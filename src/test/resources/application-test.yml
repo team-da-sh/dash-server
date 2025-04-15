@@ -1,0 +1,48 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  application:
+    name: dash
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:dash
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+jwt:
+  secret-key: dskljfgklfgjfklsdgjldfksgjldksjklgjdsflkgjfdsklgjdslk
+  access-token-valid-time: 100000
+  refresh-token-valid-time: 100000000
+
+kakao:
+  client-id: 1234
+
+s3:
+  secret-key: 1234
+  access-key: 1234
+  s3-endpoint: www.s3.com
+  region: ap-northeast-2
+  s3-bucket-name: s3
+
+naver:
+  client-id: 1234
+  client-secret: 1234
+
+toss:
+  client_id: 1234
+  payment_uri: 1234
+  connection-timeout: 1234
+  read-timeout: 1234
+  socket-timeout: 1234
+  cancel-uri: 1234
+

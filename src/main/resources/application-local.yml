@@ -1,0 +1,50 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  application:
+    name: dash
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:dash
+
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-token-valid-time: ${ACCESS_TOKEN_VALID_TIME}
+  refresh-token-valid-time: ${REFRESH_TOKEN_VALID_TIME}
+
+kakao:
+  client-id: ${KAKAO_CLIENT_ID}
+
+s3:
+  secret-key: ${SECRET_KEY}
+  access-key: ${ACCESS_KEY}
+  s3-endpoint: ${S3_ENDPOINT}
+  region: ${REGION}
+  s3-bucket-name: ${S3_BUCKET_NAME}
+
+naver:
+  client-id: ${CLIENT_ID}
+  client-secret: ${CLIENT_SECRET}
+
+toss:
+  client_id: ${TOSS_CLIENT_ID}
+  payment_uri: ${TOSS_PAYMENT_URI}
+  connection-timeout: ${CONNECTION_TIMEOUT}
+  read-timeout: ${READ_TIMEOUT}
+  socket-timeout: ${SOCKET_TIMEOUT}
+  cancel-uri: ${TOSS_CANCEL_URI}
+
+

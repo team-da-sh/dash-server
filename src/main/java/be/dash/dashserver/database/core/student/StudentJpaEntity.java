@@ -1,0 +1,65 @@
+package be.dash.dashserver.database.core.student;
+
+import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import be.dash.dashserver.core.domain.common.Level;
+import be.dash.dashserver.core.domain.member.Student;
+import be.dash.dashserver.database.core.common.BaseTimeEntity;
+import be.dash.dashserver.database.core.member.MemberJpaEntity;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@Entity
+@Table(name = "student")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
+public class StudentJpaEntity extends BaseTimeEntity {
+
+    @Id
+    @Column(name = "student_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private MemberJpaEntity member;
+
+    @Column(nullable = false,  columnDefinition = "TEXT")
+    private String profileImageUrl;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Level level;
+
+    public Student toDomain(List<StudentGenreJpaEntity> studentGenreJpaEntityList) {
+        return Student.builder()
+                .id(id)
+                .level(level)
+                .profileImageUrl(profileImageUrl)
+                .genres(studentGenreJpaEntityList.stream().map(StudentGenreJpaEntity::getGenre).toList())
+                .build();
+    }
+
+    public Student toDomain() {
+        return Student.builder()
+                .id(id)
+                .level(level)
+                .profileImageUrl(profileImageUrl)
+                .build();
+    }
+}

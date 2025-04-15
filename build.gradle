@@ -1,0 +1,81 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'be.doomchit'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+jacoco {
+    toolVersion '0.8.8'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Database
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+  	// JWT
+  	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+  	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+  	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+  	// Test
+  	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // AWS
+    implementation("software.amazon.awssdk:s3:2.21.0")
+    implementation("software.amazon.awssdk:bom:2.21.0")
+
+    // Actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // RestClient
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.4.1'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
+
+    reports {
+        html.required.set(false)
+        xml.required.set(true)
+        csv.required.set(false)
+    }
+}
