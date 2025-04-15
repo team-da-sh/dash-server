@@ -59,11 +59,6 @@ public class TeacherService {
                 jwtTokenGenerator.createRefreshToken(String.valueOf(member.getId()), Role.TEACHER));
     }
 
-    public List<TeacherLessonGenres> popular() {
-        Teachers teachers = teacherRepository.findTeachersSortByLessonCountsDesc(ANY);
-        return getTeacherLessonGenres(teachers);
-    }
-
     public TeacherDetailResult find(long teacherId) {
         Teacher teacher = teacherRepository.findByTeacherId(teacherId);
         List<Genre> genres = lessonRepository.findDistinctGenresByTeacherIdOrderByCountDesc(teacher.getId());
