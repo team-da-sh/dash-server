@@ -5,8 +5,6 @@ import org.springframework.stereotype.Repository;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
-import be.dash.dashserver.database.core.lesson.LessonJpaEntityRepository;
-import be.dash.dashserver.database.core.student.StudentJpaRepository;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -14,13 +12,10 @@ import lombok.RequiredArgsConstructor;
 public class ReservationRepositoryAdapter implements ReservationRepository {
 
     private final ReservationJpaRepository reservationJpaRepository;
-    private final LessonJpaEntityRepository lessonJpaEntityRepository;
-    private final StudentJpaRepository studentJpaRepository;
 
     @Override
     public boolean existsByMemberIdAndLessonId(long memberId, long lessonId) {
         return reservationJpaRepository.existsByMemberIdAndLessonId(memberId, lessonId);
-
     }
 
     @Override
