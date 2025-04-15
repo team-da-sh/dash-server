@@ -1,12 +1,8 @@
 package be.dash.dashserver.core.fixture;
 
-import java.util.List;
-import be.dash.dashserver.core.domain.common.Genre;
-import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.member.SocialProvider;
-import be.dash.dashserver.core.domain.member.Student;
 
 public class MemberFixture {
     private MemberFixture() {
@@ -66,7 +62,7 @@ public class MemberFixture {
                 .build();
     }
 
-    public static Member createStudentWithoutId(String nickname, Genre genre, Level level, String phoneNumber) {
+    public static Member createStudentWithoutId(String nickname, String phoneNumber) {
         return Member.builder()
                 .provider(SocialProvider.KAKAO)
                 .socialId("socialId_67890")
@@ -76,11 +72,7 @@ public class MemberFixture {
                 .name("김영희")
                 .phoneNumber(phoneNumber)
                 .nickname(nickname)
-                .student(Student.builder()
-                        .profileImageUrl(phoneNumber)
-                        .genres(List.of(genre))
-                        .level(level)
-                        .build())
+                .profileImageUrl(phoneNumber)
                 .build();
     }
 }

@@ -81,26 +81,6 @@ class LessonControllerTest {
                         .getRepresentativeImageUrl()));
     }
 
-    @DisplayName("수업을 추천한다.")
-    @Test
-    void recommendation() throws Exception {
-        Long memberId = 1L;
-        Lessons lessons = new Lessons(List.of(LessonFixture.create(memberId, 1, 1, HIPHOP, Level.BEGINNER)));
-        mockingArgumentResolver(memberId);
-        when(lessonService.getRecommendationLessons(any(Long.class), any(LessonSortOption.class))).thenReturn(lessons);
-
-        mockMvc.perform(get("/api/v1/lessons/recommendations")
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.lessons[0].id").value(lessons.lessons().get(0).getId()))
-                .andExpect(jsonPath("$.lessons[0].genre").value(lessons.lessons().get(0).getGenre().name()))
-                .andExpect(jsonPath("$.lessons[0].level").value(lessons.lessons().get(0)
-                        .getLevel().name()))
-                .andExpect(jsonPath("$.lessons[0].name").value(lessons.lessons().get(0).getName()))
-                .andExpect(jsonPath("$.lessons[0].imageUrl").value(lessons.lessons().get(0)
-                        .getRepresentativeImageUrl()));
-    }
-
     private void mockingArgumentResolver(Long memberId) {
         when(tokenParser.getToken(anyString())).thenReturn("subject");
         when(jwtTokenExtractor.getSubject(anyString())).thenReturn(String.valueOf(memberId));

@@ -12,6 +12,6 @@ public class FavoriteRepositoryAdapter implements FavoriteRepository {
 
     @Override
     public int getFavoriteCountByMemberId(Long memberId) {
-        return favoriteJpaRepository.countByStudentId(memberId);
+        return favoriteJpaRepository.countByMemberId(memberId);
     }
 }
