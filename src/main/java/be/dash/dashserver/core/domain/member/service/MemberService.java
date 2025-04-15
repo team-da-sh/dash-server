@@ -13,7 +13,7 @@ import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.service.TeacherRepository;
-import be.dash.dashserver.core.exception.ForbiddenException;
+import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 
@@ -73,7 +73,7 @@ public class MemberService {
 
     public Teacher findTeacherByMemberId(Long memberId) {
         return teacherRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new ForbiddenException("해당하는 선생님을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당하는 선생님을 찾을 수 없습니다."));
     }
 
     public List<Member> findAllByMemberIds(List<Long> memberIds) {
