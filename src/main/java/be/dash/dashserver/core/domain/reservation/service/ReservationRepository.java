@@ -7,7 +7,7 @@ public interface ReservationRepository {
 
     boolean existsByMemberIdAndLessonId(long memberId, long lessonId);
 
-    long save(long studentId, long lessonId);
+    long save(long memberId, long lessonId);
 
     Reservations findAllByMemberId(long memberId);
 

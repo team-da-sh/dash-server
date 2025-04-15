@@ -67,10 +67,10 @@ public class LessonController {
 
     }
 
-    @GetMapping("/recommendations")
-    public ResponseEntity<LessonResponses> recommendation(@MemberId Long memberId, @RequestParam(required = false, defaultValue = "LATEST", name = "sortOption") LessonSortOption sortOption) {
-        Lessons lessons = lessonService.getRecommendationLessons(memberId, sortOption);
-        return ResponseEntity.ok(new LessonResponses(lessons));
+    @GetMapping("/latest")
+    public ResponseEntity<LessonResponses> latest() {
+        Lessons searched = lessonService.searchBySortOption(LessonSortOption.LATEST);
+        return ResponseEntity.ok(new LessonResponses(searched));
     }
 
     @GetMapping("/popular-genres")
@@ -108,7 +108,7 @@ public class LessonController {
     public ResponseEntity<Void> createReservation(
             @MemberId Long memberId,
             @Valid @RequestBody PaymentRequest paymentRequest,
-            @PathVariable@Min(value = 1L, message = "수업의 식별자는 양수로 이루어져야 합니다.") long lessonId) {
+            @PathVariable @Min(value = 1L, message = "수업의 식별자는 양수로 이루어져야 합니다.") long lessonId) {
         long reservationId = reservationService.reserve(paymentRequest.toCommand(memberId, lessonId));
         return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
     }

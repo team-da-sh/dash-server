@@ -5,7 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
-import be.dash.dashserver.core.domain.member.Student;
+import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.core.domain.payment.PaymentClientApi;
 import be.dash.dashserver.core.domain.reservation.Reservation;
@@ -13,7 +13,6 @@ import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.command.CreateReservationCommand;
 import be.dash.dashserver.core.domain.teacher.service.TeacherRepository;
 import be.dash.dashserver.core.exception.ConflictException;
-import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 
@@ -29,8 +28,7 @@ public class ReservationService {
     private final PaymentClientApi paymentClientApi;
 
     public Reservation findById(long reservationId) {
-        return reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new NotFoundException("예약을 찾을 수 없습니다."));
+        return reservationRepository.findById(reservationId);
     }
 
     public boolean isBooked(long memberId, long lessonId) {
@@ -40,11 +38,11 @@ public class ReservationService {
     @Transactional
     public long reserve(CreateReservationCommand command) {
         validateReservationAvailability(command);
-        Student student = memberRepository.findStudentByMemberId(command.memberId());
+        Member member = memberRepository.findById(command.memberId());
         paymentClientApi.purchase(command.toPaymentInformation());
         long reservationId;
         try {
-            reservationId = reservationRepository.save(student.getId(), command.lessonId());
+            reservationId = reservationRepository.save(member.getId(), command.lessonId());
         } catch (DataIntegrityViolationException e) {
             paymentClientApi.cancelByInternalError(command.paymentKey());
             throw new ConflictException("이미 예약된 수업입니다.");
@@ -59,7 +57,6 @@ public class ReservationService {
             throw new ConflictException("잔여 좌석이 없습니다.");
         }
     }
-
 
     private void validateOwnerIfTeacher(long memberId, long lessonId) {
         teacherRepository.findByMemberId(memberId)
