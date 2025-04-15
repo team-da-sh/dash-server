@@ -6,25 +6,14 @@ import be.dash.dashserver.core.domain.member.AuthMember;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.member.SocialProvider;
-import be.dash.dashserver.core.domain.member.Student;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.core.exception.NotFoundException;
-import be.dash.dashserver.database.core.favorite.FavoriteJpaRepository;
-import be.dash.dashserver.database.core.reservation.ReservationJpaRepository;
-import be.dash.dashserver.database.core.student.StudentGenreJpaEntity;
-import be.dash.dashserver.database.core.student.StudentGenreJpaRepository;
-import be.dash.dashserver.database.core.student.StudentJpaEntity;
-import be.dash.dashserver.database.core.student.StudentJpaRepository;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class MemberRepositoryAdapter implements MemberRepository {
     private final MemberJpaRepository memberJpaRepository;
-    private final StudentJpaRepository studentJpaRepository;
-    private final StudentGenreJpaRepository studentGenreJpaRepository;
-    private final ReservationJpaRepository reservationJpaRepository;
-    private final FavoriteJpaRepository favoriteJpaRepository;
 
     @Override
     public AuthMember findBySocialIdAndProviderOrNull(String socialId, SocialProvider provider) {
@@ -51,7 +40,7 @@ public class MemberRepositoryAdapter implements MemberRepository {
                 .name(member.getName())
                 .phoneNumber(member.getPhoneNumber())
                 .nickname(member.getNickname())
-                .student(member.getStudent())
+                .profileImageUrl(member.getProfileImageUrl())
                 .build();
     }
 
@@ -66,34 +55,6 @@ public class MemberRepositoryAdapter implements MemberRepository {
         MemberJpaEntity memberJpaEntity = memberJpaRepository.findById(member.getId())
                 .orElseThrow(() -> new NotFoundException("멤버를 찾을 수 없습니다."));
         memberJpaEntity.updateOnboardDetails(member);
-        StudentJpaEntity studentJpaEntity = studentJpaRepository.save(StudentJpaEntity.builder()
-                .profileImageUrl(member.getStudent().getProfileImageUrl())
-                .level(member.getStudent().getLevel())
-                .member(memberJpaEntity)
-                .build());
-        studentGenreJpaRepository.saveAll(member.getStudent().getGenres().stream()
-                .map(genre -> StudentGenreJpaEntity.builder()
-                        .student(studentJpaEntity)
-                        .genre(genre)
-                        .build()).toList());
-    }
-
-    @Override
-    public Student findStudentByMemberId(long memberId) {
-        StudentJpaEntity studentJpaEntity = studentJpaRepository.findStudentsByMemberIdWithMember(memberId)
-                .orElseThrow(() -> new NotFoundException("멤버를 찾을 수 없습니다."));
-        List<StudentGenreJpaEntity> studentGenreJpaEntities = studentGenreJpaRepository.findAllStudentGenresWithStudent(studentJpaEntity.getId());
-        return studentJpaEntity.toDomain(studentGenreJpaEntities);
-    }
-
-    @Override
-    public int getReservationCountByStudentId(Long studentId) {
-        return reservationJpaRepository.countByStudentId(studentId);
-    }
-
-    @Override
-    public int getFavoriteCountByStudentId(Long studentId) {
-        return favoriteJpaRepository.countByStudentId(studentId);
     }
 
     @Override
@@ -102,10 +63,7 @@ public class MemberRepositoryAdapter implements MemberRepository {
     }
 
     @Override
-    public List<Member> findAllByStudentIds(List<Long> studentIds) {
-        List<Long> memberIds = studentJpaRepository.findAllById(studentIds).stream()
-                .map(studentJpaEntity -> studentJpaEntity.getMember().getId())
-                .toList();
+    public List<Member> findAllByMemberIds(List<Long> memberIds) {
         return memberJpaRepository.findAllById(memberIds).stream().map(MemberJpaEntity::toDomain).toList();
     }
 }

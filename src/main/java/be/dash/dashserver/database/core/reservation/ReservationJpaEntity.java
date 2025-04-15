@@ -28,7 +28,7 @@ public class ReservationJpaEntity extends BaseCreatedAtEntity {
     @Column(name = "lesson_id")
     private Long lessonId;
 
-    @Column(name = "student_id")
+    @Column(name = "member_id")
     private Long memberId;
 
     public ReservationJpaEntity(Long lessonId, Long memberId) {

@@ -7,9 +7,9 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
 
     boolean existsByMemberIdAndLessonId(Long memberId, Long lessonId);
 
-    int countByStudentId(Long studentId);
+    int countByMemberId(Long memberId);
 
-    List<ReservationJpaEntity> findAllByStudentId(long studentId);
+    List<ReservationJpaEntity> findAllByMemberId(long memberId);
 
     List<ReservationJpaEntity> findAllByLessonIdOrderByCreatedAtDesc(Long lessonId);
 }
