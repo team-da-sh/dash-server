@@ -15,7 +15,7 @@ public class Member {
     private final String name;
     private final String phoneNumber;
     private final String nickname;
-    private final Student student;
+    private final String profileImageUrl;
 
     @Builder
     public Member(
@@ -28,7 +28,7 @@ public class Member {
             String name,
             String phoneNumber,
             String nickname,
-            Student student) {
+            String profileImageUrl) {
         this.id = id;
         this.provider = provider;
         this.socialId = socialId;
@@ -38,7 +38,7 @@ public class Member {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
-        this.student = student;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public boolean isOnboarded() {
