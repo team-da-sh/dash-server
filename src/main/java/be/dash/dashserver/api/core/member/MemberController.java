@@ -40,8 +40,6 @@ public class MemberController {
                 request.name(),
                 request.phoneNumber(),
                 request.nickname(),
-                request.level(),
-                request.genres(),
                 request.profileImageUrl()));
         return ResponseEntity.ok().build();
     }
