@@ -66,4 +66,16 @@ public class MemberRepositoryAdapter implements MemberRepository {
     public List<Member> findAllByMemberIds(List<Long> memberIds) {
         return memberJpaRepository.findAllById(memberIds).stream().map(MemberJpaEntity::toDomain).toList();
     }
+
+    @Override
+    public void update(Member member) {
+        memberJpaRepository.findById(member.getId())
+                .ifPresentOrElse(
+                        memberJpaEntity -> {
+                            memberJpaEntity.update(member);
+                        },
+                        () -> {
+                            throw new NotFoundException("멤버를 찾을 수 없습니다.");
+                        });
+    }
 }

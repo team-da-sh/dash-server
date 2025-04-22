@@ -20,4 +20,6 @@ public interface MemberRepository {
     void updateRole(Long id, Role role);
 
     List<Member> findAllByMemberIds(List<Long> memberIds);
+
+    void update(Member member);
 }

@@ -8,6 +8,7 @@ import be.dash.dashserver.core.domain.favorite.service.FavoriteRepository;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.member.Member;
+import be.dash.dashserver.core.domain.member.command.MemberUpdateCommand;
 import be.dash.dashserver.core.domain.member.command.OnboardCommand;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
@@ -35,7 +36,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberInformationResult getMemberInformation(Long memberId) {
+    public MemberInformationResult getMemberInformationV2(Long memberId) {
         Member member = memberRepository.findById(memberId);
 
         return teacherRepository.findByMemberId(memberId).map(teacher ->
@@ -78,5 +79,10 @@ public class MemberService {
 
     public List<Member> findAllByMemberIds(List<Long> memberIds) {
         return memberRepository.findAllByMemberIds(memberIds);
+    }
+
+    @Transactional
+    public void updateMemberInformation(MemberUpdateCommand command) {
+        memberRepository.update(command.toMember());
     }
 }
