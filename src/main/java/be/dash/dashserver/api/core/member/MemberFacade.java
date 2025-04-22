@@ -35,7 +35,7 @@ public class MemberFacade {
     }
 
     @Transactional(readOnly = true)
-    public MyLessonsResponse getMemberLessons(long memberId) {
+    public MyLessonsResponse getMyLessons(long memberId) {
         Teacher teacher = memberService.findTeacherByMemberId(memberId);
         List<Lesson> lessons = lessonService.findAllByTeacherId(teacher.getId());
         return MyLessonsResponse.from(lessons.stream().map(MyLessonResponse::from).toList());
