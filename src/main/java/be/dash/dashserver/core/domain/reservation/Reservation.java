@@ -9,6 +9,6 @@ import lombok.Getter;
 public class Reservation {
     private final long id;
     private final long lessonId;
-    private final long studentId;
+    private final long memberId;
     private final LocalDateTime createdAt;
 }

@@ -25,8 +25,8 @@ public class Reservations {
         return reservations.stream().map(Reservation::getLessonId).collect(Collectors.toSet());
     }
 
-    public List<Long> getStudentIds() {
-        return reservations.stream().map(Reservation::getStudentId).toList();
+    public List<Long> getMemberIds() {
+        return reservations.stream().map(Reservation::getMemberId).toList();
     }
 
     public List<LocalDateTime> getCreatedAt() {

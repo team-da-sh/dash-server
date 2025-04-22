@@ -14,8 +14,8 @@ public record LessonReservationResponse(
         String location,
         String locationDetail,
         LessonRoundResponses lessonRound,
-        String studentName,
-        String studentPhoneNumber
+        String memberName,
+        String memberPhoneNumber
 ) {
     public LessonReservationResponse(Lesson lesson, Member member) {
         this(

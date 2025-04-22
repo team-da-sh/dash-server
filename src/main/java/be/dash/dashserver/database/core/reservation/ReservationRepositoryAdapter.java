@@ -1,12 +1,10 @@
 package be.dash.dashserver.database.core.reservation;
 
-import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
-import be.dash.dashserver.database.core.lesson.LessonJpaEntityRepository;
-import be.dash.dashserver.database.core.student.StudentJpaRepository;
+import be.dash.dashserver.core.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -14,24 +12,22 @@ import lombok.RequiredArgsConstructor;
 public class ReservationRepositoryAdapter implements ReservationRepository {
 
     private final ReservationJpaRepository reservationJpaRepository;
-    private final LessonJpaEntityRepository lessonJpaEntityRepository;
-    private final StudentJpaRepository studentJpaRepository;
 
     @Override
     public boolean existsByMemberIdAndLessonId(long memberId, long lessonId) {
         return reservationJpaRepository.existsByMemberIdAndLessonId(memberId, lessonId);
-
     }
 
     @Override
-    public Reservations findAllByStudentId(long studentId) {
-        return new Reservations(reservationJpaRepository.findAllByStudentId(studentId).stream()
+    public Reservations findAllByMemberId(long memberId) {
+        return new Reservations(reservationJpaRepository.findAllByMemberId(memberId).stream()
                 .map(ReservationJpaEntity::toDomain).toList());
     }
 
     @Override
-    public Optional<Reservation> findById(long reservationId) {
-        return reservationJpaRepository.findById(reservationId).map(ReservationJpaEntity::toDomain);
+    public Reservation findById(long reservationId) {
+        return reservationJpaRepository.findById(reservationId).map(ReservationJpaEntity::toDomain)
+                .orElseThrow(() -> new NotFoundException("예약을 찾을 수 없습니다."));
     }
 
     @Override
@@ -41,8 +37,13 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     }
 
     @Override
-    public long save(long studentId, long lessonId) {
-        ReservationJpaEntity reservationJpaEntity = new ReservationJpaEntity(lessonId, studentId);
+    public int getReservationCountByMemberId(Long memberId) {
+        return reservationJpaRepository.countByMemberId(memberId);
+    }
+
+    @Override
+    public long save(long memberId, long lessonId) {
+        ReservationJpaEntity reservationJpaEntity = new ReservationJpaEntity(lessonId, memberId);
         reservationJpaRepository.save(reservationJpaEntity);
         return reservationJpaEntity.getId();
     }

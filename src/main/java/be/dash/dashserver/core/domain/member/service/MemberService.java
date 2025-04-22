@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import be.dash.dashserver.core.domain.favorite.service.FavoriteRepository;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.member.Member;
-import be.dash.dashserver.core.domain.member.Student;
 import be.dash.dashserver.core.domain.member.command.OnboardCommand;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.service.TeacherRepository;
-import be.dash.dashserver.core.exception.ForbiddenException;
+import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +25,8 @@ public class MemberService {
     private final LessonRepository lessonRepository;
     private final ReservationRepository reservationRepository;
     private final TeacherRepository teacherRepository;
+    private final FavoriteRepository favoriteRepository;
+
 
     @Transactional
     public void onboard(OnboardCommand command) {
@@ -35,28 +37,25 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberInformationResult getMemberInformation(Long memberId) {
         Member member = memberRepository.findById(memberId);
-        Student student = memberRepository.findStudentByMemberId(memberId);
 
         return teacherRepository.findByMemberId(memberId).map(teacher ->
                 new MemberInformationResult(
                         member.getNickname(),
-                        student.getProfileImageUrl(),
-                        memberRepository.getReservationCountByStudentId(student.getId()),
-                        memberRepository.getFavoriteCountByStudentId(student.getId()),
+                        member.getProfileImageUrl(),
+                        reservationRepository.getReservationCountByMemberId(member.getId()),
+                        favoriteRepository.getFavoriteCountByMemberId(member.getId()),
                         lessonRepository.getLessonCount(teacher.getId())
                 )
         ).orElseGet(() ->
                 new MemberInformationResult(
                         member.getNickname(),
-                        student.getProfileImageUrl(),
-                        memberRepository.getReservationCountByStudentId(student.getId()),
-                        memberRepository.getFavoriteCountByStudentId(student.getId()),
+                        member.getProfileImageUrl(),
+                        reservationRepository.getReservationCountByMemberId(member.getId()),
+                        favoriteRepository.getFavoriteCountByMemberId(member.getId()),
                         0
                 )
         );
     }
-
-
 
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId);
@@ -64,8 +63,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<ReservationResult> getMemberReservations(Long memberId) {
-        long studentId = memberRepository.findStudentByMemberId(memberId).getId();
-        Reservations reservations = reservationRepository.findAllByStudentId(studentId);
+        Reservations reservations = reservationRepository.findAllByMemberId(memberId);
         Set<Long> lessonIds = reservations.getLessonIds();
         List<Lesson> myLessons = lessonRepository.findAllByIdsOrderByStartDate(lessonIds);
         return myLessons.stream()
@@ -75,10 +73,10 @@ public class MemberService {
 
     public Teacher findTeacherByMemberId(Long memberId) {
         return teacherRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new ForbiddenException("해당하는 선생님을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당하는 선생님을 찾을 수 없습니다."));
     }
 
-    public List<Member> findAllByStudentIds(List<Long> studentIds) {
-        return memberRepository.findAllByStudentIds(studentIds);
+    public List<Member> findAllByMemberIds(List<Long> memberIds) {
+        return memberRepository.findAllByMemberIds(memberIds);
     }
 }

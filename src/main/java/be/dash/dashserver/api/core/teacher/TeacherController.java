@@ -48,12 +48,6 @@ public class TeacherController {
 
     }
 
-    @GetMapping("/popular")
-    public ResponseEntity<TeacherResponses> popular() {
-        List<TeacherLessonGenres> popular = teacherService.popular();
-        return ResponseEntity.ok(TeacherResponses.from(popular));
-    }
-
     @GetMapping("/{teacherId}")
     public ResponseEntity<TeacherDetailResponse> find(@PathVariable @Min(value = 1L, message = "댄서의 식별자는 양수로 이루어져야 합니다.") long teacherId) {
         TeacherDetailResult teacherDetailResult = teacherService.find(teacherId);

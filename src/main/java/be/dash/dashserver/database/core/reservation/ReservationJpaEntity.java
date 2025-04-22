@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "reservation",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"lessonId", "studentId"}))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"lessonId", "memberId"}))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReservationJpaEntity extends BaseCreatedAtEntity {
 
@@ -28,15 +28,15 @@ public class ReservationJpaEntity extends BaseCreatedAtEntity {
     @Column(name = "lesson_id")
     private Long lessonId;
 
-    @Column(name = "student_id")
-    private Long studentId;
+    @Column(name = "member_id")
+    private Long memberId;
 
-    public ReservationJpaEntity(Long lessonId, Long studentId) {
+    public ReservationJpaEntity(Long lessonId, Long memberId) {
         this.lessonId = lessonId;
-        this.studentId = studentId;
+        this.memberId = memberId;
     }
 
     public Reservation toDomain() {
-        return new Reservation(id, lessonId, studentId, getCreatedAt());
+        return new Reservation(id, lessonId, memberId, getCreatedAt());
     }
 }

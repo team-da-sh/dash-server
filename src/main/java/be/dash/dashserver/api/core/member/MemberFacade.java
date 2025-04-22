@@ -10,9 +10,7 @@ import be.dash.dashserver.api.core.member.dto.ReservationDetailedResponse;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.service.LessonService;
 import be.dash.dashserver.core.domain.member.Member;
-import be.dash.dashserver.core.domain.member.Student;
 import be.dash.dashserver.core.domain.member.service.MemberService;
-import be.dash.dashserver.core.domain.member.service.StudentService;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationService;
@@ -27,7 +25,6 @@ public class MemberFacade {
     private final MemberService memberService;
     private final ReservationService reservationService;
     private final LessonService lessonService;
-    private final StudentService studentsService;
 
     @Transactional(readOnly = true)
     public ReservationDetailedResponse getMemberReservation(long memberId, long reservationId) {
@@ -50,11 +47,8 @@ public class MemberFacade {
         lessonService.validateOwner(teacher.getId(), lessonId);
         Lesson lesson = lessonService.findById(lessonId);
         Reservations reservations = reservationService.findAllByLessonIdOrderByCreatedAtDesc(lessonId);
-        List<Long> studentIds = studentsService.findAllByIds(reservations.getStudentIds()).stream()
-                .map(Student::getId)
-                .toList();
         List<LocalDateTime> reservationDateTimes = reservations.getCreatedAt();
-        List<Member> members = memberService.findAllByStudentIds(studentIds);
+        List<Member> members = memberService.findAllByMemberIds(reservations.getMemberIds());
         return MyLessonDetailedResponse.from(lesson, members, reservationDateTimes);
     }
 }

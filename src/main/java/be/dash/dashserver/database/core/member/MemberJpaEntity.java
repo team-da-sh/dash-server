@@ -55,6 +55,9 @@ public class MemberJpaEntity extends BaseTimeEntity {
     @Column(nullable = true, unique = true)
     private String nickname;
 
+    @Column(nullable = true, columnDefinition = "TEXT")
+    private String profileImageUrl;
+
     private MemberJpaEntity(SocialProvider provider, String socialId, String socialName, Role role, String email) {
         this.provider = provider;
         this.socialId = socialId;
@@ -76,7 +79,7 @@ public class MemberJpaEntity extends BaseTimeEntity {
     }
 
     @Builder
-    public MemberJpaEntity(SocialProvider provider, String socialId, String socialName, Role role, String email, String name, String phoneNumber, String nickname) {
+    public MemberJpaEntity(SocialProvider provider, String socialId, String socialName, Role role, String email, String name, String phoneNumber, String nickname, String profileImageUrl) {
         this.provider = provider;
         this.socialId = socialId;
         this.socialName = socialName;
@@ -85,6 +88,7 @@ public class MemberJpaEntity extends BaseTimeEntity {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public MemberJpaEntity(Member member) {
@@ -97,6 +101,7 @@ public class MemberJpaEntity extends BaseTimeEntity {
         this.name = member.getName();
         this.phoneNumber = member.getPhoneNumber();
         this.nickname = member.getNickname();
+        this.profileImageUrl = member.getProfileImageUrl();
     }
 
     public Member toDomain() {
@@ -110,6 +115,7 @@ public class MemberJpaEntity extends BaseTimeEntity {
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .nickname(nickname)
+                .profileImageUrl(profileImageUrl)
                 .build();
     }
 
@@ -117,5 +123,6 @@ public class MemberJpaEntity extends BaseTimeEntity {
         this.name = member.getName();
         this.phoneNumber = member.getPhoneNumber();
         this.nickname = member.getNickname();
+        this.profileImageUrl = member.getProfileImageUrl();
     }
 }

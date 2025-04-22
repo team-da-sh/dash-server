@@ -2,23 +2,20 @@ package be.dash.dashserver.database.core.favorite;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import be.dash.dashserver.database.core.common.BaseCreatedAtEntity;
-import be.dash.dashserver.database.core.lesson.LessonJpaEntity;
-import be.dash.dashserver.database.core.student.StudentJpaEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "favorite")
+@Table(name = "favorite",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"lessonId", "memberId"}))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FavoriteJpaEntity extends BaseCreatedAtEntity {
 
@@ -27,12 +24,14 @@ public class FavoriteJpaEntity extends BaseCreatedAtEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_id")
-    private LessonJpaEntity lesson;
+    @Column(name = "lesson_id")
+    private Long lessonId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id")
-    private StudentJpaEntity student;
+    @Column(name = "member_id")
+    private Long memberId;
 
+    public FavoriteJpaEntity(Long lessonId, Long memberId) {
+        this.lessonId = lessonId;
+        this.memberId = memberId;
+    }
 }
