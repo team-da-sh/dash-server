@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import be.dash.dashserver.api.core.member.dto.MyLessonResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse.MyLessonThumbnailResponse;
 import be.dash.dashserver.api.core.member.dto.ReservationDetailedResponse;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.service.LessonService;
@@ -39,6 +41,13 @@ public class MemberFacade {
         Teacher teacher = memberService.findTeacherByMemberId(memberId);
         List<Lesson> lessons = lessonService.findAllByTeacherId(teacher.getId());
         return MyLessonsResponse.from(lessons.stream().map(MyLessonResponse::from).toList());
+    }
+
+    @Transactional(readOnly = true)
+    public MyLessonsThumbnailResponse getMyLessonsThumbnail(long memberId) {
+        Teacher teacher = memberService.findTeacherByMemberId(memberId);
+        List<Lesson> lessons = lessonService.findAllByTeacherId(teacher.getId());
+        return MyLessonsThumbnailResponse.from(lessons.stream().map(MyLessonThumbnailResponse::from).toList());
     }
 
     @Transactional(readOnly = true)

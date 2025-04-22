@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import be.dash.dashserver.api.core.member.dto.MemberResponse;
 import be.dash.dashserver.api.core.member.dto.MemberUpdateRequest;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
 import be.dash.dashserver.api.core.member.dto.OnBoardRequest;
 import be.dash.dashserver.api.core.member.dto.ReservationDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ReservationsResponse;
@@ -68,6 +69,12 @@ public class MemberController {
     @GetMapping("/me/lessons")
     public ResponseEntity<MyLessonsResponse> getMyLessons(@MemberId Long memberId) {
         return ResponseEntity.ok(memberFacade.getMyLessons(memberId));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @GetMapping("/me/lessons/thumbnails")
+    public ResponseEntity<MyLessonsThumbnailResponse> getMemberLessons(@MemberId Long memberId) {
+        return ResponseEntity.ok(memberFacade.getMyLessonsThumbnail(memberId));
     }
 
     @Permission(role = Role.TEACHER)

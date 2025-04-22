@@ -35,29 +35,6 @@ public class MemberService {
         memberRepository.onboard(member);
     }
 
-    @Transactional(readOnly = true)
-    public MemberInformationResult getMemberInformationV2(Long memberId) {
-        Member member = memberRepository.findById(memberId);
-
-        return teacherRepository.findByMemberId(memberId).map(teacher ->
-                new MemberInformationResult(
-                        member.getNickname(),
-                        member.getProfileImageUrl(),
-                        reservationRepository.getReservationCountByMemberId(member.getId()),
-                        favoriteRepository.getFavoriteCountByMemberId(member.getId()),
-                        lessonRepository.getLessonCount(teacher.getId())
-                )
-        ).orElseGet(() ->
-                new MemberInformationResult(
-                        member.getNickname(),
-                        member.getProfileImageUrl(),
-                        reservationRepository.getReservationCountByMemberId(member.getId()),
-                        favoriteRepository.getFavoriteCountByMemberId(member.getId()),
-                        0
-                )
-        );
-    }
-
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId);
     }
