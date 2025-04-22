@@ -47,16 +47,11 @@ public class MemberController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<MemberResponse> updateMemberInformation(@MemberId Long memberId,
-                                                                   @Valid @RequestBody MemberUpdateRequest request) {
+    public ResponseEntity<Void> updateMemberInformation(@MemberId Long memberId,
+                                                           @Valid @RequestBody MemberUpdateRequest request) {
         memberService.updateMemberInformation(request.toCommand(memberId));
-        return ResponseEntity.ok(MemberResponse.from(memberService.findById(memberId)));
+        return ResponseEntity.noContent().build();
     }
-
-//    @GetMapping("/me")
-//    public ResponseEntity<MemberResponse> getMemberInformation(@MemberId Long memberId) {
-//        return ResponseEntity.ok(MemberResponse.from(memberService.getMemberInformation(memberId)));
-//    }
 
     @GetMapping("/me/reservations")
     public ResponseEntity<ReservationsResponse> getMemberReservations(@MemberId Long memberId) {
