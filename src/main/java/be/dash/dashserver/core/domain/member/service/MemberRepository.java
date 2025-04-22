@@ -1,6 +1,7 @@
 package be.dash.dashserver.core.domain.member.service;
 
 import java.util.List;
+import java.util.Optional;
 import be.dash.dashserver.core.domain.member.AuthMember;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.Role;
@@ -22,4 +23,6 @@ public interface MemberRepository {
     List<Member> findAllByMemberIds(List<Long> memberIds);
 
     void update(Member member);
+
+    Optional<String> findNicknameById(long memberId);
 }

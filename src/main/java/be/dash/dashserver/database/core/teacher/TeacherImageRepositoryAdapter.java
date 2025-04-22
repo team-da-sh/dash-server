@@ -1,6 +1,7 @@
 package be.dash.dashserver.database.core.teacher;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.service.TeacherImageRepository;
@@ -16,5 +17,11 @@ public class TeacherImageRepositoryAdapter implements TeacherImageRepository {
         List<TeacherImageJpaEntity> teacherImageJpaEntities = teacher.getImages().getImageUrls().stream()
                 .map(url -> new TeacherImageJpaEntity(new TeacherJpaEntity(teacher), url)).toList();
         teacherImageJpaRepository.saveAll(teacherImageJpaEntities);
+    }
+
+    @Override
+    public Optional<String> findTop1ImageUrlByTeacherId(long teacherId) {
+        return teacherImageJpaRepository.findTop1ByTeacherId(teacherId)
+                .map(TeacherImageJpaEntity::getImageUrl);
     }
 }
