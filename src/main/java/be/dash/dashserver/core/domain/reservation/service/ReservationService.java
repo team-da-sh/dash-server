@@ -74,4 +74,17 @@ public class ReservationService {
             throw new ConflictException("본인 수업은 수강할 수 없습니다.");
         }
     }
+
+    public int countUpcomingReservationsByMemberId(Long memberId) {
+        return reservationRepository.countUpcomingReservationsByMemberId(memberId);
+    }
+
+    public int countOngoingReservationsByMemberId(Long memberId) {
+        return reservationRepository.countOngoingReservationsByMemberId(memberId);
+
+    }
+
+    public int countPastReservationsByMemberId(Long memberId) {
+        return reservationRepository.countPastReservationsByMemberId(memberId);
+    }
 }

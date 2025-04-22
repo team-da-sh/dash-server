@@ -16,6 +16,7 @@ import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
 import be.dash.dashserver.api.core.member.dto.OnBoardRequest;
 import be.dash.dashserver.api.core.member.dto.ReservationDetailedResponse;
+import be.dash.dashserver.api.core.member.dto.ReservationStatisticsResponse;
 import be.dash.dashserver.api.core.member.dto.ReservationsResponse;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.Permission;
@@ -82,4 +83,10 @@ public class MemberController {
     public ResponseEntity<MyLessonDetailedResponse> getMemberLesson(@MemberId Long memberId, @PathVariable Long lessonId) {
         return ResponseEntity.ok(memberFacade.getMyLesson(memberId, lessonId));
     }
+
+    @GetMapping("/me/reservations/statistics")
+    public ResponseEntity<ReservationStatisticsResponse> getReservationStatistics(@MemberId Long memberId) {
+        return ResponseEntity.ok(memberFacade.getReservationStatistics(memberId));
+    }
+
 }

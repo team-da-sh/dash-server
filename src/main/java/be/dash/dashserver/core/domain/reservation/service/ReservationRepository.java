@@ -15,5 +15,9 @@ public interface ReservationRepository {
 
     Reservations findAllByLessonIdOrderByCreatedAtDesc(Long lessonId);
 
-    int getReservationCountByMemberId(Long memberId);
+    int countUpcomingReservationsByMemberId(Long memberId);
+
+    int countOngoingReservationsByMemberId(Long memberId);
+
+    int countPastReservationsByMemberId(Long memberId);
 }
