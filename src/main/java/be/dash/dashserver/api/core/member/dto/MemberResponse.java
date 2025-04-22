@@ -1,19 +1,16 @@
 package be.dash.dashserver.api.core.member.dto;
 
-import be.dash.dashserver.core.domain.member.service.MemberInformationResult;
+import be.dash.dashserver.core.domain.member.Member;
 
 public record MemberResponse(String nickname,
                              String profileImageUrl,
-                             int reservationCount,
-                             int favoriteCount,
-                             int lessonCount) {
-    public static MemberResponse from(MemberInformationResult memberInformationResult) {
+                             String name,
+                             String phoneNumber) {
+    public static MemberResponse from(Member member) {
         return new MemberResponse(
-                memberInformationResult.nickname(),
-                memberInformationResult.profileImageUrl(),
-                memberInformationResult.reservationCount(),
-                memberInformationResult.favoriteCount(),
-                memberInformationResult.lessonCount()
-        );
+                member.getNickname(),
+                member.getProfileImageUrl(),
+                member.getName(),
+                member.getPhoneNumber());
     }
 }
