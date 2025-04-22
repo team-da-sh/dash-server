@@ -21,8 +21,6 @@ import be.dash.dashserver.core.domain.teacher.service.dto.TeacherDetailResult;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 
-import static be.dash.dashserver.core.domain.common.Keyword.ANY;
-
 @Trace
 @Service
 @RequiredArgsConstructor

@@ -15,6 +15,7 @@ public class Teacher {
     private final String detail;
     private final List<String> educations;
     private final List<String> experiences;
+    private final List<String> prizes;
     private final String instagram;
     private final String youtube;
     private final Images images;
@@ -28,6 +29,7 @@ public class Teacher {
             String detail,
             List<String> educations,
             List<String> experiences,
+            List<String> prizes,
             String instagram,
             String youtube,
             List<String> imageUrls,
@@ -38,6 +40,7 @@ public class Teacher {
         this.detail = detail;
         this.educations = educations;
         this.experiences = experiences;
+        this.prizes = prizes;
         this.instagram = instagram;
         this.youtube = youtube;
         this.images = new Images(imageUrls);
