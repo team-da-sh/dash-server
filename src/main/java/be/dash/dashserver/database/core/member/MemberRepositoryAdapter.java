@@ -83,6 +83,6 @@ public class MemberRepositoryAdapter implements MemberRepository {
 
     @Override
     public Optional<String> findNicknameById(long memberId) {
-         return memberJpaRepository.findNickNameById(memberId);
+         return memberJpaRepository.findNicknameById(memberId);
     }
 }

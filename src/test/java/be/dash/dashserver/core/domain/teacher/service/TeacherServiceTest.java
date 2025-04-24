@@ -67,11 +67,13 @@ class TeacherServiceTest extends ServiceSliceTest {
         // when
         MyTeacherProfileResult myTeacherProfileResult = teacherService.findMyTeacherProfile(1);
 
-        //then
-        Assertions.assertThat(myTeacherProfileResult.profileImage()).isEqualTo("www.example.com/teacher1.png");
-        Assertions.assertThat(myTeacherProfileResult.nickname()).isEqualTo("nickname");
-        Assertions.assertThat(myTeacherProfileResult.instagram()).isEqualTo("@hong_dancer1");
-        Assertions.assertThat(myTeacherProfileResult.youtube()).isEqualTo("youtube.com/hong_dancer1");
+        // then
+        assertAll(
+                () -> Assertions.assertThat(myTeacherProfileResult.profileImage()).isEqualTo("www.example.com/teacher1.png"),
+                () -> Assertions.assertThat(myTeacherProfileResult.nickname()).isEqualTo("nickname"),
+                () -> Assertions.assertThat(myTeacherProfileResult.instagram()).isEqualTo("@hong_dancer1"),
+                () -> Assertions.assertThat(myTeacherProfileResult.youtube()).isEqualTo("youtube.com/hong_dancer1")
+        );
     }
 
     private void createLessons() {

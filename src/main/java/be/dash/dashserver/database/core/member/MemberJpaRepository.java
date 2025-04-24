@@ -15,5 +15,5 @@ public interface MemberJpaRepository extends JpaRepository<MemberJpaEntity, Long
     void updateRole(Long id, Role role);
 
     @Query("select m.nickname from MemberJpaEntity m where m.id = :memberId")
-    Optional<String> findNickNameById(long memberId);
+    Optional<String> findNicknameById(long memberId);
 }
