@@ -9,7 +9,7 @@ public class TeacherImageJpaEntityFixture {
 
     public static TeacherImageJpaEntity create(TeacherJpaEntity teacherJpaEntity, String imageUrl) {
         return TeacherImageJpaEntity.builder()
-                .teacher(teacherJpaEntity)
+                .teacherId(teacherJpaEntity.getId())
                 .imageUrl(imageUrl).build();
     }
 }

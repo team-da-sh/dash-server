@@ -17,11 +17,11 @@ import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
 import be.dash.dashserver.core.domain.teacher.Teachers;
 import be.dash.dashserver.core.domain.teacher.command.CreateTeacherCommand;
+import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.TeacherDetailResult;
+import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
-
-import static be.dash.dashserver.core.domain.common.Keyword.ANY;
 
 @Trace
 @Service
@@ -31,6 +31,7 @@ public class TeacherService {
     private final TeacherRepository teacherRepository;
     private final LessonRepository lessonRepository;
     private final MemberRepository memberRepository;
+    private final TeacherImageRepository teacherImageRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
 
     public List<TeacherLessonGenres> search(Keyword keyword) {
@@ -65,5 +66,15 @@ public class TeacherService {
         Lessons activeLessonsByTeacher = lessonRepository.findLessonsByTeacher(teacher);
         Member member = memberRepository.findById(teacher.getMember().getId());
         return new TeacherDetailResult(new TeacherLessonGenres(teacher, genres), member.getNickname(), activeLessonsByTeacher);
+    }
+
+    public MyTeacherProfileResult findMyTeacherProfile(long memberId) {
+        Teacher teacher = teacherRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException("선생님 프로필이 존재하지 않습니다."));
+        String image = teacherImageRepository.findTop1ImageUrlByTeacherId(teacher.getId())
+                .orElseThrow(() -> new NotFoundException("선생님 프로필 이미지가 존재하지 않습니다."));
+        String nickname = memberRepository.findNicknameById(memberId)
+                .orElseThrow(() -> new NotFoundException("멤버의 닉네임이 존재하지 않습니다."));
+        return MyTeacherProfileResult.of(image, nickname, teacher);
     }
 }

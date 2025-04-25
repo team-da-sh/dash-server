@@ -10,11 +10,12 @@ public record CreateTeacherRequest(
         String youtube,
         List<@Size(max = 30) String> educations,
         List<@Size(max = 30) String> experiences,
+        List<@Size(max = 30) String> prizes,
         @Size(max = 300) @NotBlank String detail,
         List<String> imageUrls,
         @Size(min = 1) List<String> videoUrls
 ) {
     public CreateTeacherCommand toCommand(long memberId) {
-        return new CreateTeacherCommand(memberId, instagram, youtube, educations, experiences, detail, imageUrls, videoUrls);
+        return new CreateTeacherCommand(memberId, instagram, youtube, educations, experiences, prizes, detail, imageUrls, videoUrls);
     }
 }

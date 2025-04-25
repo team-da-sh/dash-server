@@ -1,6 +1,7 @@
 package be.dash.dashserver.database.core.member;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 import be.dash.dashserver.core.domain.member.AuthMember;
 import be.dash.dashserver.core.domain.member.Member;
@@ -65,5 +66,23 @@ public class MemberRepositoryAdapter implements MemberRepository {
     @Override
     public List<Member> findAllByMemberIds(List<Long> memberIds) {
         return memberJpaRepository.findAllById(memberIds).stream().map(MemberJpaEntity::toDomain).toList();
+    }
+
+    @Override
+    public void update(Member member) {
+        memberJpaRepository.findById(member.getId())
+                .ifPresentOrElse(
+                        memberJpaEntity -> {
+                            memberJpaEntity.update(member);
+                        },
+                        () -> {
+                            throw new NotFoundException("멤버를 찾을 수 없습니다.");
+                        }
+                        );
+    }
+
+    @Override
+    public Optional<String> findNicknameById(long memberId) {
+         return memberJpaRepository.findNicknameById(memberId);
     }
 }

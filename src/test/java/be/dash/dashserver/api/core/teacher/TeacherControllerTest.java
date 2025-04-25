@@ -82,6 +82,7 @@ class TeacherControllerTest {
                 "youtube",
                 List.of("education1", "education2"),
                 List.of("experience1", "experience2"),
+                List.of("prize1", "prize2"),
                 "instagram",
                 List.of("youtube", "youtube"),
                 List.of("imageUrl1", "imageUrl2"));
@@ -104,6 +105,7 @@ class TeacherControllerTest {
                 "youtube",
                 List.of("education1education1education1education1", "education2"),
                 List.of("experience1", "experience2"),
+                List.of("prize1", "prize2"),
                 "instagram",
                 List.of("youtube", "youtube"),
                 List.of("imageUrl1", "imageUrl2"));

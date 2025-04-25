@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherDetailResponse;
+import be.dash.dashserver.api.core.teacher.dto.TeacherProfileResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherResponses;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.Permission;
@@ -52,5 +53,11 @@ public class TeacherController {
     public ResponseEntity<TeacherDetailResponse> find(@PathVariable @Min(value = 1L, message = "댄서의 식별자는 양수로 이루어져야 합니다.") long teacherId) {
         TeacherDetailResult teacherDetailResult = teacherService.find(teacherId);
         return ResponseEntity.ok(new TeacherDetailResponse(teacherDetailResult));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @GetMapping("/me")
+    public ResponseEntity<TeacherProfileResponse> findMyTeacherProfile(@MemberId Long memberId) {
+        return ResponseEntity.ok(TeacherProfileResponse.from(teacherService.findMyTeacherProfile(memberId)));
     }
 }

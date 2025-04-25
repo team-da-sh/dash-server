@@ -43,7 +43,7 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
         teacherJpaRepository.save(teacherJpaEntity);
         List<TeacherImageJpaEntity> teacherImageJpaEntities = teacher.getImageUrls().stream()
                 .map(imageUrl -> TeacherImageJpaEntity.builder()
-                        .teacher(teacherJpaEntity)
+                        .teacherId(teacherJpaEntity.getId())
                         .imageUrl(imageUrl)
                         .build()).toList();
         teacherImageJpaRepository.saveAll(teacherImageJpaEntities);

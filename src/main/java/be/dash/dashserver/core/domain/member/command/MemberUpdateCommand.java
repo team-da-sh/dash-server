@@ -2,13 +2,11 @@ package be.dash.dashserver.core.domain.member.command;
 
 import be.dash.dashserver.core.domain.member.Member;
 
-public record OnboardCommand(
-        long memberId,
-        String name,
-        String phoneNumber,
-        String nickname,
-        String profileImageUrl) {
-
+public record MemberUpdateCommand(long memberId,
+                                  String name,
+                                  String phoneNumber,
+                                  String nickname,
+                                  String profileImageUrl) {
     public Member toMember() {
         return Member.builder()
                 .id(memberId)

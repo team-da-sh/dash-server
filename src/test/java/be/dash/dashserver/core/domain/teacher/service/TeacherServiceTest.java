@@ -1,6 +1,7 @@
 package be.dash.dashserver.core.domain.teacher.service;
 
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
+import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult;
 import be.dash.dashserver.core.fixture.LessonFixture;
 import be.dash.dashserver.core.fixture.MemberFixture;
 import be.dash.dashserver.core.fixture.TeacherFixture;
@@ -47,6 +49,30 @@ class TeacherServiceTest extends ServiceSliceTest {
                 () -> assertThat(searched.get(1).genres()).containsExactly(Genre.HIPHOP),
                 () -> assertThat(searched.get(2).teacher().getId()).isEqualTo(3),
                 () -> assertThat(searched.get(2).genres()).containsExactly(Genre.FEMALE_HIPHOP)
+        );
+    }
+
+    @DisplayName("유저의 선생님 프로필을 조회한다")
+    @Test
+    void findMyTeacherProfile() {
+
+        // given
+        Member member = MemberFixture.createTeacherWithNickname("nickname", 1);
+        memberRepository.save(member);
+        Teacher teacherWithoutId = TeacherFixture.createWithoutId(1);
+        teacherRepository.save(teacherWithoutId);
+        Teacher teacher = TeacherFixture.create(1, 1);
+        teacherImageRepository.saveAll(teacher);
+
+        // when
+        MyTeacherProfileResult myTeacherProfileResult = teacherService.findMyTeacherProfile(1);
+
+        // then
+        assertAll(
+                () -> Assertions.assertThat(myTeacherProfileResult.profileImage()).isEqualTo("www.example.com/teacher1.png"),
+                () -> Assertions.assertThat(myTeacherProfileResult.nickname()).isEqualTo("nickname"),
+                () -> Assertions.assertThat(myTeacherProfileResult.instagram()).isEqualTo("@hong_dancer1"),
+                () -> Assertions.assertThat(myTeacherProfileResult.youtube()).isEqualTo("youtube.com/hong_dancer1")
         );
     }
 

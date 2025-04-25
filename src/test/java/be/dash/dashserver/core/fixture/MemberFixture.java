@@ -35,9 +35,8 @@ public class MemberFixture {
                 .build();
     }
 
-    public static Member createMember(long id) {
+    public static Member createMember() {
         return Member.builder()
-                .id(id)
                 .provider(SocialProvider.KAKAO)
                 .socialId("socialId_67890")
                 .socialName("facebook_user")

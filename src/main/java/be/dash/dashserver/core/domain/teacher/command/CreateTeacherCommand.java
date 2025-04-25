@@ -9,6 +9,7 @@ public record CreateTeacherCommand(long memberId,
                                    String youtube,
                                    List<String> educations,
                                    List<String> experiences,
+                                   List<String> prizes,
                                    String detail,
                                    List<String> imageUrls,
                                    List<String> videoUrls) {
@@ -19,6 +20,7 @@ public record CreateTeacherCommand(long memberId,
                 .detail(detail())
                 .educations(educations())
                 .experiences(experiences())
+                .prizes(prizes())
                 .instagram(instagram())
                 .youtube(youtube())
                 .imageUrls(imageUrls())

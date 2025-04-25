@@ -125,4 +125,12 @@ public class MemberJpaEntity extends BaseTimeEntity {
         this.nickname = member.getNickname();
         this.profileImageUrl = member.getProfileImageUrl();
     }
+
+
+    public void update(Member member) {
+        this.name = member.getName();
+        this.phoneNumber = member.getPhoneNumber();
+        this.nickname = member.getNickname();
+        this.profileImageUrl = member.getProfileImageUrl();
+    }
 }
