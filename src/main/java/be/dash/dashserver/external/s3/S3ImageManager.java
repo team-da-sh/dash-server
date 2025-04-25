@@ -76,7 +76,6 @@ public class S3ImageManager implements ImageManager {
                     .continuationToken(response.nextContinuationToken())
                     .build();
         } while (response.isTruncated());
-
         return keys;
     }
 
@@ -101,13 +100,11 @@ public class S3ImageManager implements ImageManager {
         if(!errors.isEmpty()) {
             throw new ImageStorageException("이미지 삭제에 실패했습니다.", errors.stream().map(S3Error::key).toList());
         }
-
     }
 
     private String generateImageFileName() {
         return UUID.randomUUID() + ".jpg";
     }
-
 
     private void validateExtension(MultipartFile image) {
         String contentType = image.getContentType();

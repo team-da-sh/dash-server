@@ -29,7 +29,5 @@ public class S3CleanUpScheduler {
             }
         }
         log.info("S3 정리 작업 끝 {}", LocalDateTime.now());
-
     }
-
 }
