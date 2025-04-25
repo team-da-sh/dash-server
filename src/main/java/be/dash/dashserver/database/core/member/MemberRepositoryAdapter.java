@@ -85,4 +85,9 @@ public class MemberRepositoryAdapter implements MemberRepository {
     public Optional<String> findNicknameById(long memberId) {
          return memberJpaRepository.findNicknameById(memberId);
     }
+
+    @Override
+    public List<String> findAllProfileImages() {
+        return memberJpaRepository.findAllProfileImages();
+    }
 }
