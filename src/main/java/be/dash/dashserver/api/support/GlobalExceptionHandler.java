@@ -121,7 +121,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ImageStorageException.class)
     public ResponseEntity<ErrorMessage> handleImageStorageException(ImageStorageException e) {
-        log.warn("handleImageStorageException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
+        log.error("handleImageStorageException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrorMessage(e.getMessage()));
     }
 
