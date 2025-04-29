@@ -1,10 +1,15 @@
 package be.dash.dashserver.external.config.s3;
 
+import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.auth.credentials.SystemPropertyCredentialsProvider;
+import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
+import software.amazon.awssdk.core.retry.RetryPolicy;
+import software.amazon.awssdk.core.retry.backoff.BackoffStrategy;
+import software.amazon.awssdk.core.retry.conditions.RetryCondition;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
@@ -31,9 +36,21 @@ public class S3Config {
 
     @Bean
     public S3Client getS3Client() {
+        ClientOverrideConfiguration overrideConfig = ClientOverrideConfiguration.builder()
+                .apiCallAttemptTimeout(Duration.ofSeconds(3))
+                .apiCallTimeout(Duration.ofSeconds(14))
+                .retryPolicy(
+                        RetryPolicy.builder()
+                                .numRetries(3)
+                                .retryCondition(RetryCondition.defaultRetryCondition())
+                                .backoffStrategy(BackoffStrategy.defaultStrategy())
+                                .build()
+                )
+                .build();
         return S3Client.builder()
                 .region(getRegion())
                 .credentialsProvider(systemPropertyCredentialsProvider())
+                .overrideConfiguration(overrideConfig)
                 .build();
     }
 }
