@@ -20,7 +20,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 
-@EnableConfigurationProperties(S3Properties.class)
+//@EnableConfigurationProperties(S3Properties.class)
 class ImageServiceTest extends ServiceSliceTest {
 
     @Autowired
