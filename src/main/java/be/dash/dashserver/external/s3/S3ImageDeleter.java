@@ -4,12 +4,12 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import be.dash.dashserver.core.exception.ImageStorageException;
 import be.dash.dashserver.core.image.ImageDeleter;
-import be.dash.dashserver.external.config.s3.S3Config;
 import be.dash.dashserver.external.config.s3.S3Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.exception.SdkClientException;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Delete;
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectsResponse;
@@ -21,7 +21,7 @@ import software.amazon.awssdk.services.s3.model.S3Error;
 @Slf4j
 public class S3ImageDeleter implements ImageDeleter {
     private final S3Properties s3Properties;
-    private final S3Config s3Config;
+    private final S3Client s3Client;
 
     @Override
     public void deleteAllByKeys(List<String> keysToDelete) {
@@ -35,7 +35,7 @@ public class S3ImageDeleter implements ImageDeleter {
 
     private DeleteObjectsResponse performDeleteAllByKeys(DeleteObjectsRequest deleteObjectRequest) {
         try {
-            return s3Config.getS3Client().deleteObjects(deleteObjectRequest);
+            return s3Client.deleteObjects(deleteObjectRequest);
         } catch (AwsServiceException e) {
             log.error("S3 삭제 실패 - 상태코드 : {}, 에러메시지 : {}", e.statusCode(), e.awsErrorDetails().errorMessage());
             throw new ImageStorageException("이미지 삭제에 실패했습니다.(서비스 오류)");

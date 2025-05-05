@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import be.dash.dashserver.core.exception.ImageStorageException;
 import be.dash.dashserver.core.image.ImageUploader;
-import be.dash.dashserver.external.config.s3.S3Config;
 import be.dash.dashserver.external.config.s3.S3Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Component
@@ -23,7 +23,7 @@ public class S3ImageUploader implements ImageUploader {
     private static final String CONTENT_DISPOSITION = "inline";
 
     private final S3Properties s3Properties;
-    private final S3Config s3Config;
+    private final S3Client s3Client;
 
     @Override
     public String upload(MultipartFile image) {
@@ -59,7 +59,7 @@ public class S3ImageUploader implements ImageUploader {
 
     private void performUpload(PutObjectRequest request, RequestBody requestBody) {
         try {
-            s3Config.getS3Client().putObject(request, requestBody);
+            s3Client.putObject(request, requestBody);
         } catch (AwsServiceException e) {
             log.error("S3 업로드 실패 - 상태코드 : {}, 에러메시지 : {}", e.statusCode(), e.awsErrorDetails().errorMessage());
             throw new ImageStorageException("이미지 저장에 실패했습니다.(서비스 오류)");

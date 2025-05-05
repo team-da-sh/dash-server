@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import be.dash.dashserver.core.exception.ImageStorageException;
 import be.dash.dashserver.core.image.ImageReader;
-import be.dash.dashserver.external.config.s3.S3Config;
 import be.dash.dashserver.external.config.s3.S3Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 @Slf4j
 public class S3ImageReader implements ImageReader {
     private final S3Properties s3Properties;
-    private final S3Config s3Config;
+    private final S3Client s3Client;
 
     @Override
     public List<String> getAllKeys() {
@@ -36,8 +35,7 @@ public class S3ImageReader implements ImageReader {
         }
     }
 
-    private List<String> performGetAllKeys() {
-        S3Client s3Client = s3Config.getS3Client();
+    private List<String> performGetAllKeys() {;
         ListObjectsV2Request request = buildRequest();
         List<String> keys = new ArrayList<>();
         ListObjectsV2Response response;
