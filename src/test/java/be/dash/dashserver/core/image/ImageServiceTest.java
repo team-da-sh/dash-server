@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.mock.web.MockMultipartFile;
 import be.dash.dashserver.ServiceSliceTest;
 import be.dash.dashserver.database.core.member.MemberJpaEntity;
@@ -20,7 +19,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 
-//@EnableConfigurationProperties(S3Properties.class)
 class ImageServiceTest extends ServiceSliceTest {
 
     @Autowired
