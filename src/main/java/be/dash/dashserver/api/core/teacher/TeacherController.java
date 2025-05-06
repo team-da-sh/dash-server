@@ -6,18 +6,21 @@ import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import be.dash.dashserver.api.core.member.dto.MemberUpdateRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherDetailResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherProfileDetailResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherProfileResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherResponses;
+import be.dash.dashserver.api.core.teacher.dto.TeacherUpdateRequest;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.Permission;
 import be.dash.dashserver.core.domain.common.Keyword;
@@ -66,5 +69,13 @@ public class TeacherController {
     @GetMapping("/me/detail")
     public ResponseEntity<TeacherProfileDetailResponse> findMyTeacherDetail(@MemberId Long memberId) {
         return ResponseEntity.ok(TeacherProfileDetailResponse.from(teacherService.findMyTeacherProfileDetail(memberId)));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @PatchMapping("/me")
+    public ResponseEntity<Void> updateTeacherProfile(@MemberId Long memberId,
+                                                        @Valid @RequestBody TeacherUpdateRequest request) {
+        teacherService.updateTeacherProfile(request.toCommand(memberId));
+        return ResponseEntity.noContent().build();
     }
 }

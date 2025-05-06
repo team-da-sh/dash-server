@@ -35,4 +35,8 @@ public class TeacherVideoJpaEntity extends BaseTimeEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String videoUrl;
 
+    public TeacherVideoJpaEntity(long teacherId, String videoUrl) {
+        this.teacherId = teacherId;
+        this.videoUrl = videoUrl;
+    }
 }

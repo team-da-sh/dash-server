@@ -71,4 +71,13 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
         List<TeacherImageJpaEntity> images = teacherImageJpaRepository.findAllByTeacherId(teacherId);
         return teacherJpaEntity.toDomainWithImageAndVideo(images, videos);
     }
+
+    @Override
+    public Optional<Teacher> update(Teacher teacher, long memberId) {
+        return teacherJpaRepository.findById(memberId)
+                        .map(entity -> {
+                            entity.updateProfile(teacher);
+                            return entity.toDomain();
+                        });
+    }
 }

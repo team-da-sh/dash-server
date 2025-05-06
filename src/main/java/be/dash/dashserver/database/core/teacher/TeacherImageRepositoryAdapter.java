@@ -24,4 +24,12 @@ public class TeacherImageRepositoryAdapter implements TeacherImageRepository {
         return teacherImageJpaRepository.findTop1ByTeacherId(teacherId)
                 .map(TeacherImageJpaEntity::getImageUrl);
     }
+
+    @Override
+    public void replace(Long id, List<String> imageUrls) {
+        teacherImageJpaRepository.deleteByTeacherIdAndImageUrlNotIn(id, imageUrls);
+        teacherImageJpaRepository.saveAll(
+                imageUrls.stream().map(imageUrl -> new TeacherImageJpaEntity(id, imageUrl)).toList()
+        );
+    }
 }

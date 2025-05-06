@@ -17,6 +17,7 @@ import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
 import be.dash.dashserver.core.domain.teacher.Teachers;
 import be.dash.dashserver.core.domain.teacher.command.CreateTeacherCommand;
+import be.dash.dashserver.core.domain.teacher.command.TeacherUpdateCommand;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileDetailResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.TeacherDetailResult;
@@ -88,5 +89,13 @@ public class TeacherService {
         List<String> videos = teacherVideoRepository.findAllByTeacherId(teacher.getId());
 
         return MyTeacherProfileDetailResult.of(teacher, image, videos);
+    }
+
+    @Transactional
+    public void updateTeacherProfile(TeacherUpdateCommand command) {
+        Teacher teacher = teacherRepository.update(command.toTeacher(), command.memberId())
+                        .orElseThrow(() -> new NotFoundException("선생님 프로필이 존재하지 않습니다."));
+        teacherImageRepository.replace(teacher.getId(), command.imageUrls());
+        teacherVideoRepository.replace(teacher.getId(), command.videoUrls());
     }
 }

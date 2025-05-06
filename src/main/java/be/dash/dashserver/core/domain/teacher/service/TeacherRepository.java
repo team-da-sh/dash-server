@@ -14,4 +14,6 @@ public interface TeacherRepository {
     Optional<Teacher> findByMemberId(Long memberId);
 
     Teacher findByTeacherId(Long teacherId);
+
+    Optional<Teacher> update(Teacher teacher, long memberId);
 }

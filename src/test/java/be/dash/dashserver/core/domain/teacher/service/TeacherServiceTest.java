@@ -14,8 +14,10 @@ import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
+import be.dash.dashserver.core.domain.teacher.command.TeacherUpdateCommand;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileDetailResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult;
+import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.fixture.LessonFixture;
 import be.dash.dashserver.core.fixture.MemberFixture;
 import be.dash.dashserver.core.fixture.TeacherFixture;
@@ -75,15 +77,7 @@ class TeacherServiceTest extends ServiceSliceTest {
     @Test
     void findMyTeacherProfile() {
         // given
-        MemberJpaEntity member = MemberJpaEntityFixture.createWithNickname("nickname", 1);
-        memberJpaRepository.save(member);
-        TeacherJpaEntity teacher = TeacherJpaEntityFixture.create(member);
-        teacherJpaRepository.save(teacher);
-        TeacherImageJpaEntity teacherImage = TeacherImageJpaEntity.builder()
-                .teacherId(teacher.getId())
-                .imageUrl("www.example.com/teacher12.png")
-                .build();
-        teacherImageJpaRepository.save(teacherImage);
+        registerTeacher();
 
         // when
         MyTeacherProfileResult myTeacherProfileResult = teacherService.findMyTeacherProfile(1);
@@ -101,20 +95,7 @@ class TeacherServiceTest extends ServiceSliceTest {
     @Test
     void findMyTeacherDetailProfile() {
         // given
-        MemberJpaEntity member = MemberJpaEntityFixture.createWithNickname("nickname", 1);
-        memberJpaRepository.save(member);
-        TeacherJpaEntity teacher = TeacherJpaEntityFixture.create(member);
-        teacherJpaRepository.save(teacher);
-        TeacherImageJpaEntity teacherImage = TeacherImageJpaEntity.builder()
-                .teacherId(teacher.getId())
-                .imageUrl("www.example.com/teacher12.png")
-                .build();
-        teacherImageJpaRepository.save(teacherImage);
-        TeacherVideoJpaEntity teacherVideo = TeacherVideoJpaEntity.builder()
-                .teacherId(teacher.getId())
-                .videoUrl("www.example.com/teacher12_video.mp4")
-                .build();
-        teacherVideoJpaRepository.save(teacherVideo);
+        registerTeacher();
 
         // when
         MyTeacherProfileDetailResult myTeacherProfileDetail = teacherService.findMyTeacherProfileDetail(1);
@@ -130,6 +111,80 @@ class TeacherServiceTest extends ServiceSliceTest {
                 () -> Assertions.assertThat(myTeacherProfileDetail.experiences()).containsExactly("다양한 공연 및 강의 경험"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.prizes()).containsExactly("앱잼1등")
         );
+    }
+
+    @DisplayName("선생님 프로필을 수정한다")
+    @Test
+    void updateTeacherProfile() {
+        // given
+        registerTeacher();
+
+        // when
+        teacherService.updateTeacherProfile(new TeacherUpdateCommand(
+                1L,
+                "updated_detail",
+                List.of("www.example.com/updated.png"),
+                "@updated_instagram",
+                "updated_youtube.com",
+                List.of("updated_education"),
+                List.of("updated_experience"),
+                List.of("updated_prize"),
+                List.of("www.example.com/updated_video.mp4",
+                        "www.example.com/updated_video2.mp4")
+        ));
+
+        TeacherJpaEntity updatedTeacher = teacherJpaRepository.findById(1L).get();
+        // then
+        assertAll(
+                ()-> Assertions.assertThat(teacherImageJpaRepository.findAllByTeacherId(1L)).hasSize(1),
+                ()-> Assertions.assertThat(teacherVideoJpaRepository.findAllByTeacherId(1L)).hasSize(2),
+                ()-> Assertions.assertThat(updatedTeacher.getDetail()).isEqualTo("updated_detail"),
+                ()-> Assertions.assertThat(updatedTeacher.getInstagram()).isEqualTo("@updated_instagram"),
+                ()-> Assertions.assertThat(updatedTeacher.getYoutube()).isEqualTo("updated_youtube.com"),
+                ()-> Assertions.assertThat(updatedTeacher.getEducation()).isEqualTo("updated_education"),
+                ()-> Assertions.assertThat(updatedTeacher.getExperience()).isEqualTo("updated_experience"),
+                ()-> Assertions.assertThat(updatedTeacher.getPrize()).isEqualTo("updated_prize")
+        );
+    }
+
+    @DisplayName("선생님 프로필을 수정시 잘못된 memberId를 입력하면 예외가 발생한다")
+    @Test
+    void failUpdateTeacherProfile() {
+        // given
+        registerTeacher();
+
+        // when then
+        Assertions.assertThatThrownBy(() -> teacherService.updateTeacherProfile(new TeacherUpdateCommand(
+                2L,
+                "updated_detail",
+                List.of("www.example.com/updated.png"),
+                "@updated_instagram",
+                "updated_youtube.com",
+                List.of("updated_education"),
+                List.of("updated_experience"),
+                List.of("updated_prize"),
+                List.of("www.example.com/updated_video.mp4",
+                        "www.example.com/updated_video2.mp4")
+        ))).isInstanceOf(NotFoundException.class)
+                .hasMessage("선생님 프로필이 존재하지 않습니다.");
+    }
+
+    private void registerTeacher() {
+        // given
+        MemberJpaEntity member = MemberJpaEntityFixture.createWithNickname("nickname", 1);
+        memberJpaRepository.save(member);
+        TeacherJpaEntity teacher = TeacherJpaEntityFixture.create(member);
+        teacherJpaRepository.save(teacher);
+        TeacherImageJpaEntity teacherImage = TeacherImageJpaEntity.builder()
+                .teacherId(teacher.getId())
+                .imageUrl("www.example.com/teacher12.png")
+                .build();
+        teacherImageJpaRepository.save(teacherImage);
+        TeacherVideoJpaEntity teacherVideo = TeacherVideoJpaEntity.builder()
+                .teacherId(teacher.getId())
+                .videoUrl("www.example.com/teacher12_video.mp4")
+                .build();
+        teacherVideoJpaRepository.save(teacherVideo);
     }
 
     private void createLessons() {
