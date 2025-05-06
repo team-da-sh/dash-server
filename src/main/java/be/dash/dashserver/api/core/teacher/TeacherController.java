@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherDetailResponse;
+import be.dash.dashserver.api.core.teacher.dto.TeacherProfileDetailResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherProfileResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherResponses;
 import be.dash.dashserver.api.support.MemberId;
@@ -59,5 +60,11 @@ public class TeacherController {
     @GetMapping("/me")
     public ResponseEntity<TeacherProfileResponse> findMyTeacherProfile(@MemberId Long memberId) {
         return ResponseEntity.ok(TeacherProfileResponse.from(teacherService.findMyTeacherProfile(memberId)));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @GetMapping("/me/detail")
+    public ResponseEntity<TeacherProfileDetailResponse> findMyTeacherDetail(@MemberId Long memberId) {
+        return ResponseEntity.ok(TeacherProfileDetailResponse.from(teacherService.findMyTeacherProfileDetail(memberId)));
     }
 }

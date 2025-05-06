@@ -50,7 +50,7 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
 
         List<TeacherVideoJpaEntity> teacherVideoJpaEntities = teacher.getVideoUrls().stream()
                 .map(videoUrl -> TeacherVideoJpaEntity.builder()
-                        .teacher(teacherJpaEntity)
+                        .teacherId(teacherJpaEntity.getId())
                         .videoUrl(videoUrl)
                         .build()).toList();
         teacherVideoJpaRepository.saveAll(teacherVideoJpaEntities);

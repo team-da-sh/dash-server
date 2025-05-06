@@ -17,6 +17,7 @@ import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
 import be.dash.dashserver.core.domain.teacher.Teachers;
 import be.dash.dashserver.core.domain.teacher.command.CreateTeacherCommand;
+import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileDetailResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.TeacherDetailResult;
 import be.dash.dashserver.core.exception.NotFoundException;
@@ -33,6 +34,7 @@ public class TeacherService {
     private final MemberRepository memberRepository;
     private final TeacherImageRepository teacherImageRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
+    private final TeacherVideoRepository teacherVideoRepository;
 
     public List<TeacherLessonGenres> search(Keyword keyword) {
         Teachers teachers = teacherRepository.findTeachersSortByLessonCountsDesc(keyword.getValue());
@@ -76,5 +78,15 @@ public class TeacherService {
         String nickname = memberRepository.findNicknameById(memberId)
                 .orElseThrow(() -> new NotFoundException("멤버의 닉네임이 존재하지 않습니다."));
         return MyTeacherProfileResult.of(image, nickname, teacher);
+    }
+
+    public MyTeacherProfileDetailResult findMyTeacherProfileDetail(long memberId) {
+        Teacher teacher = teacherRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException("선생님 프로필이 존재하지 않습니다."));
+        String image = teacherImageRepository.findTop1ImageUrlByTeacherId(teacher.getId())
+                .orElseThrow(() -> new NotFoundException("선생님 프로필 이미지가 존재하지 않습니다."));
+        List<String> videos = teacherVideoRepository.findAllByTeacherId(teacher.getId());
+
+        return MyTeacherProfileDetailResult.of(teacher, image, videos);
     }
 }

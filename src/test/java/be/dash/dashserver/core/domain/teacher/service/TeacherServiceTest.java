@@ -14,10 +14,21 @@ import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
+import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileDetailResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult;
 import be.dash.dashserver.core.fixture.LessonFixture;
 import be.dash.dashserver.core.fixture.MemberFixture;
 import be.dash.dashserver.core.fixture.TeacherFixture;
+import be.dash.dashserver.database.core.member.MemberJpaEntity;
+import be.dash.dashserver.database.core.member.MemberJpaRepository;
+import be.dash.dashserver.database.core.teacher.TeacherImageJpaEntity;
+import be.dash.dashserver.database.core.teacher.TeacherImageJpaRepository;
+import be.dash.dashserver.database.core.teacher.TeacherJpaEntity;
+import be.dash.dashserver.database.core.teacher.TeacherJpaRepository;
+import be.dash.dashserver.database.core.teacher.TeacherVideoJpaEntity;
+import be.dash.dashserver.database.core.teacher.TeacherVideoJpaRepository;
+import be.dash.dashserver.database.fixture.MemberJpaEntityFixture;
+import be.dash.dashserver.database.fixture.TeacherJpaEntityFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -34,6 +45,14 @@ class TeacherServiceTest extends ServiceSliceTest {
     private MemberRepository memberRepository;
     @Autowired
     private TeacherImageRepository teacherImageRepository;
+    @Autowired
+    private TeacherJpaRepository teacherJpaRepository;
+    @Autowired
+    private MemberJpaRepository memberJpaRepository;
+    @Autowired
+    private TeacherImageJpaRepository teacherImageJpaRepository;
+    @Autowired
+    private TeacherVideoJpaRepository teacherVideoJpaRepository;
 
     @DisplayName("기본 정렬 조건에 맞게 댄서들을 정렬 후 조회한다.")
     @Test
@@ -55,24 +74,61 @@ class TeacherServiceTest extends ServiceSliceTest {
     @DisplayName("유저의 선생님 프로필을 조회한다")
     @Test
     void findMyTeacherProfile() {
-
         // given
-        Member member = MemberFixture.createTeacherWithNickname("nickname", 1);
-        memberRepository.save(member);
-        Teacher teacherWithoutId = TeacherFixture.createWithoutId(1);
-        teacherRepository.save(teacherWithoutId);
-        Teacher teacher = TeacherFixture.create(1, 1);
-        teacherImageRepository.saveAll(teacher);
+        MemberJpaEntity member = MemberJpaEntityFixture.createWithNickname("nickname", 1);
+        memberJpaRepository.save(member);
+        TeacherJpaEntity teacher = TeacherJpaEntityFixture.create(member);
+        teacherJpaRepository.save(teacher);
+        TeacherImageJpaEntity teacherImage = TeacherImageJpaEntity.builder()
+                .teacherId(teacher.getId())
+                .imageUrl("www.example.com/teacher12.png")
+                .build();
+        teacherImageJpaRepository.save(teacherImage);
 
         // when
         MyTeacherProfileResult myTeacherProfileResult = teacherService.findMyTeacherProfile(1);
 
         // then
         assertAll(
-                () -> Assertions.assertThat(myTeacherProfileResult.profileImage()).isEqualTo("www.example.com/teacher1.png"),
+                () -> Assertions.assertThat(myTeacherProfileResult.profileImage()).isEqualTo("www.example.com/teacher12.png"),
                 () -> Assertions.assertThat(myTeacherProfileResult.nickname()).isEqualTo("nickname"),
-                () -> Assertions.assertThat(myTeacherProfileResult.instagram()).isEqualTo("@hong_dancer1"),
-                () -> Assertions.assertThat(myTeacherProfileResult.youtube()).isEqualTo("youtube.com/hong_dancer1")
+                () -> Assertions.assertThat(myTeacherProfileResult.instagram()).isEqualTo("@hong_dancer"),
+                () -> Assertions.assertThat(myTeacherProfileResult.youtube()).isEqualTo("youtube.com/hong_dancer")
+        );
+    }
+
+    @DisplayName("유저의 선생님 상세 프로필을 조회한다")
+    @Test
+    void findMyTeacherDetailProfile() {
+        // given
+        MemberJpaEntity member = MemberJpaEntityFixture.createWithNickname("nickname", 1);
+        memberJpaRepository.save(member);
+        TeacherJpaEntity teacher = TeacherJpaEntityFixture.create(member);
+        teacherJpaRepository.save(teacher);
+        TeacherImageJpaEntity teacherImage = TeacherImageJpaEntity.builder()
+                .teacherId(teacher.getId())
+                .imageUrl("www.example.com/teacher12.png")
+                .build();
+        teacherImageJpaRepository.save(teacherImage);
+        TeacherVideoJpaEntity teacherVideo = TeacherVideoJpaEntity.builder()
+                .teacherId(teacher.getId())
+                .videoUrl("www.example.com/teacher12_video.mp4")
+                .build();
+        teacherVideoJpaRepository.save(teacherVideo);
+
+        // when
+        MyTeacherProfileDetailResult myTeacherProfileDetail = teacherService.findMyTeacherProfileDetail(1);
+
+        // then
+        assertAll(
+                () -> Assertions.assertThat(myTeacherProfileDetail.profileImage()).isEqualTo("www.example.com/teacher12.png"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.instagram()).isEqualTo("@hong_dancer"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.youtube()).isEqualTo("youtube.com/hong_dancer"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.detail()).isEqualTo("경력 10년의 힙합 댄서"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.videos()).containsExactly("www.example.com/teacher12_video.mp4"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.educations()).containsExactly("한국예술대학교 댄스학과"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.experiences()).containsExactly("다양한 공연 및 강의 경험"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.prizes()).containsExactly("앱잼1등")
         );
     }
 
