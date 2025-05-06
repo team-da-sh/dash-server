@@ -144,4 +144,13 @@ public class TeacherJpaEntity extends BaseTimeEntity {
                 .videoUrls(teacherVideoJpaEntities.stream().map(TeacherVideoJpaEntity::getVideoUrl).toList())
                 .build();
     }
+
+    public void updateProfile(Teacher teacher) {
+        this.detail = teacher.getDetail();
+        this.education = String.join(",", teacher.getEducations());
+        this.experience = String.join(",", teacher.getExperiences());
+        this.prize = String.join(",", teacher.getPrizes());
+        this.instagram = teacher.getInstagram();
+        this.youtube = teacher.getYoutube();
+    }
 }

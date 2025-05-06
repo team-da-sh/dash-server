@@ -28,12 +28,15 @@ public class TeacherVideoJpaEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "teacher_id")
-    private TeacherJpaEntity teacher;
+    @Column(name = "teacher_id", nullable = false)
+    private Long teacherId;
 
     @Getter
     @Column(nullable = false, columnDefinition = "TEXT")
     private String videoUrl;
 
+    public TeacherVideoJpaEntity(long teacherId, String videoUrl) {
+        this.teacherId = teacherId;
+        this.videoUrl = videoUrl;
+    }
 }

@@ -50,7 +50,7 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
 
         List<TeacherVideoJpaEntity> teacherVideoJpaEntities = teacher.getVideoUrls().stream()
                 .map(videoUrl -> TeacherVideoJpaEntity.builder()
-                        .teacher(teacherJpaEntity)
+                        .teacherId(teacherJpaEntity.getId())
                         .videoUrl(videoUrl)
                         .build()).toList();
         teacherVideoJpaRepository.saveAll(teacherVideoJpaEntities);
@@ -60,7 +60,6 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
     public Optional<Teacher> findByMemberId(Long memberId) {
         return teacherJpaRepository.findByMemberId(memberId)
                 .map(TeacherJpaEntity::toDomain);
-
     }
 
     @Override
@@ -70,5 +69,14 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
         List<TeacherVideoJpaEntity> videos = teacherVideoJpaRepository.findAllByTeacherId(teacherId);
         List<TeacherImageJpaEntity> images = teacherImageJpaRepository.findAllByTeacherId(teacherId);
         return teacherJpaEntity.toDomainWithImageAndVideo(images, videos);
+    }
+
+    @Override
+    public Optional<Teacher> update(Teacher teacher, long memberId) {
+        return teacherJpaRepository.findById(memberId)
+                        .map(entity -> {
+                            entity.updateProfile(teacher);
+                            return entity.toDomain();
+                        });
     }
 }
