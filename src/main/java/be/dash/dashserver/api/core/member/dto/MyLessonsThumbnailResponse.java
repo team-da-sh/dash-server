@@ -7,9 +7,6 @@ import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 
 public record MyLessonsThumbnailResponse(List<MyLessonThumbnailResponse> lessons) {
-    private static final int D_DAY_ADJUSTER = -1;
-
-
     public static MyLessonsThumbnailResponse from(List<MyLessonThumbnailResponse> lessons) {
         return new MyLessonsThumbnailResponse(lessons);
     }
@@ -27,7 +24,7 @@ public record MyLessonsThumbnailResponse(List<MyLessonThumbnailResponse> lessons
                     lesson.getRepresentativeImageUrl(),
                     lesson.getGenre(),
                     lesson.getLevel(),
-                    D_DAY_ADJUSTER * (int) LocalDateTime.now().until(lesson.getStartTime(), java.time.temporal.ChronoUnit.DAYS));
+                    (int) LocalDateTime.now().until(lesson.getStartTime(), java.time.temporal.ChronoUnit.DAYS));
         }
     }
 }

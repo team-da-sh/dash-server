@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface TeacherVideoRepository {
     List<String> findAllByTeacherId(long teacherId);
-    void replace(long id, List<String> strings);
+    void replace(long teacherId, List<String> strings);
 }

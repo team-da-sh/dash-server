@@ -49,7 +49,6 @@ public class TeacherController {
     public ResponseEntity<CreateTeacherResponse> create(@MemberId Long memberId,
                                                         @Valid @RequestBody CreateTeacherRequest request) {
         return ResponseEntity.ok(CreateTeacherResponse.from(teacherService.create(request.toCommand(memberId))));
-
     }
 
     @GetMapping("/{teacherId}")

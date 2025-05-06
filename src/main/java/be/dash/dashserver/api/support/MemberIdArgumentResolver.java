@@ -38,7 +38,7 @@ public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (Objects.isNull(token)) {
-            return null;
+            throw UnAuthorizedException.empty();
         }
         String memberId;
         try {
