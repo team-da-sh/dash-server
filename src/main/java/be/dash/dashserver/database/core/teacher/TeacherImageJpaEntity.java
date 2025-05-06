@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import be.dash.dashserver.database.core.common.BaseCreatedAtEntity;
 import lombok.AccessLevel;
@@ -24,7 +23,7 @@ public class TeacherImageJpaEntity extends BaseCreatedAtEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "teacher_id")
+    @Column(name = "teacher_id", nullable = false)
     private Long teacherId;
 
     @Column(nullable = false, columnDefinition = "TEXT")
