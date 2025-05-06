@@ -60,7 +60,6 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
     public Optional<Teacher> findByMemberId(Long memberId) {
         return teacherJpaRepository.findByMemberId(memberId)
                 .map(TeacherJpaEntity::toDomain);
-
     }
 
     @Override

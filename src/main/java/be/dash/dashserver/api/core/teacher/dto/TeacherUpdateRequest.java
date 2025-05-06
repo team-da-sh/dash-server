@@ -18,5 +18,4 @@ public record TeacherUpdateRequest(
     public TeacherUpdateCommand toCommand(long memberId) {
         return new TeacherUpdateCommand(memberId, detail, imageUrls, instagram, youtube, educations, experiences, prizes, videoUrls);
     }
-
 }
