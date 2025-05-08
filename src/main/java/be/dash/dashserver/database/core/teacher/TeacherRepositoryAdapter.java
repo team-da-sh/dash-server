@@ -73,7 +73,7 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
 
     @Override
     public Optional<Teacher> update(Teacher teacher, long memberId) {
-        return teacherJpaRepository.findById(memberId)
+        return teacherJpaRepository.findByMemberId(memberId)
                         .map(entity -> {
                             entity.updateProfile(teacher);
                             return entity.toDomain();
