@@ -30,9 +30,9 @@ kakao:
 s3:
   secret-key: 1234
   access-key: 1234
-  s3-endpoint: www.s3.com
+  s3-endpoint: http://localhost/
   region: ap-northeast-2
-  s3-bucket-name: s3
+  s3-bucket-name: test
 
 naver:
   client-id: 1234

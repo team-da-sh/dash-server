@@ -18,6 +18,7 @@ public class MemberJpaEntityFixture {
                 .name("김영희")
                 .phoneNumber("010-8765-4321")
                 .nickname("younghee")
+                .profileImageUrl("http://localhost/profile.jpg")
                 .build();
     }
 

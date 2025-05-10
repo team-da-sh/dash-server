@@ -17,6 +17,7 @@ import be.dash.dashserver.core.auth.UnAuthorizedException;
 import be.dash.dashserver.core.exception.BadRequestException;
 import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.exception.ForbiddenException;
+import be.dash.dashserver.core.exception.ImageStorageException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.exception.PaymentClientException;
 import be.dash.dashserver.core.log.LogForm;
@@ -116,6 +117,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> handleDashApiException(DashApiException e) {
         log.warn("handleDashApiException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
         return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
+    }
+
+    @ExceptionHandler(ImageStorageException.class)
+    public ResponseEntity<ErrorMessage> handleImageStorageException(ImageStorageException e) {
+        log.error("handleImageStorageException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrorMessage(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

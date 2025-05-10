@@ -25,4 +25,6 @@ public interface MemberRepository {
     void update(Member member);
 
     Optional<String> findNicknameById(long memberId);
+
+    List<String> findAllProfileImages();
 }

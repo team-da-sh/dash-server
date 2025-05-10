@@ -1,5 +1,6 @@
 package be.dash.dashserver.database.core.member;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,4 +17,7 @@ public interface MemberJpaRepository extends JpaRepository<MemberJpaEntity, Long
 
     @Query("select m.nickname from MemberJpaEntity m where m.id = :memberId")
     Optional<String> findNicknameById(long memberId);
+
+    @Query("select m.profileImageUrl from MemberJpaEntity m")
+    List<String> findAllProfileImages();
 }
