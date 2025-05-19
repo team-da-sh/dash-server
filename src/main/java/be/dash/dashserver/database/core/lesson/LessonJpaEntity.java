@@ -20,7 +20,6 @@ import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.Location;
 import be.dash.dashserver.core.domain.lesson.Round;
 import be.dash.dashserver.core.domain.lesson.Rounds;
-import be.dash.dashserver.core.domain.lesson.Videos;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.database.core.common.BaseTimeEntity;
 import be.dash.dashserver.database.core.teacher.TeacherImageJpaEntity;
@@ -130,7 +129,7 @@ public class LessonJpaEntity extends BaseTimeEntity {
                 .build();
     }
 
-    public Lesson toDomain(Teacher teacher, Images images, Videos videos, Rounds rounds) {
+    public Lesson toDomain(Teacher teacher, Images images, Rounds rounds) {
         return Lesson.builder()
                 .id(id)
                 .teacher(teacher)
@@ -139,7 +138,6 @@ public class LessonJpaEntity extends BaseTimeEntity {
                 .level(level)
                 .location(new Location(location, streetAddress, oldStreetAddress, detailedAddress))
                 .favoriteCount(favoriteCount)
-                .videos(videos)
                 .images(images)
                 .rounds(rounds)
                 .reservationCount(reservationCount)

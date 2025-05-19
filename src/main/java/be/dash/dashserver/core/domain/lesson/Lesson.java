@@ -17,7 +17,6 @@ public class Lesson {
     private final Genre genre;
     private final Level level;
     private final Images images;
-    private final Videos videos;
     private final String name;
     private final Long favoriteCount;
     private final Long reservationCount;
@@ -29,7 +28,7 @@ public class Lesson {
 
 
     @Builder
-    public Lesson(long id, Teacher teacher, String name, Genre genre, Level level, Location location, Long favoriteCount, Long reservationCount, Long maxReservationCount, String detail, String recommendation, int price, LocalDateTime createdAt, Images images, Videos videos, Rounds rounds) {
+    public Lesson(long id, Teacher teacher, String name, Genre genre, Level level, Location location, Long favoriteCount, Long reservationCount, Long maxReservationCount, String detail, String recommendation, int price, LocalDateTime createdAt, Images images, Rounds rounds) {
         this.id = id;
         this.teacher = teacher;
         this.name = name;
@@ -44,7 +43,6 @@ public class Lesson {
         this.price = price;
         this.createdAt = createdAt;
         this.images = images;
-        this.videos = videos;
         this.rounds = rounds;
     }
 

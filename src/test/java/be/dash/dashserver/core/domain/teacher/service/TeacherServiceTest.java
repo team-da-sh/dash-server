@@ -1,5 +1,6 @@
 package be.dash.dashserver.core.domain.teacher.service;
 
+import java.util.Arrays;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -55,6 +56,15 @@ class TeacherServiceTest extends ServiceSliceTest {
     private TeacherImageJpaRepository teacherImageJpaRepository;
     @Autowired
     private TeacherVideoJpaRepository teacherVideoJpaRepository;
+
+    @Test
+    void t1() {
+        String[] split = "".split(",");
+        System.out.println(split.length);
+        System.out.println("s"+ split[0] + "s");
+        List<String> list = Arrays.stream("".split(",")).toList();
+        System.out.println(Arrays.toString(list.toArray()));
+    }
 
     @DisplayName("기본 정렬 조건에 맞게 댄서들을 정렬 후 조회한다.")
     @Test
