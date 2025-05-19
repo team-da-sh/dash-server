@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
@@ -20,7 +21,7 @@ public record CreateLessonRequest(
         @NotBlank(message = "상세설명은 공백일 수 없습니다.")
         @Size(max = 300, message = "상세설명은 300자 이하입니다.")
         String detail,
-        @Pattern(regexp = "^[0-9]+$", message = "예약인원은 숫자여야 합니다.")
+        @Positive(message = "최대 예약 인원은 양수여야 합니다.")
         long maxReservationCount,
         @NotNull(message = "장르는 필수입니다.")
         Genre genre,
@@ -29,8 +30,7 @@ public record CreateLessonRequest(
         @NotBlank(message = "추천은 공백일 수 없습니다.")
         @Size(max = 200, message = "추천은 200자 이하입니다.")
         String recommendation,
-        @Pattern(regexp = "^[0-9]+$", message = "가격은 숫자여야 합니다.")
-        @Positive(message = "가격은 양수여야 합니다.")
+        @PositiveOrZero(message = "가격은 0또는 양수여야 합니다.")
         int price,
         String location,
         String streetAddress,
