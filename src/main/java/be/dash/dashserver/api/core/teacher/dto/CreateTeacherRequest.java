@@ -1,20 +1,37 @@
 package be.dash.dashserver.api.core.teacher.dto;
 
 import java.util.List;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.util.StringUtils;
 import be.dash.dashserver.core.domain.teacher.command.CreateTeacherCommand;
 
 public record CreateTeacherRequest(
-        String instagram,
+        String instagram, //인스타 유튭 중 하나 필수
         String youtube,
-        List<@Size(max = 30) String> educations,
-        List<@Size(max = 30) String> experiences,
-        List<@Size(max = 30) String> prizes,
-        @Size(max = 300) @NotBlank String detail,
-        List<String> imageUrls,
-        @Size(min = 1) List<String> videoUrls
+        @NotNull(message = "학력은 null일 수 없습니다.")
+        List<@NotBlank(message = "학력은 공백 불가.") @Size(max = 50, message = "학력 최대 50자") String> educations,
+        @NotNull(message = "경력은 null일 수 없습니다.")
+        List<@NotBlank(message = "경력은 공백 불가.") @Size(max = 50, message = "학력 최대 50자") String> experiences,
+        @NotNull(message = "수상은 null일 수 없습니다.")
+        List<@NotBlank(message = "수상은 공백 불가.") @Size(max = 50, message = "수상 최대 50자") String> prizes,
+        @NotBlank(message = "소개는 공백일 수 없습니다.")
+        @Size(min = 30, max = 500, message = "소개는 최소 30자, 최대 500자입니다.")
+        String detail,
+        @NotNull(message = "이미지 url 리스트는 null일 수 없습니다.")
+        @Size(min = 1, message = "이미지 url은 최소 1개입니다.")
+        List<String> imageUrls, // 최소 1갸
+        @NotNull(message = "영상은 null일 수 없습니다.")
+        @Size(max = 5, message = "영상은 최대 5개입니다.")
+        List<String> videoUrls //해당 없음 가능
 ) {
+    @AssertTrue(message = "인스타그램과 유튜브 중 하나는 필수입니다.")
+    boolean isInstagramOrYoutubeValid() {
+        return StringUtils.hasText(instagram) || StringUtils.hasText(youtube);
+    }
+
     public CreateTeacherCommand toCommand(long memberId) {
         return new CreateTeacherCommand(memberId, instagram, youtube, educations, experiences, prizes, detail, imageUrls, videoUrls);
     }

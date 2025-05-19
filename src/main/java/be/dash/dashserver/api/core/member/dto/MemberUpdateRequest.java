@@ -6,12 +6,18 @@ import jakarta.validation.constraints.Size;
 import be.dash.dashserver.core.domain.member.command.MemberUpdateCommand;
 
 public record MemberUpdateRequest(
-        @NotBlank @Size(min = 2, max = 8) String name,
-        @Size(min = 11, max = 11) @NotBlank String phoneNumber,
-        @NotBlank @Size(max = 10) String nickname,
+        @NotBlank(message = "이름은 공백일 수 없습니다.")
+        @Size(min = 2, max = 8, message = "이름은 최소 2자, 최대 8자입니다.")
+        String name,
+        @NotBlank(message = "전화번호는 공백일 수 없습니다.")
+        @Size(min = 11, max = 11, message = "전화번호는 11자입니다.")
+        String phoneNumber,
+        @NotBlank(message = "닉네임은 공백일 수 없습니다.")
+        @Size(max = 8, message = "댄서네임은 최대 8자입니다.")
+        String nickname,
         String profileImageUrl
 ) {
-    @AssertTrue(message = "profileImageUrl이 null이 아니면 공백일 수 없습니다.")
+    @AssertTrue(message = "이미지 url은 null이거나 공백이 아니어야 합니다.")
     public boolean isProfileImageUrlValid() {
         return profileImageUrl == null || !profileImageUrl.isBlank();
     }

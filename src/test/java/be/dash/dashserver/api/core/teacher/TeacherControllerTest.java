@@ -78,12 +78,12 @@ class TeacherControllerTest {
     @DisplayName("주어진 요청으로 댄서 생성 요청을 처리하고 올바른 응답을 반환한다.")
     @Test
     void create() throws Exception {
-        CreateTeacherRequest createTeacherRequest = new CreateTeacherRequest("detail",
+        CreateTeacherRequest createTeacherRequest = new CreateTeacherRequest("instagram",
                 "youtube",
                 List.of("education1", "education2"),
                 List.of("experience1", "experience2"),
                 List.of("prize1", "prize2"),
-                "instagram",
+                "detaildetaildetaildetaildetaildetaildetail",
                 List.of("youtube", "youtube"),
                 List.of("imageUrl1", "imageUrl2"));
         // when
@@ -98,15 +98,15 @@ class TeacherControllerTest {
 
     }
 
-    @DisplayName("요청 검증을 통과하지 못하면 에러를 반환한다.")
+    @DisplayName("요청 검증을 통과하지 못하면 에러를 반환한다.(유튜브, 인스타그램 검증 실패)")
     @Test
     void failCreate() throws Exception {
-        CreateTeacherRequest createTeacherRequest = new CreateTeacherRequest("detail",
-                "youtube",
+        CreateTeacherRequest createTeacherRequest = new CreateTeacherRequest(null,
+                null,
                 List.of("education1education1education1education1", "education2"),
                 List.of("experience1", "experience2"),
                 List.of("prize1", "prize2"),
-                "instagram",
+                "detaildetaildetaildetaildetaildetaildetail",
                 List.of("youtube", "youtube"),
                 List.of("imageUrl1", "imageUrl2"));
         // when
