@@ -1,9 +1,8 @@
 package be.dash.dashserver.database.core.teacher;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +14,7 @@ import jakarta.persistence.Table;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.database.core.common.BaseTimeEntity;
 import be.dash.dashserver.database.core.member.MemberJpaEntity;
+import be.dash.dashserver.database.core.teacher.support.StringListConverter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,17 +35,20 @@ public class TeacherJpaEntity extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private MemberJpaEntity member;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String detail;
 
+    @Convert(converter = StringListConverter.class)
     @Column(nullable = true)
-    private String education;
+    private List<String> education;
 
+    @Convert(converter = StringListConverter.class)
     @Column(nullable = true)
-    private String experience;
+    private List<String> experience;
 
+    @Convert(converter = StringListConverter.class)
     @Column(nullable = true)
-    private String prize;
+    private List<String> prize;
 
     @Column(nullable = true, unique = true, columnDefinition = "TEXT")
     private String instagram;
@@ -54,7 +57,9 @@ public class TeacherJpaEntity extends BaseTimeEntity {
     private String youtube;
 
     @Builder
-    public TeacherJpaEntity(MemberJpaEntity member, String detail, String education, String experience, String instagram, String youtube, String prize) {
+    public TeacherJpaEntity(Long id, MemberJpaEntity member, String detail,
+                            List<String> education, List<String> experience,
+                             String instagram, String youtube, List<String> prize) {
         this.member = member;
         this.detail = detail;
         this.education = education;
@@ -68,9 +73,9 @@ public class TeacherJpaEntity extends BaseTimeEntity {
         this.id = teacher.getId();
         this.member = new MemberJpaEntity(teacher.getMember());
         this.detail = teacher.getDetail();
-        this.education = String.join(",", teacher.getEducations());
-        this.experience = String.join(",", teacher.getExperiences());
-        this.prize = String.join(",", teacher.getPrizes());
+        this.education = teacher.getEducations();
+        this.experience = teacher.getExperiences();
+        this.prize = teacher.getPrizes();
         this.instagram = teacher.getInstagram();
         this.youtube = teacher.getYoutube();
     }
@@ -79,9 +84,9 @@ public class TeacherJpaEntity extends BaseTimeEntity {
         return TeacherJpaEntity.builder()
                 .member(new MemberJpaEntity(teacher.getMember()))
                 .detail(teacher.getDetail())
-                .education(teacher.getEducations().stream().collect(Collectors.joining(",")))
-                .experience(teacher.getExperiences().stream().collect(Collectors.joining(",")))
-                .prize(teacher.getPrizes().stream().collect(Collectors.joining(",")))
+                .education(teacher.getEducations())
+                .experience(teacher.getExperiences())
+                .prize(teacher.getPrizes())
                 .instagram(teacher.getInstagram())
                 .youtube(teacher.getYoutube())
                 .build();
@@ -92,9 +97,9 @@ public class TeacherJpaEntity extends BaseTimeEntity {
                 .id(id)
                 .member(member.toDomain())
                 .detail(detail)
-                .educations(Arrays.stream(education.split(",")).toList())
-                .experiences(Arrays.stream(experience.split(",")).toList())
-                .prizes(Arrays.stream(prize.split(",")).toList())
+                .educations(education)
+                .experiences(experience)
+                .prizes(prize)
                 .instagram(instagram)
                 .youtube(youtube)
                 .build();
@@ -105,9 +110,9 @@ public class TeacherJpaEntity extends BaseTimeEntity {
                 .id(id)
                 .member(member.toDomain())
                 .detail(detail)
-                .educations(Arrays.stream(education.split(",")).toList())
-                .experiences(Arrays.stream(experience.split(",")).toList())
-                .prizes(Arrays.stream(prize.split(",")).toList())
+                .educations(education)
+                .experiences(experience)
+                .prizes(prize)
                 .instagram(instagram)
                 .youtube(youtube)
                 .imageUrls(teacherImageJpaEntities.stream().map(TeacherImageJpaEntity::getImageUrl).toList())
@@ -119,9 +124,9 @@ public class TeacherJpaEntity extends BaseTimeEntity {
                 .id(id)
                 .member(member.toDomain())
                 .detail(detail)
-                .educations(Arrays.stream(education.split(",")).toList())
-                .experiences(Arrays.stream(experience.split(",")).toList())
-                .prizes(Arrays.stream(prize.split(",")).toList())
+                .educations(education)
+                .experiences(experience)
+                .prizes(prize)
                 .instagram(instagram)
                 .youtube(youtube)
                 .imageUrls(teacherImageJpaEntities.stream().map(TeacherImageJpaEntity::getImageUrl).toList())
@@ -135,9 +140,9 @@ public class TeacherJpaEntity extends BaseTimeEntity {
                 .member(member.toDomain())
                 .detail(detail)
                 .member(memberJpaEntity.toDomain())
-                .educations(Arrays.stream(education.split(",")).toList())
-                .experiences(Arrays.stream(experience.split(",")).toList())
-                .prizes(Arrays.stream(prize.split(",")).toList())
+                .educations(education)
+                .experiences(experience)
+                .prizes(prize)
                 .instagram(instagram)
                 .youtube(youtube)
                 .imageUrls(teacherImageJpaEntities.stream().map(TeacherImageJpaEntity::getImageUrl).toList())
@@ -147,9 +152,9 @@ public class TeacherJpaEntity extends BaseTimeEntity {
 
     public void updateProfile(Teacher teacher) {
         this.detail = teacher.getDetail();
-        this.education = String.join(",", teacher.getEducations());
-        this.experience = String.join(",", teacher.getExperiences());
-        this.prize = String.join(",", teacher.getPrizes());
+        this.education = teacher.getEducations();
+        this.experience = teacher.getExperiences();
+        this.prize = teacher.getPrizes();
         this.instagram = teacher.getInstagram();
         this.youtube = teacher.getYoutube();
     }

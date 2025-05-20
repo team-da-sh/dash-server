@@ -144,9 +144,9 @@ class TeacherServiceTest extends ServiceSliceTest {
                 ()-> Assertions.assertThat(updatedTeacher.getDetail()).isEqualTo("updated_detail"),
                 ()-> Assertions.assertThat(updatedTeacher.getInstagram()).isEqualTo("@updated_instagram"),
                 ()-> Assertions.assertThat(updatedTeacher.getYoutube()).isEqualTo("updated_youtube.com"),
-                ()-> Assertions.assertThat(updatedTeacher.getEducation()).isEqualTo("updated_education"),
-                ()-> Assertions.assertThat(updatedTeacher.getExperience()).isEqualTo("updated_experience"),
-                ()-> Assertions.assertThat(updatedTeacher.getPrize()).isEqualTo("updated_prize")
+                ()-> Assertions.assertThat(updatedTeacher.getEducation()).containsExactly("updated_education"),
+                ()-> Assertions.assertThat(updatedTeacher.getExperience()).containsExactly("updated_experience"),
+                ()-> Assertions.assertThat(updatedTeacher.getPrize()).containsExactly("updated_prize")
         );
     }
 
@@ -219,9 +219,9 @@ class TeacherServiceTest extends ServiceSliceTest {
                 () -> assertThat(teacher.getDetail()).isEqualTo("detaildetaildetaildetaildetail"),
                 () -> assertThat(teacher.getInstagram()).isEqualTo("instagram"),
                 () -> assertThat(teacher.getYoutube()).isEqualTo("youtube"),
-                () -> assertThat(teacher.getEducation()).isEqualTo("한국예술대학교 댄스학과"),
-                () -> assertThat(teacher.getExperience()).isEqualTo("다양한 공연 및 강의 경험"),
-                () -> assertThat(teacher.getPrize()).isEqualTo("앱잼1등"),
+                () -> assertThat(teacher.getEducation()).containsExactly("한국예술대학교 댄스학과"),
+                () -> assertThat(teacher.getExperience()).containsExactly("다양한 공연 및 강의 경험"),
+                () -> assertThat(teacher.getPrize()).containsExactly("앱잼1등"),
                 () -> assertThat(teacherImageJpaRepository.findAllByTeacherId(1L)).hasSize(1),
                 () -> assertThat(teacherVideoJpaRepository.findAllByTeacherId(1L)).hasSize(1)
         );
