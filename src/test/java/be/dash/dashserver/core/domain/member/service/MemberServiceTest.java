@@ -1,19 +1,16 @@
 package be.dash.dashserver.core.domain.member.service;
 
-import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import be.dash.dashserver.ServiceSliceTest;
-import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.member.SocialProvider;
 import be.dash.dashserver.core.domain.member.command.MemberUpdateCommand;
 import be.dash.dashserver.core.domain.member.command.OnboardCommand;
 import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.exception.NotFoundException;
-import be.dash.dashserver.core.fixture.MemberFixture;
 import be.dash.dashserver.database.core.member.MemberJpaEntity;
 import be.dash.dashserver.database.core.member.MemberJpaRepository;
 import be.dash.dashserver.database.fixture.MemberJpaEntityFixture;

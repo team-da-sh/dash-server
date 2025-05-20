@@ -1,6 +1,5 @@
 package be.dash.dashserver.core.domain.teacher.service;
 
-import java.util.Arrays;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -9,7 +9,6 @@ import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.Location;
 import be.dash.dashserver.core.domain.lesson.Round;
 import be.dash.dashserver.core.domain.lesson.Rounds;
-import be.dash.dashserver.core.domain.lesson.Videos;
 
 public class LessonFixture {
     private LessonFixture() {
