@@ -86,7 +86,8 @@ class TeacherServiceTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> Assertions.assertThat(myTeacherProfileResult.profileImage()).isEqualTo("www.example.com/teacher12.png"),
+                () -> Assertions.assertThat(myTeacherProfileResult.profileImage())
+                        .isEqualTo("www.example.com/teacher12.png"),
                 () -> Assertions.assertThat(myTeacherProfileResult.nickname()).isEqualTo("nickname"),
                 () -> Assertions.assertThat(myTeacherProfileResult.instagram()).isEqualTo("@hong_dancer"),
                 () -> Assertions.assertThat(myTeacherProfileResult.youtube()).isEqualTo("youtube.com/hong_dancer")
@@ -104,11 +105,13 @@ class TeacherServiceTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> Assertions.assertThat(myTeacherProfileDetail.profileImage()).isEqualTo("www.example.com/teacher12.png"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.profileImage())
+                        .isEqualTo("www.example.com/teacher12.png"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.instagram()).isEqualTo("@hong_dancer"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.youtube()).isEqualTo("youtube.com/hong_dancer"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.detail()).isEqualTo("경력 10년의 힙합 댄서"),
-                () -> Assertions.assertThat(myTeacherProfileDetail.videos()).containsExactly("www.example.com/teacher12_video.mp4"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.videos())
+                        .containsExactly("www.example.com/teacher12_video.mp4"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.educations()).containsExactly("한국예술대학교 댄스학과"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.experiences()).containsExactly("다양한 공연 및 강의 경험"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.prizes()).containsExactly("앱잼1등")
@@ -138,14 +141,14 @@ class TeacherServiceTest extends ServiceSliceTest {
         TeacherJpaEntity updatedTeacher = teacherJpaRepository.findById(1L).get();
         // then
         assertAll(
-                ()-> Assertions.assertThat(teacherImageJpaRepository.findAllByTeacherId(1L)).hasSize(1),
-                ()-> Assertions.assertThat(teacherVideoJpaRepository.findAllByTeacherId(1L)).hasSize(2),
-                ()-> Assertions.assertThat(updatedTeacher.getDetail()).isEqualTo("updated_detail"),
-                ()-> Assertions.assertThat(updatedTeacher.getInstagram()).isEqualTo("@updated_instagram"),
-                ()-> Assertions.assertThat(updatedTeacher.getYoutube()).isEqualTo("updated_youtube.com"),
-                ()-> Assertions.assertThat(updatedTeacher.getEducation()).containsExactly("updated_education"),
-                ()-> Assertions.assertThat(updatedTeacher.getExperience()).containsExactly("updated_experience"),
-                ()-> Assertions.assertThat(updatedTeacher.getPrize()).containsExactly("updated_prize")
+                () -> Assertions.assertThat(teacherImageJpaRepository.findAllByTeacherId(1L)).hasSize(1),
+                () -> Assertions.assertThat(teacherVideoJpaRepository.findAllByTeacherId(1L)).hasSize(2),
+                () -> Assertions.assertThat(updatedTeacher.getDetail()).isEqualTo("updated_detail"),
+                () -> Assertions.assertThat(updatedTeacher.getInstagram()).isEqualTo("@updated_instagram"),
+                () -> Assertions.assertThat(updatedTeacher.getYoutube()).isEqualTo("updated_youtube.com"),
+                () -> Assertions.assertThat(updatedTeacher.getEducation()).containsExactly("updated_education"),
+                () -> Assertions.assertThat(updatedTeacher.getExperience()).containsExactly("updated_experience"),
+                () -> Assertions.assertThat(updatedTeacher.getPrize()).containsExactly("updated_prize")
         );
     }
 
@@ -179,17 +182,17 @@ class TeacherServiceTest extends ServiceSliceTest {
 
         // when then
         Assertions.assertThatThrownBy(() -> teacherService.updateTeacherProfile(new TeacherUpdateCommand(
-                2L,
-                "updated_detail",
-                List.of("www.example.com/updated.png"),
-                "@updated_instagram",
-                "updated_youtube.com",
-                List.of("updated_education"),
-                List.of("updated_experience"),
-                List.of("updated_prize"),
-                List.of("www.example.com/updated_video.mp4",
-                        "www.example.com/updated_video2.mp4")
-        ))).isInstanceOf(NotFoundException.class)
+                        2L,
+                        "updated_detail",
+                        List.of("www.example.com/updated.png"),
+                        "@updated_instagram",
+                        "updated_youtube.com",
+                        List.of("updated_education"),
+                        List.of("updated_experience"),
+                        List.of("updated_prize"),
+                        List.of("www.example.com/updated_video.mp4",
+                                "www.example.com/updated_video2.mp4")
+                ))).isInstanceOf(NotFoundException.class)
                 .hasMessage("선생님 프로필이 존재하지 않습니다.");
     }
 
@@ -234,7 +237,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         memberJpaRepository.save(MemberJpaEntityFixture.createWithNickname("testnickname", 2));
 
         // when, then
-        Assertions.assertThatThrownBy(() ->teacherService.create(new CreateTeacherCommand(
+        Assertions.assertThatThrownBy(() -> teacherService.create(new CreateTeacherCommand(
                 1L,
                 "@hong_dancer",
                 "youtube",
@@ -255,7 +258,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         memberJpaRepository.save(MemberJpaEntityFixture.createWithNickname("testnickname", 2));
 
         // when, then
-        Assertions.assertThatThrownBy(() ->teacherService.create(new CreateTeacherCommand(
+        Assertions.assertThatThrownBy(() -> teacherService.create(new CreateTeacherCommand(
                 1L,
                 "@hong_dancer2",
                 "youtube.com/hong_dancer",

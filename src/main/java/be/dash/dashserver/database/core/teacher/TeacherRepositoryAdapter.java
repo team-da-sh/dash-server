@@ -40,7 +40,7 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
     @Override
     public void register(Teacher teacher) {
         TeacherJpaEntity teacherJpaEntity = TeacherJpaEntity.fromDomain(teacher);
-            teacherJpaRepository.save(teacherJpaEntity);
+        teacherJpaRepository.save(teacherJpaEntity);
 
         List<TeacherImageJpaEntity> teacherImageJpaEntities = teacher.getImageUrls().stream()
                 .map(imageUrl -> TeacherImageJpaEntity.builder()
@@ -75,10 +75,10 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
     @Override
     public Optional<Teacher> update(Teacher teacher, long memberId) {
         return teacherJpaRepository.findByMemberId(memberId)
-                        .map(entity -> {
-                            entity.updateProfile(teacher);
-                            return entity.toDomain();
-                        });
+                .map(entity -> {
+                    entity.updateProfile(teacher);
+                    return entity.toDomain();
+                });
     }
 
     @Override

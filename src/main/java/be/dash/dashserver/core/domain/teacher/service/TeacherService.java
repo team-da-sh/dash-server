@@ -102,7 +102,7 @@ public class TeacherService {
         validateYoutube(command.youtube());
 
         Teacher teacher = teacherRepository.update(command.toTeacher(), command.memberId())
-                        .orElseThrow(() -> new NotFoundException("선생님 프로필이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("선생님 프로필이 존재하지 않습니다."));
         teacherImageRepository.replace(teacher.getId(), command.imageUrls());
         teacherVideoRepository.replace(teacher.getId(), command.videoUrls());
     }

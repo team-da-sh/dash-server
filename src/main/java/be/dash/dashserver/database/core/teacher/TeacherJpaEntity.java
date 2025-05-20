@@ -59,7 +59,7 @@ public class TeacherJpaEntity extends BaseTimeEntity {
     @Builder
     public TeacherJpaEntity(Long id, MemberJpaEntity member, String detail,
                             List<String> education, List<String> experience,
-                             String instagram, String youtube, List<String> prize) {
+                            String instagram, String youtube, List<String> prize) {
         this.member = member;
         this.detail = detail;
         this.education = education;

@@ -23,7 +23,7 @@ public record OnBoardRequest(
     }
 
     public OnboardCommand toCommand(long memberId) {
-            return new OnboardCommand(memberId, name, phoneNumber, nickname, profileImageUrl);
+        return new OnboardCommand(memberId, name, phoneNumber, nickname, profileImageUrl);
     }
 }
 

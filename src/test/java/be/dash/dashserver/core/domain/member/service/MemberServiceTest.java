@@ -57,7 +57,7 @@ public class MemberServiceTest extends ServiceSliceTest {
                         "nickname2",
                         "url")
         )).isInstanceOf(ConflictException.class);
-}
+    }
 
     @DisplayName("멤버 정보를 변경할 때, 전화번호가 중복되면 예외가 발생한다.")
     @Test

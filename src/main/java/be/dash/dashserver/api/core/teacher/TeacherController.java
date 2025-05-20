@@ -72,7 +72,7 @@ public class TeacherController {
     @Permission(role = Role.TEACHER)
     @PatchMapping("/me")
     public ResponseEntity<Void> updateTeacherProfile(@MemberId Long memberId,
-                                                        @Valid @RequestBody TeacherUpdateRequest request) {
+                                                     @Valid @RequestBody TeacherUpdateRequest request) {
         teacherService.updateTeacherProfile(request.toCommand(memberId));
         return ResponseEntity.noContent().build();
     }

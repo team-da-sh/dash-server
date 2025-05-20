@@ -72,6 +72,7 @@ public class MemberService {
             throw new ConflictException("이미 사용 중인 닉네임입니다.");
         }
     }
+
     private void validatePhoneNumber(String phoneNumber) {
         if (memberRepository.existsByPhoneNumber(phoneNumber)) {
             throw new ConflictException("이미 사용 중인 전화번호입니다.");
