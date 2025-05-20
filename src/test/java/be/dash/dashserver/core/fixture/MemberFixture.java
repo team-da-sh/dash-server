@@ -17,7 +17,7 @@ public class MemberFixture {
                 .role(Role.TEACHER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-4321")
+                .phoneNumber("01087654321")
                 .nickname("yeonghee")
                 .build();
     }
@@ -30,7 +30,7 @@ public class MemberFixture {
                 .role(Role.TEACHER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-4321")
+                .phoneNumber("01087654321")
                 .nickname("yeonghee")
                 .build();
     }
@@ -43,7 +43,7 @@ public class MemberFixture {
                 .role(Role.MEMBER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-4321")
+                .phoneNumber("01087654321")
                 .nickname("yeonghee")
                 .build();
     }
@@ -56,7 +56,7 @@ public class MemberFixture {
                 .role(Role.MEMBER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-432" + index)
+                .phoneNumber("0108765432" + index)
                 .nickname("yeonghee" + index)
                 .build();
     }
@@ -69,7 +69,7 @@ public class MemberFixture {
                 .role(Role.TEACHER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-432" + index)
+                .phoneNumber("0108765432" + index)
                 .nickname(nickname)
                 .build();
     }

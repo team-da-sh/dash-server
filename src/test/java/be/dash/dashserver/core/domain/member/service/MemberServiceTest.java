@@ -61,7 +61,7 @@ public class MemberServiceTest extends ServiceSliceTest {
                         "nickname2",
                         "url")
         )).isInstanceOf(ConflictException.class)
-                .hasMessage("이미 사용중인 닉네임입니다.");
+                .hasMessage("이미 사용 중인 닉네임입니다.");
     }
 
     @DisplayName("멤버 정보를 변경할 때, 전화번호가 중복되면 예외가 발생한다.")
@@ -74,10 +74,10 @@ public class MemberServiceTest extends ServiceSliceTest {
                 new MemberUpdateCommand(1L,
                         "name",
                         "01087654322",
-                        "nickname2",
+                        "nickname",
                         "url")
         )).isInstanceOf(ConflictException.class)
-                .hasMessage("이미 사용중인 전화번호입니다.");
+                .hasMessage("이미 사용 중인 전화번호입니다.");
     }
 
     @DisplayName("멤버 정보를 변경할 때, 멤버가 존재하지 않으면 예외가 발생한다.")
@@ -113,10 +113,10 @@ public class MemberServiceTest extends ServiceSliceTest {
                         onBoardMember.getId(),
                         "대쉬",
                         "01087654321",
-                        "nickname1",
+                        "nickname",
                         null)
         )).isInstanceOf(ConflictException.class)
-                .hasMessage("이미 사용중인 전화번호입니다.");
+                .hasMessage("이미 사용 중인 전화번호입니다.");
     }
 
     @DisplayName("온보딩 시 닉네임이 중복되면 예외가 발생한다.")
@@ -141,6 +141,6 @@ public class MemberServiceTest extends ServiceSliceTest {
                         "nickname1",
                         null)
         )).isInstanceOf(ConflictException.class)
-                .hasMessage("이미 사용중인 닉네임입니다.");
+                .hasMessage("이미 사용 중인 닉네임입니다.");
     }
 }

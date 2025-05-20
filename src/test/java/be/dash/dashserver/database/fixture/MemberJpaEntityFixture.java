@@ -16,7 +16,7 @@ public class MemberJpaEntityFixture {
                 .role(Role.TEACHER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-4321")
+                .phoneNumber("01087654321")
                 .nickname("younghee")
                 .build();
     }
@@ -29,7 +29,7 @@ public class MemberJpaEntityFixture {
                 .role(Role.TEACHER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-432" + index)
+                .phoneNumber("0108765432" + index)
                 .nickname(nickname)
                 .build();
     }
