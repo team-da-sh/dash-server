@@ -25,4 +25,8 @@ public interface MemberRepository {
     void update(Member member);
 
     Optional<String> findNicknameById(long memberId);
+
+    boolean existsByNickname(String nickname);
+
+    boolean existsByPhoneNumber(String phoneNumber);
 }

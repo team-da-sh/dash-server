@@ -16,4 +16,8 @@ public interface MemberJpaRepository extends JpaRepository<MemberJpaEntity, Long
 
     @Query("select m.nickname from MemberJpaEntity m where m.id = :memberId")
     Optional<String> findNicknameById(long memberId);
+
+    boolean existsByNickname(String nickname);
+
+    boolean existsByPhoneNumber(String phoneNumber);
 }

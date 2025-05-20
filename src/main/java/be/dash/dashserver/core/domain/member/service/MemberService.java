@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import be.dash.dashserver.core.domain.favorite.service.FavoriteRepository;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.member.Member;
@@ -14,6 +13,7 @@ import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.service.TeacherRepository;
+import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +26,12 @@ public class MemberService {
     private final LessonRepository lessonRepository;
     private final ReservationRepository reservationRepository;
     private final TeacherRepository teacherRepository;
-    private final FavoriteRepository favoriteRepository;
-
 
     @Transactional
     public void onboard(OnboardCommand command) {
+        validateNickname(command.nickname());
+        validatePhoneNumber(command.phoneNumber());
+
         Member member = command.toMember();
         memberRepository.onboard(member);
     }
@@ -60,6 +61,20 @@ public class MemberService {
 
     @Transactional
     public void updateMemberInformation(MemberUpdateCommand command) {
+        validateNickname(command.nickname());
+        validatePhoneNumber(command.phoneNumber());
+
         memberRepository.update(command.toMember());
+    }
+
+    private void validateNickname(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new ConflictException("이미 사용 중인 닉네임입니다.");
+        }
+    }
+    private void validatePhoneNumber(String phoneNumber) {
+        if (memberRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new ConflictException("이미 사용 중인 전화번호입니다.");
+        }
     }
 }

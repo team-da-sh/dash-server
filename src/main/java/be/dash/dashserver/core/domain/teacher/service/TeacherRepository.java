@@ -16,4 +16,8 @@ public interface TeacherRepository {
     Teacher findByTeacherId(Long teacherId);
 
     Optional<Teacher> update(Teacher teacher, long memberId);
+
+    boolean existByInstagram(String instagram);
+
+    boolean existByYoutube(String youtube);
 }

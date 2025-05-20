@@ -2,6 +2,7 @@ package be.dash.dashserver.core.domain.teacher.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import be.dash.dashserver.core.auth.JwtTokenGenerator;
@@ -21,6 +22,7 @@ import be.dash.dashserver.core.domain.teacher.command.TeacherUpdateCommand;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileDetailResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.TeacherDetailResult;
+import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +56,9 @@ public class TeacherService {
 
     @Transactional
     public Token create(CreateTeacherCommand command) {
+        validateInstagram(command.instagram());
+        validateYoutube(command.youtube());
+
         Member member = memberRepository.findById(command.memberId());
         Teacher teacher = command.toDomain(member);
         teacherRepository.register(teacher);
@@ -93,9 +98,24 @@ public class TeacherService {
 
     @Transactional
     public void updateTeacherProfile(TeacherUpdateCommand command) {
+        validateInstagram(command.instagram());
+        validateYoutube(command.youtube());
+
         Teacher teacher = teacherRepository.update(command.toTeacher(), command.memberId())
                         .orElseThrow(() -> new NotFoundException("선생님 프로필이 존재하지 않습니다."));
         teacherImageRepository.replace(teacher.getId(), command.imageUrls());
         teacherVideoRepository.replace(teacher.getId(), command.videoUrls());
+    }
+
+    private void validateInstagram(String instagram) {
+        if (Objects.nonNull(instagram) && teacherRepository.existByInstagram(instagram)) {
+            throw new ConflictException("이미 사용 중인 인스타그램입니다.");
+        }
+    }
+
+    private void validateYoutube(String youtube) {
+        if (Objects.nonNull(youtube) && teacherRepository.existByYoutube(youtube)) {
+            throw new ConflictException("이미 사용 중인 유튜브입니다.");
+        }
     }
 }

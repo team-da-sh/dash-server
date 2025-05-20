@@ -17,4 +17,8 @@ public interface TeacherJpaRepository extends JpaRepository<TeacherJpaEntity, Lo
             "group by t.id, t.member.nickname " +
             "order by count(l) desc")
     List<TeacherLessonCount> findTeacherLessonCountsDesc(@Param("keyword") String keyword);
+
+    boolean existsByInstagram(String instagram);
+
+    boolean existsByYoutube(String youtube);
 }

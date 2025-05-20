@@ -40,7 +40,8 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
     @Override
     public void register(Teacher teacher) {
         TeacherJpaEntity teacherJpaEntity = TeacherJpaEntity.fromDomain(teacher);
-        teacherJpaRepository.save(teacherJpaEntity);
+            teacherJpaRepository.save(teacherJpaEntity);
+
         List<TeacherImageJpaEntity> teacherImageJpaEntities = teacher.getImageUrls().stream()
                 .map(imageUrl -> TeacherImageJpaEntity.builder()
                         .teacherId(teacherJpaEntity.getId())
@@ -78,5 +79,15 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
                             entity.updateProfile(teacher);
                             return entity.toDomain();
                         });
+    }
+
+    @Override
+    public boolean existByInstagram(String instagram) {
+        return teacherJpaRepository.existsByInstagram(instagram);
+    }
+
+    @Override
+    public boolean existByYoutube(String youtube) {
+        return teacherJpaRepository.existsByYoutube(youtube);
     }
 }
