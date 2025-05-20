@@ -17,7 +17,7 @@ public class MemberFixture {
                 .role(Role.TEACHER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-4321")
+                .phoneNumber("01087654321")
                 .nickname("yeonghee")
                 .build();
     }
@@ -30,7 +30,7 @@ public class MemberFixture {
                 .role(Role.TEACHER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-4321")
+                .phoneNumber("01087654321")
                 .nickname("yeonghee")
                 .build();
     }
@@ -43,8 +43,21 @@ public class MemberFixture {
                 .role(Role.MEMBER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-4321")
+                .phoneNumber("01087654321")
                 .nickname("yeonghee")
+                .build();
+    }
+
+    public static Member createMember(int index) {
+        return Member.builder()
+                .provider(SocialProvider.KAKAO)
+                .socialId("socialId_67890")
+                .socialName("facebook_user")
+                .role(Role.MEMBER)
+                .email("admin@example.com")
+                .name("김영희")
+                .phoneNumber("0108765432" + index)
+                .nickname("yeonghee" + index)
                 .build();
     }
 
@@ -56,22 +69,8 @@ public class MemberFixture {
                 .role(Role.TEACHER)
                 .email("admin@example.com")
                 .name("김영희")
-                .phoneNumber("010-8765-432" + index)
+                .phoneNumber("0108765432" + index)
                 .nickname(nickname)
-                .build();
-    }
-
-    public static Member createStudentWithoutId(String nickname, String phoneNumber) {
-        return Member.builder()
-                .provider(SocialProvider.KAKAO)
-                .socialId("socialId_67890")
-                .socialName("facebook_user")
-                .role(Role.MEMBER)
-                .email("admin@example.com")
-                .name("김영희")
-                .phoneNumber(phoneNumber)
-                .nickname(nickname)
-                .profileImageUrl(phoneNumber)
                 .build();
     }
 }

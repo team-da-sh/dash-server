@@ -1,5 +1,8 @@
 package be.dash.dashserver.api.support;
 
+import java.util.stream.Collectors;
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -35,7 +38,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.warn("handleMethodArgumentNotValidException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
-        return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
+        String errorMessage = e.getBindingResult().getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(","));
+        return ResponseEntity.badRequest().body(new ErrorMessage(errorMessage));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorMessage> handleConstraintViolationException(ConstraintViolationException e) {
+        log.warn("handleConstraintViolationException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
+        String errorMessage = e.getConstraintViolations().stream()
+                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+                .collect(Collectors.joining(","));
+        return ResponseEntity.badRequest().body(new ErrorMessage(errorMessage));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

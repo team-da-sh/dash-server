@@ -67,6 +67,6 @@ public class MemberFacade {
                 reservationService.countUpcomingReservationsByMemberId(memberId),
                 reservationService.countOngoingReservationsByMemberId(memberId),
                 reservationService.countPastReservationsByMemberId(memberId)
-                );
+        );
     }
 }

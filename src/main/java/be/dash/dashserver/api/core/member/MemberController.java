@@ -50,7 +50,7 @@ public class MemberController {
 
     @PatchMapping("/me")
     public ResponseEntity<Void> updateMemberInformation(@MemberId Long memberId,
-                                                           @Valid @RequestBody MemberUpdateRequest request) {
+                                                        @Valid @RequestBody MemberUpdateRequest request) {
         memberService.updateMemberInformation(request.toCommand(memberId));
         return ResponseEntity.noContent().build();
     }

@@ -45,8 +45,6 @@ class LessonRepositoryAdapterTest {
     private LessonRoundJpaRepository lessonRoundJpaRepository;
     @Autowired
     private LessonImageJpaRepository lessonImageJpaRepository;
-    @Autowired
-    private LessonVideoJpaRepository lessonVideoJpaRepository;
 
     @DisplayName("동적으로 필터에 해당하며, 마감기한이 지나지 않은 수업들을 조회한다.")
     @Test
@@ -124,11 +122,9 @@ class LessonRepositoryAdapterTest {
         // then
         List<LessonImageJpaEntity> all = lessonImageJpaRepository.findAll();
         List<LessonRoundJpaEntity> all1 = lessonRoundJpaRepository.findAll();
-        List<LessonVideoJpaEntity> all2 = lessonVideoJpaRepository.findAll();
         Assertions.assertAll(
                 () -> assertThat(all.size()).isEqualTo(2),
-                () -> assertThat(all1.size()).isEqualTo(1),
-                () -> assertThat(all2.size()).isEqualTo(2)
+                () -> assertThat(all1.size()).isEqualTo(1)
         );
     }
 }

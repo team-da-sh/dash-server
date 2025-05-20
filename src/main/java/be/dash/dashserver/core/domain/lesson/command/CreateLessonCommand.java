@@ -10,13 +10,11 @@ import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.Location;
 import be.dash.dashserver.core.domain.lesson.Round;
 import be.dash.dashserver.core.domain.lesson.Rounds;
-import be.dash.dashserver.core.domain.lesson.Videos;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 
 public record CreateLessonCommand(List<String> imageUrls,
                                   String name,
                                   String detail,
-                                  List<String> videoUrls,
                                   long maxReservationCount,
                                   Genre genre,
                                   Level level,
@@ -44,7 +42,6 @@ public record CreateLessonCommand(List<String> imageUrls,
                 .level(level)
                 .location(new Location(location, streetAddress, oldStreetAddress, detailedAddress))
                 .images(new Images(imageUrls))
-                .videos(new Videos(videoUrls))
                 .favoriteCount(0L)
                 .reservationCount(0L)
                 .maxReservationCount(maxReservationCount)

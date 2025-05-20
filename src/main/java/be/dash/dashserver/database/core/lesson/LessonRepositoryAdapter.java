@@ -11,7 +11,6 @@ import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.Lessons;
 import be.dash.dashserver.core.domain.lesson.Round;
 import be.dash.dashserver.core.domain.lesson.Rounds;
-import be.dash.dashserver.core.domain.lesson.Videos;
 import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.exception.DashException;
@@ -34,7 +33,6 @@ public class LessonRepositoryAdapter implements LessonRepository {
     private final TeacherImageJpaRepository teacherImageJpaRepository;
     private final LessonRoundJpaRepository lessonRoundJpaRepository;
     private final LessonImageJpaRepository lessonImageJpaRepository;
-    private final LessonVideoJpaRepository lessonVideoJpaRepository;
     private final MemberJpaRepository memberJpaRepository;
     private final TeacherJpaRepository teacherJpaRepository;
     private final TeacherVideoJpaRepository teacherVideoJpaRepository;
@@ -52,10 +50,6 @@ public class LessonRepositoryAdapter implements LessonRepository {
         List<LessonImageJpaEntity> lessonImageJpaEntities = lesson.getImages().getImageUrls().stream()
                 .map(imageUrl -> new LessonImageJpaEntity(lessonJpaEntity.getId(), imageUrl)).toList();
         lessonImageJpaRepository.saveAll(lessonImageJpaEntities);
-
-        List<LessonVideoJpaEntity> lessonVideoJpaEntities = lesson.getVideos().getVideoUrls().stream()
-                .map(videoUrl -> new LessonVideoJpaEntity(lessonJpaEntity.getId(), videoUrl)).toList();
-        lessonVideoJpaRepository.saveAll(lessonVideoJpaEntities);
 
         List<LessonRoundJpaEntity> lessonRoundJpaEntities = lesson.getRounds().getRounds().stream()
                 .map(lessonRound -> new LessonRoundJpaEntity(lessonJpaEntity.getId(), lessonRound.getStartTime(), lessonRound.getEndTime()))
@@ -104,8 +98,6 @@ public class LessonRepositoryAdapter implements LessonRepository {
                 .orElseThrow(() -> new DashException("해당하는 수업을 찾을 수 없습니다."));
         Images lessonImages = new Images(lessonImageJpaRepository.findAllByLessonId(lessonId).stream()
                 .map(LessonImageJpaEntity::getImageUrl).toList());
-        Videos lessonVideos = new Videos(lessonVideoJpaRepository.findAllByLessonId(lessonId).stream()
-                .map(LessonVideoJpaEntity::getVideoUrl).toList());
         Rounds lessonsRounds = new Rounds(lessonRoundJpaRepository.findAllByLessonId(lessonId).stream()
                 .map(lessonRoundJpaEntity -> new Round(lessonRoundJpaEntity.getStartTime(), lessonRoundJpaEntity.getEndTime()))
                 .toList());
@@ -118,7 +110,7 @@ public class LessonRepositoryAdapter implements LessonRepository {
                 .orElseThrow(() -> new DashException("해당하는 멤버를 찾을 수 없습니다."));
         Teacher teacher = teacherJpaEntity.toDomainWithImageAndVideo(teacherImages, teacherVideos, memberJpaEntity);
 
-        return lessonJpaEntity.toDomain(teacher, lessonImages, lessonVideos, lessonsRounds);
+        return lessonJpaEntity.toDomain(teacher, lessonImages, lessonsRounds);
     }
 
     @Override

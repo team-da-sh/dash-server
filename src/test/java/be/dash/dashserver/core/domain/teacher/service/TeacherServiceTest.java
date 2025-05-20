@@ -14,9 +14,11 @@ import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
+import be.dash.dashserver.core.domain.teacher.command.CreateTeacherCommand;
 import be.dash.dashserver.core.domain.teacher.command.TeacherUpdateCommand;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileDetailResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult;
+import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.fixture.LessonFixture;
 import be.dash.dashserver.core.fixture.MemberFixture;
@@ -84,7 +86,8 @@ class TeacherServiceTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> Assertions.assertThat(myTeacherProfileResult.profileImage()).isEqualTo("www.example.com/teacher12.png"),
+                () -> Assertions.assertThat(myTeacherProfileResult.profileImage())
+                        .isEqualTo("www.example.com/teacher12.png"),
                 () -> Assertions.assertThat(myTeacherProfileResult.nickname()).isEqualTo("nickname"),
                 () -> Assertions.assertThat(myTeacherProfileResult.instagram()).isEqualTo("@hong_dancer"),
                 () -> Assertions.assertThat(myTeacherProfileResult.youtube()).isEqualTo("youtube.com/hong_dancer")
@@ -102,11 +105,13 @@ class TeacherServiceTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> Assertions.assertThat(myTeacherProfileDetail.profileImage()).isEqualTo("www.example.com/teacher12.png"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.profileImage())
+                        .isEqualTo("www.example.com/teacher12.png"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.instagram()).isEqualTo("@hong_dancer"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.youtube()).isEqualTo("youtube.com/hong_dancer"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.detail()).isEqualTo("경력 10년의 힙합 댄서"),
-                () -> Assertions.assertThat(myTeacherProfileDetail.videos()).containsExactly("www.example.com/teacher12_video.mp4"),
+                () -> Assertions.assertThat(myTeacherProfileDetail.videos())
+                        .containsExactly("www.example.com/teacher12_video.mp4"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.educations()).containsExactly("한국예술대학교 댄스학과"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.experiences()).containsExactly("다양한 공연 및 강의 경험"),
                 () -> Assertions.assertThat(myTeacherProfileDetail.prizes()).containsExactly("앱잼1등")
@@ -136,37 +141,134 @@ class TeacherServiceTest extends ServiceSliceTest {
         TeacherJpaEntity updatedTeacher = teacherJpaRepository.findById(1L).get();
         // then
         assertAll(
-                ()-> Assertions.assertThat(teacherImageJpaRepository.findAllByTeacherId(1L)).hasSize(1),
-                ()-> Assertions.assertThat(teacherVideoJpaRepository.findAllByTeacherId(1L)).hasSize(2),
-                ()-> Assertions.assertThat(updatedTeacher.getDetail()).isEqualTo("updated_detail"),
-                ()-> Assertions.assertThat(updatedTeacher.getInstagram()).isEqualTo("@updated_instagram"),
-                ()-> Assertions.assertThat(updatedTeacher.getYoutube()).isEqualTo("updated_youtube.com"),
-                ()-> Assertions.assertThat(updatedTeacher.getEducation()).isEqualTo("updated_education"),
-                ()-> Assertions.assertThat(updatedTeacher.getExperience()).isEqualTo("updated_experience"),
-                ()-> Assertions.assertThat(updatedTeacher.getPrize()).isEqualTo("updated_prize")
+                () -> Assertions.assertThat(teacherImageJpaRepository.findAllByTeacherId(1L)).hasSize(1),
+                () -> Assertions.assertThat(teacherVideoJpaRepository.findAllByTeacherId(1L)).hasSize(2),
+                () -> Assertions.assertThat(updatedTeacher.getDetail()).isEqualTo("updated_detail"),
+                () -> Assertions.assertThat(updatedTeacher.getInstagram()).isEqualTo("@updated_instagram"),
+                () -> Assertions.assertThat(updatedTeacher.getYoutube()).isEqualTo("updated_youtube.com"),
+                () -> Assertions.assertThat(updatedTeacher.getEducation()).containsExactly("updated_education"),
+                () -> Assertions.assertThat(updatedTeacher.getExperience()).containsExactly("updated_experience"),
+                () -> Assertions.assertThat(updatedTeacher.getPrize()).containsExactly("updated_prize")
         );
     }
 
-    @DisplayName("선생님 프로필을 수정시 잘못된 memberId를 입력하면 예외가 발생한다")
+    @DisplayName("선생님 프로필을 수정시 instagram이 중복되면 예외가 발생한다")
     @Test
-    void failUpdateTeacherProfile() {
+    void failUpdateTeacherProfileOnDuplicatedInstagram() {
         // given
         registerTeacher();
+        memberJpaRepository.save(MemberJpaEntityFixture.createWithNickname("testnickname", 2));
 
         // when then
         Assertions.assertThatThrownBy(() -> teacherService.updateTeacherProfile(new TeacherUpdateCommand(
-                2L,
+                1L,
                 "updated_detail",
                 List.of("www.example.com/updated.png"),
-                "@updated_instagram",
+                "@hong_dancer",
                 "updated_youtube.com",
                 List.of("updated_education"),
                 List.of("updated_experience"),
                 List.of("updated_prize"),
                 List.of("www.example.com/updated_video.mp4",
                         "www.example.com/updated_video2.mp4")
-        ))).isInstanceOf(NotFoundException.class)
+        ))).isInstanceOf(ConflictException.class);
+    }
+
+    @DisplayName("선생님 프로필을 수정시 잘못된 memberId를 입력하면 예외가 발생한다")
+    @Test
+    void failUpdateTeacherProfileOnWrongId() {
+        // given
+        registerTeacher();
+
+        // when then
+        Assertions.assertThatThrownBy(() -> teacherService.updateTeacherProfile(new TeacherUpdateCommand(
+                        2L,
+                        "updated_detail",
+                        List.of("www.example.com/updated.png"),
+                        "@updated_instagram",
+                        "updated_youtube.com",
+                        List.of("updated_education"),
+                        List.of("updated_experience"),
+                        List.of("updated_prize"),
+                        List.of("www.example.com/updated_video.mp4",
+                                "www.example.com/updated_video2.mp4")
+                ))).isInstanceOf(NotFoundException.class)
                 .hasMessage("선생님 프로필이 존재하지 않습니다.");
+    }
+
+    @DisplayName("선생님 프로필을 등록한다.")
+    @Test
+    void create() {
+        // given
+        memberJpaRepository.save(MemberJpaEntityFixture.create());
+
+        // when
+        teacherService.create(new CreateTeacherCommand(
+                1L,
+                "instagram",
+                "youtube",
+                List.of("한국예술대학교 댄스학과"),
+                List.of("다양한 공연 및 강의 경험"),
+                List.of("앱잼1등"),
+                "detaildetaildetaildetaildetail",
+                List.of("www.example.com/image.mp4"),
+                List.of("www.example.com/video.mp4")
+        ));
+
+        // then
+        TeacherJpaEntity teacher = teacherJpaRepository.findById(1L).get();
+        assertAll(
+                () -> assertThat(teacher.getDetail()).isEqualTo("detaildetaildetaildetaildetail"),
+                () -> assertThat(teacher.getInstagram()).isEqualTo("instagram"),
+                () -> assertThat(teacher.getYoutube()).isEqualTo("youtube"),
+                () -> assertThat(teacher.getEducation()).containsExactly("한국예술대학교 댄스학과"),
+                () -> assertThat(teacher.getExperience()).containsExactly("다양한 공연 및 강의 경험"),
+                () -> assertThat(teacher.getPrize()).containsExactly("앱잼1등"),
+                () -> assertThat(teacherImageJpaRepository.findAllByTeacherId(1L)).hasSize(1),
+                () -> assertThat(teacherVideoJpaRepository.findAllByTeacherId(1L)).hasSize(1)
+        );
+    }
+
+    @DisplayName("선생님 프로필을 등록시 instagram이 중복되면 예외를 발생한다..")
+    @Test
+    void failCreateOnDuplicatedInstagram() {
+        // given
+        registerTeacher();
+        memberJpaRepository.save(MemberJpaEntityFixture.createWithNickname("testnickname", 2));
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> teacherService.create(new CreateTeacherCommand(
+                1L,
+                "@hong_dancer",
+                "youtube",
+                List.of("한국예술대학교 댄스학과"),
+                List.of("다양한 공연 및 강의 경험"),
+                List.of("앱잼1등"),
+                "detaildetaildetaildetaildetail",
+                List.of("www.example.com/image.mp4"),
+                List.of("www.example.com/video.mp4"))
+        )).isInstanceOf(ConflictException.class);
+    }
+
+    @DisplayName("선생님 프로필을 등록시 youtube가 중복되면 예외를 발생한다..")
+    @Test
+    void failCreateOnDuplicatedYoutube() {
+        // given
+        registerTeacher();
+        memberJpaRepository.save(MemberJpaEntityFixture.createWithNickname("testnickname", 2));
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> teacherService.create(new CreateTeacherCommand(
+                1L,
+                "@hong_dancer2",
+                "youtube.com/hong_dancer",
+                List.of("한국예술대학교 댄스학과"),
+                List.of("다양한 공연 및 강의 경험"),
+                List.of("앱잼1등"),
+                "detaildetaildetaildetaildetail",
+                List.of("www.example.com/image.mp4"),
+                List.of("www.example.com/video.mp4"))
+        )).isInstanceOf(ConflictException.class);
     }
 
     private void registerTeacher() {

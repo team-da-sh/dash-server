@@ -78,11 +78,21 @@ public class MemberRepositoryAdapter implements MemberRepository {
                         () -> {
                             throw new NotFoundException("멤버를 찾을 수 없습니다.");
                         }
-                        );
+                );
     }
 
     @Override
     public Optional<String> findNicknameById(long memberId) {
-         return memberJpaRepository.findNicknameById(memberId);
+        return memberJpaRepository.findNicknameById(memberId);
+    }
+
+    @Override
+    public boolean existsByNickname(String nickname) {
+        return memberJpaRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    public boolean existsByPhoneNumber(String phoneNumber) {
+        return memberJpaRepository.existsByPhoneNumber(phoneNumber);
     }
 }
