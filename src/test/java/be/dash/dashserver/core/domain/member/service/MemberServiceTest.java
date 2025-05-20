@@ -15,6 +15,8 @@ import be.dash.dashserver.database.core.member.MemberJpaEntity;
 import be.dash.dashserver.database.core.member.MemberJpaRepository;
 import be.dash.dashserver.database.fixture.MemberJpaEntityFixture;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 public class MemberServiceTest extends ServiceSliceTest {
     @Autowired
     private MemberService memberService;
@@ -38,10 +40,12 @@ public class MemberServiceTest extends ServiceSliceTest {
         MemberJpaEntity savedMember = memberJpaRepository.findById(1L).get();
 
         // then
-        Assertions.assertThat(savedMember.getName()).isEqualTo("name");
-        Assertions.assertThat(savedMember.getPhoneNumber()).isEqualTo("01011111111");
-        Assertions.assertThat(savedMember.getNickname()).isEqualTo("nickname2");
-        Assertions.assertThat(savedMember.getProfileImageUrl()).isEqualTo("url");
+        assertAll(
+                () -> Assertions.assertThat(savedMember.getName()).isEqualTo("name"),
+                () -> Assertions.assertThat(savedMember.getPhoneNumber()).isEqualTo("01011111111"),
+                () ->Assertions.assertThat(savedMember.getNickname()).isEqualTo("nickname2"),
+                () -> Assertions.assertThat(savedMember.getProfileImageUrl()).isEqualTo("url")
+        );
     }
 
     @DisplayName("멤버 정보를 변경할 때, 닉네임이 중복되면 예외가 발생한다.")
@@ -56,7 +60,8 @@ public class MemberServiceTest extends ServiceSliceTest {
                         "01011111111",
                         "nickname2",
                         "url")
-        )).isInstanceOf(ConflictException.class);
+        )).isInstanceOf(ConflictException.class)
+                .hasMessage("이미 사용중인 닉네임입니다.");
     }
 
     @DisplayName("멤버 정보를 변경할 때, 전화번호가 중복되면 예외가 발생한다.")
@@ -71,7 +76,8 @@ public class MemberServiceTest extends ServiceSliceTest {
                         "01087654322",
                         "nickname2",
                         "url")
-        )).isInstanceOf(ConflictException.class);
+        )).isInstanceOf(ConflictException.class)
+                .hasMessage("이미 사용중인 전화번호입니다.");
     }
 
     @DisplayName("멤버 정보를 변경할 때, 멤버가 존재하지 않으면 예외가 발생한다.")
@@ -84,7 +90,8 @@ public class MemberServiceTest extends ServiceSliceTest {
                         "01011111111",
                         "nickname2",
                         "url")
-        )).isInstanceOf(NotFoundException.class);
+        )).isInstanceOf(NotFoundException.class)
+                .hasMessage("멤버를 찾을 수 없습니다.");
     }
 
     @DisplayName("온보딩 시 전화번호가 중복되면 예외가 발생한다.")
@@ -108,7 +115,8 @@ public class MemberServiceTest extends ServiceSliceTest {
                         "01087654321",
                         "nickname1",
                         null)
-        )).isInstanceOf(ConflictException.class);
+        )).isInstanceOf(ConflictException.class)
+                .hasMessage("이미 사용중인 전화번호입니다.");
     }
 
     @DisplayName("온보딩 시 닉네임이 중복되면 예외가 발생한다.")
@@ -132,6 +140,7 @@ public class MemberServiceTest extends ServiceSliceTest {
                         "01087654321",
                         "nickname1",
                         null)
-        )).isInstanceOf(ConflictException.class);
+        )).isInstanceOf(ConflictException.class)
+                .hasMessage("이미 사용중인 닉네임입니다.");
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
 import be.dash.dashserver.core.domain.teacher.command.CreateTeacherCommand;
 
 public record CreateTeacherRequest(
-        String instagram, //인스타 유튭 중 하나 필수
+        String instagram,
         String youtube,
         @NotNull(message = "학력은 null일 수 없습니다.")
         List<@NotBlank(message = "학력은 공백 불가.") @Size(max = 50, message = "학력 최대 50자") String> educations,
@@ -22,10 +22,10 @@ public record CreateTeacherRequest(
         String detail,
         @NotNull(message = "이미지 url 리스트는 null일 수 없습니다.")
         @Size(min = 1, message = "이미지 url은 최소 1개입니다.")
-        List<String> imageUrls, // 최소 1갸
+        List<String> imageUrls,
         @NotNull(message = "영상은 null일 수 없습니다.")
         @Size(max = 5, message = "영상은 최대 5개입니다.")
-        List<String> videoUrls //해당 없음 가능
+        List<String> videoUrls
 ) {
     @AssertTrue(message = "인스타그램과 유튜브 중 하나는 필수입니다.")
     boolean isInstagramOrYoutubeValid() {
