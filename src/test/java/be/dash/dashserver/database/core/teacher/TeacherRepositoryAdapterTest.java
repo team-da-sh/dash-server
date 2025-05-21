@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.common.Level;
@@ -25,13 +26,17 @@ import be.dash.dashserver.database.fixture.TeacherJpaEntityFixture;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import({TeacherRepositoryAdapter.class, LessonRepositoryAdapter.class})
+@Import({
+        TeacherRepositoryAdapter.class,
+        LessonRepositoryAdapter.class,
+        ObjectMapper.class
+})
 class TeacherRepositoryAdapterTest {
 
     @Autowired
     private TeacherRepository teacherRepository;
     @Autowired
-    private LessonRepository LessonRepository;
+    private LessonRepository lessonRepository;
     @Autowired
     private TeacherJpaRepository teacherJpaRepository;
     @Autowired
@@ -71,11 +76,11 @@ class TeacherRepositoryAdapterTest {
     }
 
     private void createLessons(TeacherJpaEntity teacherJpaEntity, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        LessonRepository.save(LessonFixture.create(teacherJpaEntity.getId(), 1, Genre.HIPHOP, Level.ADVANCED,
+        lessonRepository.save(LessonFixture.create(teacherJpaEntity.getId(), 1, Genre.HIPHOP, Level.ADVANCED,
                 startDateTime.plusDays(1), endDateTime.minusDays(1), 50));
-        LessonRepository.save(LessonFixture.create(teacherJpaEntity.getId(), 1, Genre.HIPHOP, Level.BEGINNER,
+        lessonRepository.save(LessonFixture.create(teacherJpaEntity.getId(), 1, Genre.HIPHOP, Level.BEGINNER,
                 startDateTime.plusDays(3), endDateTime.minusDays(1), 40));
-        LessonRepository.save(LessonFixture.create(teacherJpaEntity.getId(), 1, Genre.HIPHOP, Level.BEGINNER,
+        lessonRepository.save(LessonFixture.create(teacherJpaEntity.getId(), 1, Genre.HIPHOP, Level.BEGINNER,
                 startDateTime.plusDays(2), endDateTime.minusDays(1), 30));
     }
 }

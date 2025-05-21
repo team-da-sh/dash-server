@@ -6,12 +6,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.database.fixture.MemberJpaEntityFixture;
 
 @DataJpaTest
-@Import(MemberRepositoryAdapter.class)
+@Import({
+        MemberRepositoryAdapter.class,
+        ObjectMapper.class
+})
 class MemberRepositoryAdapterTest {
 
     @Autowired

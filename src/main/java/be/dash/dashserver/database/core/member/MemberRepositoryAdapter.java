@@ -95,4 +95,14 @@ public class MemberRepositoryAdapter implements MemberRepository {
     public boolean existsByPhoneNumber(String phoneNumber) {
         return memberJpaRepository.existsByPhoneNumber(phoneNumber);
     }
+
+    @Override
+    public boolean existsByNicknameAndIdNot(String nickname, Long memberId) {
+        return memberJpaRepository.existsByNicknameAndIdNot(nickname, memberId);
+    }
+
+    @Override
+    public boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long memberId) {
+        return memberJpaRepository.existsByPhoneNumberAndIdNot(phoneNumber, memberId);
+    }
 }

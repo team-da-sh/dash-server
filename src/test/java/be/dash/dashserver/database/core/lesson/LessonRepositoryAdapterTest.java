@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.lesson.Lesson;
@@ -19,7 +20,6 @@ import be.dash.dashserver.database.core.teacher.TeacherImageJpaEntity;
 import be.dash.dashserver.database.core.teacher.TeacherImageJpaRepository;
 import be.dash.dashserver.database.core.teacher.TeacherJpaEntity;
 import be.dash.dashserver.database.core.teacher.TeacherJpaRepository;
-import be.dash.dashserver.database.core.teacher.TeacherVideoJpaRepository;
 import be.dash.dashserver.database.fixture.MemberJpaEntityFixture;
 import be.dash.dashserver.database.fixture.TeacherImageJpaEntityFixture;
 import be.dash.dashserver.database.fixture.TeacherJpaEntityFixture;
@@ -28,7 +28,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
-@Import(LessonRepositoryAdapter.class)
+@Import({
+        LessonRepositoryAdapter.class,
+        ObjectMapper.class
+})
 class LessonRepositoryAdapterTest {
 
     @Autowired
@@ -39,8 +42,6 @@ class LessonRepositoryAdapterTest {
     private TeacherJpaRepository teacherJpaRepository;
     @Autowired
     private TeacherImageJpaRepository teacherImageJpaRepository;
-    @Autowired
-    private TeacherVideoJpaRepository teacherVideoJpaRepository;
     @Autowired
     private LessonRoundJpaRepository lessonRoundJpaRepository;
     @Autowired

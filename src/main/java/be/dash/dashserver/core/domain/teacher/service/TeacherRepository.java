@@ -20,4 +20,8 @@ public interface TeacherRepository {
     boolean existByInstagram(String instagram);
 
     boolean existByYoutube(String youtube);
+
+    boolean existByYoutubeAndMemberIdNot(String youtube, long memberId);
+
+    boolean existByInstagramAndMemberIdNot(String instagram, long memberId);
 }

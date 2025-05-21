@@ -161,7 +161,7 @@ class TeacherServiceTest extends ServiceSliceTest {
 
         // when then
         Assertions.assertThatThrownBy(() -> teacherService.updateTeacherProfile(new TeacherUpdateCommand(
-                1L,
+                2L,
                 "updated_detail",
                 List.of("www.example.com/updated.png"),
                 "@hong_dancer",
