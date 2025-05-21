@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.database.core.common.BaseTimeEntity;
 import be.dash.dashserver.database.core.member.MemberJpaEntity;
-import be.dash.dashserver.database.core.teacher.support.StringListConverter;
+import be.dash.dashserver.database.core.teacher.support.StringListToJsonConverter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,22 +38,22 @@ public class TeacherJpaEntity extends BaseTimeEntity {
     @Column(nullable = false, length = 500)
     private String detail;
 
-    @Convert(converter = StringListConverter.class)
+    @Convert(converter = StringListToJsonConverter.class)
     @Column(nullable = true)
     private List<String> education;
 
-    @Convert(converter = StringListConverter.class)
+    @Convert(converter = StringListToJsonConverter.class)
     @Column(nullable = true)
     private List<String> experience;
 
-    @Convert(converter = StringListConverter.class)
+    @Convert(converter = StringListToJsonConverter.class)
     @Column(nullable = true)
     private List<String> prize;
 
-    @Column(nullable = true, unique = true, columnDefinition = "TEXT")
+    @Column(nullable = true, unique = true)
     private String instagram;
 
-    @Column(nullable = true, unique = true, columnDefinition = "TEXT")
+    @Column(nullable = true, unique = true)
     private String youtube;
 
     @Builder
