@@ -90,4 +90,14 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
     public boolean existByYoutube(String youtube) {
         return teacherJpaRepository.existsByYoutube(youtube);
     }
+
+    @Override
+    public boolean existByYoutubeAndMemberIdNot(String youtube, long memberId) {
+        return teacherJpaRepository.existsByYoutubeAndMemberIdNot(youtube, memberId);
+    }
+
+    @Override
+    public boolean existByInstagramAndMemberIdNot(String instagram, long memberId) {
+        return teacherJpaRepository.existsByInstagramAndMemberIdNot(instagram, memberId);
+    }
 }

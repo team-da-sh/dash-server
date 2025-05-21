@@ -97,14 +97,25 @@ public class TeacherService {
     }
 
     @Transactional
-    public void updateTeacherProfile(TeacherUpdateCommand command) {
-        validateInstagram(command.instagram());
-        validateYoutube(command.youtube());
+    public void updateTeacherProfile(TeacherUpdateCommand command) {validateInstagramOnUpdate(command.instagram(), command.memberId());
+        validateYoutubeOnUpdate(command.youtube(), command.memberId());
 
         Teacher teacher = teacherRepository.update(command.toTeacher(), command.memberId())
                 .orElseThrow(() -> new NotFoundException("선생님 프로필이 존재하지 않습니다."));
         teacherImageRepository.replace(teacher.getId(), command.imageUrls());
         teacherVideoRepository.replace(teacher.getId(), command.videoUrls());
+    }
+
+    private void validateYoutubeOnUpdate(String youtube, long memberId) {
+        if (Objects.nonNull(youtube) && teacherRepository.existByYoutubeAndMemberIdNot(youtube, memberId)) {
+            throw new ConflictException("이미 사용 중인 유튜브입니다.");
+        }
+    }
+
+    private void validateInstagramOnUpdate(String instagram, long memberId) {
+        if (Objects.nonNull(instagram) && teacherRepository.existByInstagramAndMemberIdNot(instagram, memberId)) {
+            throw new ConflictException("이미 사용 중인 인스타그램입니다.");
+        }
     }
 
     private void validateInstagram(String instagram) {

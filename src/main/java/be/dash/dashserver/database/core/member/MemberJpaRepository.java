@@ -20,4 +20,8 @@ public interface MemberJpaRepository extends JpaRepository<MemberJpaEntity, Long
     boolean existsByNickname(String nickname);
 
     boolean existsByPhoneNumber(String phoneNumber);
+
+    boolean existsByNicknameAndIdNot(String nickname, Long memberId);
+
+    boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long memberId);
 }
