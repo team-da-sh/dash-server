@@ -27,9 +27,18 @@ public record TeacherUpdateRequest(
         @Size(max = 5, message = "영상은 최대 5개입니다.")
         List<String> videoUrls
 ) {
-    @AssertTrue(message = "인스타그램과 유튜브 중 하나는 필수입니다.")
+
+    @AssertTrue(message = "인스타그램과 유튜브 중 하나는 필수이며, 각 입력은 30자, 100자를 초과할 수 없습니다.")
     boolean isInstagramOrYoutubeValid() {
-        return StringUtils.hasText(instagram) || StringUtils.hasText(youtube);
+        boolean hasInstagram = StringUtils.hasText(instagram);
+        boolean hasYoutube = StringUtils.hasText(youtube);
+
+        boolean isLengthValid =
+                (!hasInstagram || instagram.length() <= 30) &&
+                        (!hasYoutube || youtube.length() <= 100);
+
+        boolean isOnePresent = hasInstagram || hasYoutube;
+        return isOnePresent && isLengthValid;
     }
 
     public TeacherUpdateCommand toCommand(long memberId) {
