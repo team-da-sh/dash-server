@@ -81,7 +81,7 @@ public class LessonJpaEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private Long maxReservationCount;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 300)
     private String detail;
 
     @Column(nullable = false)
