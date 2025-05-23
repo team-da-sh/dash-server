@@ -20,7 +20,7 @@ public class TeacherVideoRepositoryAdapter implements TeacherVideoRepository {
 
     @Override
     public void replace(long teacherId, List<String> videoUrls) {
-        teacherVideoJpaRepository.deleteByTeacherIdAndVideoUrlNotIn(teacherId, videoUrls);
+        teacherVideoJpaRepository.deleteByTeacherId(teacherId);
         teacherVideoJpaRepository.saveAll(
                 videoUrls.stream().map(videoUrl -> new TeacherVideoJpaEntity(teacherId, videoUrl)).toList()
         );

@@ -26,10 +26,10 @@ public class TeacherImageRepositoryAdapter implements TeacherImageRepository {
     }
 
     @Override
-    public void replace(Long id, List<String> imageUrls) {
-        teacherImageJpaRepository.deleteByTeacherIdAndImageUrlNotIn(id, imageUrls);
+    public void replace(long teacherId, List<String> imageUrls) {
+        teacherImageJpaRepository.deleteByTeacherId(teacherId);
         teacherImageJpaRepository.saveAll(
-                imageUrls.stream().map(imageUrl -> new TeacherImageJpaEntity(id, imageUrl)).toList()
+                imageUrls.stream().map(imageUrl -> new TeacherImageJpaEntity(teacherId, imageUrl)).toList()
         );
     }
 }
