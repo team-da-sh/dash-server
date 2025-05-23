@@ -1,6 +1,8 @@
 package be.dash.dashserver.api.core.external;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,12 +18,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@Validated
 public class LocationSearchController {
     private final LocationSearchService locationSearchService;
 
     @Permission(role = {Role.MEMBER, Role.TEACHER})
     @GetMapping("/locations")
-    public ResponseEntity<LocationsResponse> getLocations(@RequestParam final String query) {
+    public ResponseEntity<LocationsResponse> getLocations(@RequestParam @NotBlank final String query) {
         return ResponseEntity.ok(LocationsResponse.of(locationSearchService.getLocations(query)));
     }
 }
