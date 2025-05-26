@@ -13,7 +13,6 @@ import be.dash.dashserver.core.domain.lesson.Lessons;
 import be.dash.dashserver.core.domain.lesson.command.CreateLessonCommand;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.service.TeacherRepository;
-import be.dash.dashserver.core.exception.ForbiddenException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
@@ -54,15 +53,5 @@ public class LessonService {
 
     public Lesson findById(long lessonId) {
         return lessonRepository.findLessonsById(lessonId);
-    }
-
-    public List<Lesson> findAllByTeacherId(long teacherId) {
-        return lessonRepository.findAllByTeacherIdOrderByStartDateTime(teacherId);
-    }
-
-    public void validateOwner(long teacherId, long lessonId) {
-        if (!lessonRepository.existsByTeacherIdAndLessonId(teacherId, lessonId)) {
-            throw new ForbiddenException("해당하는 수업에 대한 권한이 없습니다.");
-        }
     }
 }
