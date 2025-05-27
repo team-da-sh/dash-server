@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import be.dash.dashserver.api.core.member.MyLessonDetailedResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherDetailResponse;
@@ -75,5 +78,23 @@ public class TeacherController {
                                                      @Valid @RequestBody TeacherUpdateRequest request) {
         teacherService.updateTeacherProfile(request.toCommand(memberId));
         return ResponseEntity.noContent().build();
+    }
+
+    @Permission(role = Role.TEACHER)
+    @GetMapping("/me/lessons/{lessonId}")
+    public ResponseEntity<MyLessonDetailedResponse> getMyLesson(@MemberId Long memberId, @PathVariable Long lessonId) {
+        return ResponseEntity.ok(teacherService.getMyLesson(memberId, lessonId));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @GetMapping("/me/lessons")
+    public ResponseEntity<MyLessonsResponse> getMyLessons(@MemberId Long memberId) {
+        return ResponseEntity.ok(teacherService.getMyLessons(memberId));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @GetMapping("/me/lessons/thumbnails")
+    public ResponseEntity<MyLessonsThumbnailResponse> getMyLessonsThumbnail(@MemberId Long memberId) {
+        return ResponseEntity.ok(teacherService.getMyLessonsThumbnail(memberId));
     }
 }

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import be.dash.dashserver.api.core.member.dto.MemberResponse;
 import be.dash.dashserver.api.core.member.dto.MemberUpdateRequest;
-import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
-import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
 import be.dash.dashserver.api.core.member.dto.OnBoardRequest;
 import be.dash.dashserver.api.core.member.dto.ReservationDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ReservationStatisticsResponse;
@@ -33,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberFacade memberFacade;
 
     @Permission(role = Role.MEMBER)
     @PostMapping("/onboard")
@@ -63,30 +60,11 @@ public class MemberController {
 
     @GetMapping("/me/reservations/{reservationId}")
     public ResponseEntity<ReservationDetailedResponse> getReservation(@MemberId Long memberId, @PathVariable Long reservationId) {
-        return ResponseEntity.ok(memberFacade.getMemberReservation(memberId, reservationId));
-    }
-
-    @Permission(role = Role.TEACHER)
-    @GetMapping("/me/lessons")
-    public ResponseEntity<MyLessonsResponse> getMyLessons(@MemberId Long memberId) {
-        return ResponseEntity.ok(memberFacade.getMyLessons(memberId));
-    }
-
-    @Permission(role = Role.TEACHER)
-    @GetMapping("/me/lessons/thumbnails")
-    public ResponseEntity<MyLessonsThumbnailResponse> getMemberLessons(@MemberId Long memberId) {
-        return ResponseEntity.ok(memberFacade.getMyLessonsThumbnail(memberId));
-    }
-
-    @Permission(role = Role.TEACHER)
-    @GetMapping("/me/lessons/{lessonId}")
-    public ResponseEntity<MyLessonDetailedResponse> getMemberLesson(@MemberId Long memberId, @PathVariable Long lessonId) {
-        return ResponseEntity.ok(memberFacade.getMyLesson(memberId, lessonId));
+        return ResponseEntity.ok(memberService.getMemberReservation(memberId, reservationId));
     }
 
     @GetMapping("/me/reservations/statistics")
     public ResponseEntity<ReservationStatisticsResponse> getReservationStatistics(@MemberId Long memberId) {
-        return ResponseEntity.ok(memberFacade.getReservationStatistics(memberId));
+        return ResponseEntity.ok(memberService.getReservationStatistics(memberId));
     }
-
 }

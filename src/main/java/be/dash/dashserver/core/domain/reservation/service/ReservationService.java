@@ -9,7 +9,6 @@ import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.core.domain.payment.PaymentClientApi;
 import be.dash.dashserver.core.domain.reservation.Reservation;
-import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.command.CreateReservationCommand;
 import be.dash.dashserver.core.domain.teacher.service.TeacherRepository;
 import be.dash.dashserver.core.exception.ConflictException;
@@ -65,26 +64,9 @@ public class ReservationService {
                 });
     }
 
-    public Reservations findAllByLessonIdOrderByCreatedAtDesc(Long lessonId) {
-        return reservationRepository.findAllByLessonIdOrderByCreatedAtDesc(lessonId);
-    }
-
     private void validateOwner(long teacherId, long lessonId) {
         if (lessonRepository.existsByTeacherIdAndLessonId(teacherId, lessonId)) {
             throw new ConflictException("본인 수업은 수강할 수 없습니다.");
         }
-    }
-
-    public int countUpcomingReservationsByMemberId(Long memberId) {
-        return reservationRepository.countUpcomingReservationsByMemberId(memberId);
-    }
-
-    public int countOngoingReservationsByMemberId(Long memberId) {
-        return reservationRepository.countOngoingReservationsByMemberId(memberId);
-
-    }
-
-    public int countPastReservationsByMemberId(Long memberId) {
-        return reservationRepository.countPastReservationsByMemberId(memberId);
     }
 }

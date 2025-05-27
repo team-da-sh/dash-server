@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface TeacherVideoJpaRepository extends JpaRepository<TeacherVideoJpaEntity, Long> {
     List<TeacherVideoJpaEntity> findAllByTeacherId(Long teacherId);
-    @Modifying
-    @Query("DELETE FROM TeacherVideoJpaEntity tv WHERE tv.teacherId = :id AND tv.videoUrl NOT IN :videoUrls")
-    void deleteByTeacherIdAndVideoUrlNotIn(long id, List<String> videoUrls);
+
+    void deleteByTeacherId(long teacherId);
 }

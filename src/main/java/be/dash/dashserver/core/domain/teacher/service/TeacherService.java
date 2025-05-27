@@ -1,19 +1,28 @@
 package be.dash.dashserver.core.domain.teacher.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import be.dash.dashserver.api.core.member.MyLessonDetailedResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse.MyLessonThumbnailResponse;
 import be.dash.dashserver.core.auth.JwtTokenGenerator;
 import be.dash.dashserver.core.auth.Token;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Keyword;
+import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.Lessons;
 import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
+import be.dash.dashserver.core.domain.reservation.Reservations;
+import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
 import be.dash.dashserver.core.domain.teacher.Teachers;
@@ -23,6 +32,7 @@ import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileDetail
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.TeacherDetailResult;
 import be.dash.dashserver.core.exception.ConflictException;
+import be.dash.dashserver.core.exception.ForbiddenException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +48,7 @@ public class TeacherService {
     private final TeacherImageRepository teacherImageRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final TeacherVideoRepository teacherVideoRepository;
+    private final ReservationRepository reservationRepository;
 
     public List<TeacherLessonGenres> search(Keyword keyword) {
         Teachers teachers = teacherRepository.findTeachersSortByLessonCountsDesc(keyword.getValue());
@@ -77,27 +88,29 @@ public class TeacherService {
     }
 
     public MyTeacherProfileResult findMyTeacherProfile(long memberId) {
-        Teacher teacher = teacherRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new NotFoundException("선생님 프로필이 존재하지 않습니다."));
-        String image = teacherImageRepository.findTop1ImageUrlByTeacherId(teacher.getId())
-                .orElseThrow(() -> new NotFoundException("선생님 프로필 이미지가 존재하지 않습니다."));
+        Teacher teacher = findTeacherByMemberId(memberId);
+        String image = findTeacherImageByTeacherId(teacher.getId());
         String nickname = memberRepository.findNicknameById(memberId)
                 .orElseThrow(() -> new NotFoundException("멤버의 닉네임이 존재하지 않습니다."));
         return MyTeacherProfileResult.of(image, nickname, teacher);
     }
 
     public MyTeacherProfileDetailResult findMyTeacherProfileDetail(long memberId) {
-        Teacher teacher = teacherRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new NotFoundException("선생님 프로필이 존재하지 않습니다."));
-        String image = teacherImageRepository.findTop1ImageUrlByTeacherId(teacher.getId())
-                .orElseThrow(() -> new NotFoundException("선생님 프로필 이미지가 존재하지 않습니다."));
+        Teacher teacher = findTeacherByMemberId(memberId);
+        String image = findTeacherImageByTeacherId(teacher.getId());
         List<String> videos = teacherVideoRepository.findAllByTeacherId(teacher.getId());
 
         return MyTeacherProfileDetailResult.of(teacher, image, videos);
     }
 
+    private String findTeacherImageByTeacherId(long teacherId) {
+        return teacherImageRepository.findTop1ImageUrlByTeacherId(teacherId)
+                .orElseThrow(() -> new NotFoundException("선생님 프로필 이미지가 존재하지 않습니다."));
+    }
+
     @Transactional
-    public void updateTeacherProfile(TeacherUpdateCommand command) {validateInstagramOnUpdate(command.instagram(), command.memberId());
+    public void updateTeacherProfile(TeacherUpdateCommand command) {
+        validateInstagramOnUpdate(command.instagram(), command.memberId());
         validateYoutubeOnUpdate(command.youtube(), command.memberId());
 
         Teacher teacher = teacherRepository.update(command.toTeacher(), command.memberId())
@@ -128,5 +141,41 @@ public class TeacherService {
         if (Objects.nonNull(youtube) && teacherRepository.existByYoutube(youtube)) {
             throw new ConflictException("이미 사용 중인 유튜브입니다.");
         }
+    }
+
+    public MyLessonDetailedResponse getMyLesson(long memberId, long lessonId) {
+        Teacher teacher = findTeacherByMemberId(memberId);
+        Lesson lesson = lessonRepository.findLessonsById(lessonId);
+        validateOwner(teacher, lesson);
+        Reservations reservations = reservationRepository.findAllByLessonIdOrderByCreatedAtDesc(lessonId);
+        List<LocalDateTime> reservationDateTimes = reservations.getCreatedAt();
+        List<Member> members = memberRepository.findAllByMemberIds(reservations.getMemberIds());
+        return MyLessonDetailedResponse.from(lesson, members, reservationDateTimes);
+    }
+
+    private Teacher findTeacherByMemberId(long memberId) {
+        return teacherRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException("해당하는 선생님을 찾을 수 없습니다."));
+    }
+
+    private void validateOwner(Teacher teacher, Lesson lesson) {
+        if (!lessonRepository.existsByTeacherIdAndLessonId(teacher.getId(), lesson.getId())) {
+            throw new ForbiddenException("해당하는 수업에 대한 권한이 없습니다.");
+        }
+    }
+
+    public MyLessonsResponse getMyLessons(long memberId) {
+        List<Lesson> lessons = getLessons(memberId);
+        return MyLessonsResponse.from(lessons.stream().map(MyLessonResponse::from).toList());
+    }
+
+    public MyLessonsThumbnailResponse getMyLessonsThumbnail(long memberId) {
+        List<Lesson> lessons = getLessons(memberId);
+        return MyLessonsThumbnailResponse.from(lessons.stream().map(MyLessonThumbnailResponse::from).toList());
+    }
+
+    private List<Lesson> getLessons(long memberId) {
+        Teacher teacher = findTeacherByMemberId(memberId);
+        return lessonRepository.findAllByTeacherIdOrderByStartDateTime(teacher.getId());
     }
 }

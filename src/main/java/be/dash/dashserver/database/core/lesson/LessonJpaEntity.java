@@ -25,6 +25,7 @@ import be.dash.dashserver.database.core.common.BaseTimeEntity;
 import be.dash.dashserver.database.core.teacher.TeacherImageJpaEntity;
 import be.dash.dashserver.database.core.teacher.TeacherJpaEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -81,7 +82,7 @@ public class LessonJpaEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private Long maxReservationCount;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 300)
     private String detail;
 
     @Column(nullable = false)
@@ -89,6 +90,26 @@ public class LessonJpaEntity extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Integer price;
+
+    @Builder
+    public LessonJpaEntity(TeacherJpaEntity teacher, String name, Genre genre, Level level, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String streetAddress, String oldStreetAddress, String detailedAddress, Long favoriteCount, Long reservationCount, Long maxReservationCount, String detail, String recommendation, Integer price) {
+        this.teacher = teacher;
+        this.name = name;
+        this.genre = genre;
+        this.level = level;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.location = location;
+        this.streetAddress = streetAddress;
+        this.oldStreetAddress = oldStreetAddress;
+        this.detailedAddress = detailedAddress;
+        this.favoriteCount = favoriteCount;
+        this.reservationCount = reservationCount;
+        this.maxReservationCount = maxReservationCount;
+        this.detail = detail;
+        this.recommendation = recommendation;
+        this.price = price;
+    }
 
     public LessonJpaEntity(Lesson lesson) {
         this.teacher = new TeacherJpaEntity(lesson.getTeacher());
