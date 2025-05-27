@@ -89,7 +89,7 @@ public class TeacherService {
 
     public MyTeacherProfileResult findMyTeacherProfile(long memberId) {
         Teacher teacher = findTeacherByMemberId(memberId);
-        String image = findTeacherImageBy(teacher);
+        String image = findTeacherImageByTeacherId(teacher.getId());
         String nickname = memberRepository.findNicknameById(memberId)
                 .orElseThrow(() -> new NotFoundException("멤버의 닉네임이 존재하지 않습니다."));
         return MyTeacherProfileResult.of(image, nickname, teacher);
@@ -97,14 +97,14 @@ public class TeacherService {
 
     public MyTeacherProfileDetailResult findMyTeacherProfileDetail(long memberId) {
         Teacher teacher = findTeacherByMemberId(memberId);
-        String image = findTeacherImageBy(teacher);
+        String image = findTeacherImageByTeacherId(teacher.getId());
         List<String> videos = teacherVideoRepository.findAllByTeacherId(teacher.getId());
 
         return MyTeacherProfileDetailResult.of(teacher, image, videos);
     }
 
-    private String findTeacherImageBy(Teacher teacher) {
-        return teacherImageRepository.findTop1ImageUrlByTeacherId(teacher.getId())
+    private String findTeacherImageByTeacherId(long teacherId) {
+        return teacherImageRepository.findTop1ImageUrlByTeacherId(teacherId)
                 .orElseThrow(() -> new NotFoundException("선생님 프로필 이미지가 존재하지 않습니다."));
     }
 
