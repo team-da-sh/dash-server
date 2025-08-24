@@ -13,6 +13,7 @@ import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.command.MemberUpdateCommand;
 import be.dash.dashserver.core.domain.member.command.OnboardCommand;
 import be.dash.dashserver.core.domain.reservation.Reservation;
+import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.core.exception.ConflictException;
@@ -41,8 +42,8 @@ public class MemberService {
         return memberRepository.findById(memberId);
     }
 
-    public List<ReservationResult> getMemberReservations(Long memberId) {
-        Reservations reservations = reservationRepository.findAllByMemberId(memberId);
+    public List<ReservationResult> getMemberReservations(Long memberId, ReservationStatus status) {
+        Reservations reservations = reservationRepository.findAllByMemberIdAndStatus(memberId, status);
         Set<Long> lessonIds = reservations.getLessonIds();
         List<Lesson> myLessons = lessonRepository.findAllByIdsOrderByStartDate(lessonIds);
         return myLessons.stream()

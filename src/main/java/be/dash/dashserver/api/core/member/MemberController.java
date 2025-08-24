@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import be.dash.dashserver.api.core.member.dto.MemberResponse;
 import be.dash.dashserver.api.core.member.dto.MemberUpdateRequest;
@@ -22,6 +23,7 @@ import be.dash.dashserver.api.support.Permission;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.member.service.MemberService;
 import be.dash.dashserver.core.domain.member.service.ReservationResult;
+import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 
@@ -54,8 +56,8 @@ public class MemberController {
     }
 
     @GetMapping("/me/reservations")
-    public ResponseEntity<ReservationsResponse> getMemberReservations(@MemberId Long memberId) {
-        List<ReservationResult> memberReservations = memberService.getMemberReservations(memberId);
+    public ResponseEntity<ReservationsResponse> getMemberReservations(@MemberId Long memberId, @RequestParam(name = "status", required = false) ReservationStatus status) {
+        List<ReservationResult> memberReservations = memberService.getMemberReservations(memberId, status);
         return ResponseEntity.ok(ReservationsResponse.from(memberReservations));
     }
 

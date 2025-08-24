@@ -22,8 +22,8 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     }
 
     @Override
-    public Reservations findAllByMemberId(long memberId) {
-        return new Reservations(reservationJpaRepository.findAllByMemberId(memberId).stream()
+    public Reservations findAllByMemberIdAndStatus(long memberId, ReservationStatus status) {
+        return new Reservations(reservationJpaRepository.findAllByMemberIdAndStatusNullable(memberId, status).stream()
                 .map(ReservationJpaEntity::toDomain).toList());
     }
 
