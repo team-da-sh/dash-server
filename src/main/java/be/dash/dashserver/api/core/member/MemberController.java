@@ -17,6 +17,7 @@ import be.dash.dashserver.api.core.member.dto.OnBoardRequest;
 import be.dash.dashserver.api.core.member.dto.ReservationCancelRequest;
 import be.dash.dashserver.api.core.member.dto.ReservationDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ReservationStatisticsResponse;
+import be.dash.dashserver.api.core.member.dto.ReservationStatusCountResponses;
 import be.dash.dashserver.api.core.member.dto.ReservationsResponse;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.Permission;
@@ -64,6 +65,11 @@ public class MemberController {
     @GetMapping("/me/reservations/{reservationId}")
     public ResponseEntity<ReservationDetailedResponse> getReservation(@MemberId Long memberId, @PathVariable Long reservationId) {
         return ResponseEntity.ok(memberService.getMemberReservation(memberId, reservationId));
+    }
+
+    @GetMapping("/me/reservations/status")
+    public ResponseEntity<ReservationStatusCountResponses> getMemberReservationsStatusCount(@MemberId Long memberId) {
+        return ResponseEntity.ok(memberService.getMemberReservationsStatusCount(memberId));
     }
 
     @PostMapping("/me/reservations/{reservationId}/cancel")

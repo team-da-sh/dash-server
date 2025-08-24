@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import be.dash.dashserver.api.core.member.dto.ReservationCancelRequest;
 import be.dash.dashserver.api.core.member.dto.ReservationDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ReservationStatisticsResponse;
+import be.dash.dashserver.api.core.member.dto.ReservationStatusCountResponses;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.member.Member;
@@ -49,6 +50,11 @@ public class MemberService {
         return myLessons.stream()
                 .map(lesson -> ReservationResult.of(lesson, reservations))
                 .toList();
+    }
+
+    public ReservationStatusCountResponses getMemberReservationsStatusCount(Long memberId) {
+        Reservations reservations = reservationRepository.findAllByMemberIdAndStatus(memberId, null);
+        return ReservationStatusCountResponses.from(reservations);
     }
 
     @Transactional
