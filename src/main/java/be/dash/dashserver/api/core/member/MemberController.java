@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import be.dash.dashserver.api.core.member.dto.MemberResponse;
 import be.dash.dashserver.api.core.member.dto.MemberUpdateRequest;
 import be.dash.dashserver.api.core.member.dto.OnBoardRequest;
+import be.dash.dashserver.api.core.member.dto.ReservationCancelRequest;
 import be.dash.dashserver.api.core.member.dto.ReservationDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ReservationStatisticsResponse;
 import be.dash.dashserver.api.core.member.dto.ReservationsResponse;
@@ -61,6 +62,12 @@ public class MemberController {
     @GetMapping("/me/reservations/{reservationId}")
     public ResponseEntity<ReservationDetailedResponse> getReservation(@MemberId Long memberId, @PathVariable Long reservationId) {
         return ResponseEntity.ok(memberService.getMemberReservation(memberId, reservationId));
+    }
+
+    @PostMapping("/me/reservations/{reservationId}/cancel")
+    public ResponseEntity<Void> cancelReservation(@MemberId Long memberId, @PathVariable Long reservationId, @Valid @RequestBody ReservationCancelRequest request) {
+        memberService.cancelMemberReservation(memberId, reservationId, request);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me/reservations/statistics")

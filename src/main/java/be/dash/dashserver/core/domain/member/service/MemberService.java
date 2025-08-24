@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import be.dash.dashserver.api.core.member.dto.ReservationCancelRequest;
 import be.dash.dashserver.api.core.member.dto.ReservationDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ReservationStatisticsResponse;
 import be.dash.dashserver.core.domain.lesson.Lesson;
@@ -86,6 +87,11 @@ public class MemberService {
         Reservation reservation = reservationRepository.findById(reservationId);
         Lesson lesson = lessonRepository.findLessonsById(reservation.getLessonId());
         return ReservationDetailedResponse.from(member, reservation, lesson);
+    }
+
+    @Transactional
+    public void cancelMemberReservation(long memberId, long reservationId, ReservationCancelRequest request) {
+        reservationRepository.cancel(memberId, reservationId, request.toCancelReservationCommand());
     }
 
     public ReservationStatisticsResponse getReservationStatistics(Long memberId) {
