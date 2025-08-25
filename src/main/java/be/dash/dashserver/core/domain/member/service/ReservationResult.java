@@ -24,7 +24,7 @@ public record ReservationResult(
 ) {
     public static ReservationResult of(Lesson lesson, Reservations reservations) {
         Reservation reservation = reservations.findReservationByLessonId(lesson.getId());
-        return new ReservationResult(//첫번째 레슨과 reservations에 대해 다음을 한다.
+        return new ReservationResult(
                 lesson.getId(),
                 reservation.getId(),
                 lesson.getName(),
@@ -41,4 +41,20 @@ public record ReservationResult(
         );
     }
 
+    public static ReservationResult of(Lesson lesson, Reservation reservation) {
+        return new ReservationResult(
+                lesson.getId(),
+                reservation.getId(),
+                lesson.getName(),
+                lesson.getRepresentativeImageUrl(),
+                lesson.getGenre().name(),
+                lesson.getLevel().name(),
+                lesson.getLocationName(),
+                lesson.getStartTime(),
+                lesson.getEndTime(),
+                lesson.calculateDDay(),
+                AttendStatus.calculateAttendStatus(lesson.getStartTime(), lesson.getEndTime()),
+                reservation.getReservationStatus(),
+                reservation.getCreatedAt());
+    }
 }

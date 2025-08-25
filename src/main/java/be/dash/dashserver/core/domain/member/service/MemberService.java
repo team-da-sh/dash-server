@@ -89,7 +89,14 @@ public class MemberService {
         }
     }
 
-    public ReservationDetailedResponse getMemberReservation(long memberId, long reservationId) {
+    public ReservationResult getMemberReservation(long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId);
+        Lesson lesson = lessonRepository.findLessonsById(reservation.getLessonId());
+        return ReservationResult.of(lesson, reservation);
+    }
+
+
+    public ReservationDetailedResponse getMemberReservationDetailed(long memberId, long reservationId) {
         Member member = memberRepository.findById(memberId);
         Reservation reservation = reservationRepository.findById(reservationId);
         Lesson lesson = lessonRepository.findLessonsById(reservation.getLessonId());
