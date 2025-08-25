@@ -18,6 +18,7 @@ import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherResponse;
+import be.dash.dashserver.api.core.teacher.dto.TeacherAccountResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherDetailResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherProfileDetailResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherProfileResponse;
@@ -25,6 +26,7 @@ import be.dash.dashserver.api.core.teacher.dto.TeacherResponses;
 import be.dash.dashserver.api.core.teacher.dto.TeacherUpdateRequest;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.Permission;
+import be.dash.dashserver.core.domain.account.service.AccountService;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
@@ -40,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 public class TeacherController {
     private final TeacherService teacherService;
+    private final AccountService accountService;
 
     @GetMapping
     public ResponseEntity<TeacherResponses> search(@RequestParam(required = false, defaultValue = Keyword.ANY, name = "keyword") Keyword keyword) {
@@ -70,6 +73,12 @@ public class TeacherController {
     @GetMapping("/me/detail")
     public ResponseEntity<TeacherProfileDetailResponse> findMyTeacherDetail(@MemberId Long memberId) {
         return ResponseEntity.ok(TeacherProfileDetailResponse.from(teacherService.findMyTeacherProfileDetail(memberId)));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @GetMapping("/me/account")
+    public ResponseEntity<TeacherAccountResponse> findMyTeacherAccount(@MemberId Long memberId) {
+        return ResponseEntity.ok(TeacherAccountResponse.from(accountService.findMyTeacherAccount(memberId)));
     }
 
     @Permission(role = Role.TEACHER)
