@@ -24,4 +24,15 @@ public class AccountRepositoryAdapter implements AccountRepository {
                 .orElseThrow(() -> new NotFoundException("계좌에 일치하는 은행 정보가 존재하지 않습니다."));
         return account.toDomain(bankJpaEntity);
     }
+
+    @Override
+    public void saveByMemberIdAndIsTeacherAccount(Account command) {
+        AccountJpaEntity entity = new AccountJpaEntity(command);
+        accountJpaEntityRepository.save(entity);
+    }
+
+    @Override
+    public boolean existsByMemberIdAndIsTeacherAccount(long memberId, boolean isTeacherAccount) {
+        return accountJpaEntityRepository.existsByMemberIdAndIsTeacherAccount(memberId, isTeacherAccount);
+    }
 }

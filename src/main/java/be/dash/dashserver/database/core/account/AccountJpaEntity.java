@@ -49,4 +49,12 @@ public class AccountJpaEntity {
                 bankJpaEntity.getBankName()
         );
     }
+
+    public AccountJpaEntity(Account account) {
+        this.depositor = account.depositor();
+        this.accountNumber = account.accountNumber();
+        this.memberId = account.memberId();
+        this.bankId = account.bankId();
+        this.isTeacherAccount = account.isTeacherAccount();
+    }
 }

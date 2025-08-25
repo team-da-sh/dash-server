@@ -5,4 +5,8 @@ import be.dash.dashserver.core.domain.account.Account;
 public interface AccountRepository {
 
     Account findByMemberIdAndIsTeacherAccount(long memberId);
+
+    void saveByMemberIdAndIsTeacherAccount(Account account);
+
+    boolean existsByMemberIdAndIsTeacherAccount(long memberId, boolean isTeacherAccount);
 }
