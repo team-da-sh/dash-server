@@ -1,7 +1,7 @@
 package be.dash.dashserver.api.core.member.dto;
 
-public record ReservationStatusCount(
-        String reservationStatus,
+public record StatusCount(
+        String status,
         long count
 ) {
 }

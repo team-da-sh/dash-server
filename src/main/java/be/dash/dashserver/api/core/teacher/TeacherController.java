@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import be.dash.dashserver.api.core.account.dto.AccountRequest;
 import be.dash.dashserver.api.core.member.MyLessonDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
-import be.dash.dashserver.api.core.account.dto.AccountRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherResponse;
+import be.dash.dashserver.api.core.teacher.dto.LessonStatusCountResponses;
 import be.dash.dashserver.api.core.teacher.dto.TeacherAccountResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherDetailResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherProfileDetailResponse;
@@ -113,5 +114,11 @@ public class TeacherController {
     @GetMapping("/me/lessons/thumbnails")
     public ResponseEntity<MyLessonsThumbnailResponse> getMyLessonsThumbnail(@MemberId Long memberId) {
         return ResponseEntity.ok(teacherService.getMyLessonsThumbnail(memberId));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @GetMapping("/me/lessons/status")
+    public ResponseEntity<LessonStatusCountResponses> getMyLessonsStatusCount(@MemberId Long memberId) {
+        return ResponseEntity.ok(teacherService.getMyLessonsStatusCount(memberId));
     }
 }

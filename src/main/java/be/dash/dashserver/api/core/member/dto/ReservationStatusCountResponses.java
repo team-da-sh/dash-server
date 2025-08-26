@@ -8,21 +8,21 @@ import static be.dash.dashserver.core.domain.reservation.ReservationStatus.CANCE
 import static be.dash.dashserver.core.domain.reservation.ReservationStatus.PENDING_APPROVAL;
 import static be.dash.dashserver.core.domain.reservation.ReservationStatus.PENDING_CANCELLATION;
 
-public record ReservationStatusCountResponses(List<ReservationStatusCount> reservationStatusCounts) {
+public record ReservationStatusCountResponses(List<StatusCount> reservationStatusCounts) {
     private static final String ALL_STATUS = "ALL";
 
     public static ReservationStatusCountResponses from(Reservations reservations) {
-        ReservationStatusCount all = new ReservationStatusCount(ALL_STATUS, reservations.getSize());
-        ReservationStatusCount pendingApproval = new ReservationStatusCount(PENDING_APPROVAL.name(), reservations.getReservations()
+        StatusCount all = new StatusCount(ALL_STATUS, reservations.getSize());
+        StatusCount pendingApproval = new StatusCount(PENDING_APPROVAL.name(), reservations.getReservations()
                 .stream()
                 .filter(reservation -> reservation.getReservationStatus() == PENDING_APPROVAL).count());
-        ReservationStatusCount approved = new ReservationStatusCount(APPROVED.name(), reservations.getReservations()
+        StatusCount approved = new StatusCount(APPROVED.name(), reservations.getReservations()
                 .stream()
                 .filter(reservation -> reservation.getReservationStatus() == APPROVED).count());
-        ReservationStatusCount pendingCancellation = new ReservationStatusCount(PENDING_CANCELLATION.name(), reservations.getReservations()
+        StatusCount pendingCancellation = new StatusCount(PENDING_CANCELLATION.name(), reservations.getReservations()
                 .stream()
                 .filter(reservation -> reservation.getReservationStatus() == PENDING_CANCELLATION).count());
-        ReservationStatusCount cancelled = new ReservationStatusCount(CANCELLED.name(), reservations.getReservations()
+        StatusCount cancelled = new StatusCount(CANCELLED.name(), reservations.getReservations()
                 .stream()
                 .filter(reservation -> reservation.getReservationStatus() == CANCELLED).count());
         return new ReservationStatusCountResponses(List.of(all, pendingApproval, approved, pendingCancellation, cancelled));

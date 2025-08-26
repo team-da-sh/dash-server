@@ -11,6 +11,7 @@ import be.dash.dashserver.api.core.member.dto.MyLessonResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse.MyLessonThumbnailResponse;
+import be.dash.dashserver.api.core.teacher.dto.LessonStatusCountResponses;
 import be.dash.dashserver.core.auth.JwtTokenGenerator;
 import be.dash.dashserver.core.auth.Token;
 import be.dash.dashserver.core.domain.common.Genre;
@@ -177,5 +178,11 @@ public class TeacherService {
     private List<Lesson> getLessons(long memberId) {
         Teacher teacher = findTeacherByMemberId(memberId);
         return lessonRepository.findAllByTeacherIdOrderByStartDateTime(teacher.getId());
+    }
+
+    public LessonStatusCountResponses getMyLessonsStatusCount(Long memberId) {
+        List<Lesson> lessons = getLessons(memberId);
+        return LessonStatusCountResponses.from(lessons);
+
     }
 }
