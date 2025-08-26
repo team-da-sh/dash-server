@@ -2,7 +2,7 @@ package be.dash.dashserver.core.domain.account.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import be.dash.dashserver.api.core.teacher.dto.AccountRequest;
+import be.dash.dashserver.api.core.account.dto.AccountRequest;
 import be.dash.dashserver.core.domain.account.Account;
 import be.dash.dashserver.core.domain.account.service.dto.AccountResult;
 import be.dash.dashserver.core.log.annotation.Trace;

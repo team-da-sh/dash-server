@@ -34,9 +34,17 @@ public class AccountJpaEntity {
     private Long bankId;
 
     @Column(name = "is_teacher_account")
-    private Boolean isTeacherAccount = false;  // 기본값: 일반 회원
-
+    private Boolean isTeacherAccount = false;
     // 수강생 계좌도 이걸로 관리하게 될 수 있으니 boolean으로 학생이 등록한것인지, 선생이 등록한것인지 구분.
+
+    public AccountJpaEntity(String depositor, String accountNumber, Long memberId, Long bankId, Boolean isTeacherAccount) {
+        this.depositor = depositor;
+        this.accountNumber = accountNumber;
+        this.memberId = memberId;
+        this.bankId = bankId;
+        this.isTeacherAccount = isTeacherAccount;
+    }
+
     public Account toDomain(BankJpaEntity bankJpaEntity) {
         return new Account(
                 true,
@@ -51,10 +59,6 @@ public class AccountJpaEntity {
     }
 
     public AccountJpaEntity(Account account) {
-        this.depositor = account.depositor();
-        this.accountNumber = account.accountNumber();
-        this.memberId = account.memberId();
-        this.bankId = account.bankId();
-        this.isTeacherAccount = account.isTeacherAccount();
+        this(account.depositor(), account.accountNumber(), account.memberId(), account.bankId(), account.isTeacherAccount());
     }
 }

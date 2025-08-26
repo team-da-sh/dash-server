@@ -19,6 +19,7 @@ import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
 import be.dash.dashserver.core.auth.JwtTokenExtractor;
 import be.dash.dashserver.core.auth.Token;
 import be.dash.dashserver.core.auth.TokenParser;
+import be.dash.dashserver.core.domain.account.service.AccountService;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
@@ -40,6 +41,8 @@ class TeacherControllerTest {
 
     @MockitoBean
     private TeacherService teacherService;
+    @MockitoBean
+    private AccountService accountService;
     @MockitoBean
     private JwtTokenExtractor jwtTokenExtractor;
     @MockitoBean

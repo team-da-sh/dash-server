@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.database.core.lesson.LessonJpaEntity;
-import be.dash.dashserver.database.core.lesson.LessonJpaEntityRepository;
+import be.dash.dashserver.database.core.lesson.LessonJpaRepository;
 import be.dash.dashserver.database.core.member.MemberJpaEntity;
 import be.dash.dashserver.database.core.member.MemberJpaRepository;
 import be.dash.dashserver.database.core.teacher.TeacherJpaEntity;
@@ -30,7 +30,7 @@ class ReservationRepositoryAdapterTest {
     @Autowired
     private TeacherJpaRepository teacherJpaRepository;
     @Autowired
-    private LessonJpaEntityRepository lessonJpaEntityRepository;
+    private LessonJpaRepository lessonJpaRepository;
     @Autowired
     private ReservationRepository reservationRepository;
 
@@ -44,7 +44,7 @@ class ReservationRepositoryAdapterTest {
         teacherJpaRepository.save(teacherJpaEntity);
         LessonJpaEntity lessonJpaEntity = LessonJpaEntityFixture.create(teacherJpaEntity,
                 LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2));
-        lessonJpaEntityRepository.save(lessonJpaEntity);
+        lessonJpaRepository.save(lessonJpaEntity);
         reservationRepository.save(memberJpaEntity.getId(), lessonJpaEntity.getId());
 
         // when
@@ -63,7 +63,7 @@ class ReservationRepositoryAdapterTest {
         teacherJpaRepository.save(teacherJpaEntity);
         LessonJpaEntity lessonJpaEntity = LessonJpaEntityFixture.create(teacherJpaEntity,
                 LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(2));
-        lessonJpaEntityRepository.save(lessonJpaEntity);
+        lessonJpaRepository.save(lessonJpaEntity);
         reservationRepository.save(memberJpaEntity.getId(), lessonJpaEntity.getId());
 
         // when
@@ -82,7 +82,7 @@ class ReservationRepositoryAdapterTest {
         teacherJpaRepository.save(teacherJpaEntity);
         LessonJpaEntity lessonJpaEntity = LessonJpaEntityFixture.create(teacherJpaEntity,
                 LocalDateTime.now().minusDays(2), LocalDateTime.now().minusDays(1));
-        lessonJpaEntityRepository.save(lessonJpaEntity);
+        lessonJpaRepository.save(lessonJpaEntity);
         reservationRepository.save(memberJpaEntity.getId(), lessonJpaEntity.getId());
 
         // when

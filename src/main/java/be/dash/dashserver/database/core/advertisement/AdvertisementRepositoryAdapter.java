@@ -10,15 +10,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
 
-    private final AdvertisementJpaEntityRepository advertisementJpaEntityRepository;
+    private final AdvertisementJpaRepository advertisementJpaRepository;
 
     @Override
     public List<Advertisement> getAdvertisement() {
-        return advertisementJpaEntityRepository.findAll().stream().map(AdvertisementJpaEntity::toDomain).toList();
+        return advertisementJpaRepository.findAll().stream().map(AdvertisementJpaEntity::toDomain).toList();
     }
 
     @Override
     public Advertisement save(Advertisement advertisement) {
-        return advertisementJpaEntityRepository.save(new AdvertisementJpaEntity(advertisement)).toDomain();
+        return advertisementJpaRepository.save(new AdvertisementJpaEntity(advertisement)).toDomain();
     }
 }

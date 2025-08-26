@@ -9,4 +9,6 @@ public interface AccountRepository {
     void saveByMemberIdAndIsTeacherAccount(Account account);
 
     boolean existsByMemberIdAndIsTeacherAccount(long memberId, boolean isTeacherAccount);
+
+    Account findByLessonId(long lessonID);
 }

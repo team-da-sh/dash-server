@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LessonRepositoryAdapter implements LessonRepository {
 
-    private final LessonJpaEntityRepository lessonJpaEntityRepository;
+    private final LessonJpaRepository lessonJpaRepository;
     private final TeacherImageJpaRepository teacherImageJpaRepository;
     private final LessonRoundJpaRepository lessonRoundJpaRepository;
     private final LessonImageJpaRepository lessonImageJpaRepository;
@@ -39,13 +39,13 @@ public class LessonRepositoryAdapter implements LessonRepository {
 
     @Override
     public List<Lesson> findActiveLessonsByFilters(Genre genre, Level level, LocalDateTime startDateTime, LocalDateTime endDateTime, String keyword, LocalDateTime now) {
-        List<LessonJpaEntity> activeLessons = lessonJpaEntityRepository.findAll(LessonSpecifications.findActiveLessonsByFilters(genre, level, startDateTime, endDateTime, keyword, now));
+        List<LessonJpaEntity> activeLessons = lessonJpaRepository.findAll(LessonSpecifications.findActiveLessonsByFilters(genre, level, startDateTime, endDateTime, keyword, now));
         return getLessons(activeLessons);
     }
 
     @Override
     public void save(Lesson lesson) {
-        LessonJpaEntity lessonJpaEntity = lessonJpaEntityRepository.save(new LessonJpaEntity(lesson));
+        LessonJpaEntity lessonJpaEntity = lessonJpaRepository.save(new LessonJpaEntity(lesson));
 
         List<LessonImageJpaEntity> lessonImageJpaEntities = lesson.getImages().getImageUrls().stream()
                 .map(imageUrl -> new LessonImageJpaEntity(lessonJpaEntity.getId(), imageUrl)).toList();
@@ -59,12 +59,12 @@ public class LessonRepositoryAdapter implements LessonRepository {
 
     @Override
     public List<Genre> findDistinctGenresByTeacherIdOrderByCountDesc(Long teacherId) {
-        return lessonJpaEntityRepository.findDistinctGenresByTeacherIdOrderByCountDesc(teacherId);
+        return lessonJpaRepository.findDistinctGenresByTeacherIdOrderByCountDesc(teacherId);
     }
 
     @Override
     public List<Lesson> findActiveLessons(LocalDateTime now) {
-        return getLessons(lessonJpaEntityRepository.findByStartDateTimeGreaterThan(now));
+        return getLessons(lessonJpaRepository.findByStartDateTimeGreaterThan(now));
     }
 
     private List<Lesson> getLessons(List<LessonJpaEntity> activeLessons) {
@@ -80,12 +80,12 @@ public class LessonRepositoryAdapter implements LessonRepository {
 
     @Override
     public List<Genre> popularGenres(LocalDateTime localDateTime) {
-        return lessonJpaEntityRepository.findPopularGenresByActiveLessons(localDateTime);
+        return lessonJpaRepository.findPopularGenresByActiveLessons(localDateTime);
     }
 
     @Override
     public Lessons findLessonsByTeacher(Teacher teacher) {
-        return new Lessons(lessonJpaEntityRepository.findByTeacherIdOrderByCreatedAtDesc(teacher.getId())
+        return new Lessons(lessonJpaRepository.findByTeacherIdOrderByCreatedAtDesc(teacher.getId())
                 .stream().map(lessonJpaEntity -> {
                     List<LessonImageJpaEntity> images = lessonImageJpaRepository.findAllByLessonId(lessonJpaEntity.getId());
                     return lessonJpaEntity.toDomain(teacher, images);
@@ -94,7 +94,7 @@ public class LessonRepositoryAdapter implements LessonRepository {
 
     @Override
     public Lesson findLessonsById(Long lessonId) {
-        LessonJpaEntity lessonJpaEntity = lessonJpaEntityRepository.findById(lessonId)
+        LessonJpaEntity lessonJpaEntity = lessonJpaRepository.findById(lessonId)
                 .orElseThrow(() -> new DashException("해당하는 수업을 찾을 수 없습니다."));
         Images lessonImages = new Images(lessonImageJpaRepository.findAllByLessonId(lessonId).stream()
                 .map(LessonImageJpaEntity::getImageUrl).toList());
@@ -115,33 +115,33 @@ public class LessonRepositoryAdapter implements LessonRepository {
 
     @Override
     public int getLessonCount(Long teacherId) {
-        return lessonJpaEntityRepository.countByTeacherId(teacherId);
+        return lessonJpaRepository.countByTeacherId(teacherId);
     }
 
     @Override
     public List<Lesson> findAllByIdsOrderByStartDate(Set<Long> lessonIds) {
-        return getLessons(lessonJpaEntityRepository.findAllByIdsOOrderByStartDateTime(lessonIds));
+        return getLessons(lessonJpaRepository.findAllByIdsOOrderByStartDateTime(lessonIds));
     }
 
     @Override
     public List<Lesson> findAllByTeacherIdOrderByStartDateTime(long teacherId) {
-        return getLessons(lessonJpaEntityRepository.findAllByTeacherIdOOrderByStartDateTime(teacherId));
+        return getLessons(lessonJpaRepository.findAllByTeacherIdOOrderByStartDateTime(teacherId));
     }
 
     @Override
     public void increaseReservationCount(long lessonId) {
-        lessonJpaEntityRepository.increaseReservationCount(lessonId);
+        lessonJpaRepository.increaseReservationCount(lessonId);
     }
 
     @Override
     public boolean isFull(long lessonId) {
-        return lessonJpaEntityRepository.findById(lessonId)
+        return lessonJpaRepository.findById(lessonId)
                 .map(lessonJpaEntity -> lessonJpaEntity.getReservationCount() >= lessonJpaEntity.getMaxReservationCount())
                 .orElseThrow(() -> new NotFoundException("해당하는 수업을 찾을 수 없습니다."));
     }
 
     @Override
     public boolean existsByTeacherIdAndLessonId(long teacherId, long lessonId) {
-        return lessonJpaEntityRepository.existsByTeacherIdAndId(teacherId, lessonId);
+        return lessonJpaRepository.existsByTeacherIdAndId(teacherId, lessonId);
     }
 }
