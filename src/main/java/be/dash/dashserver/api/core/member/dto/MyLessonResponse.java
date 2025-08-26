@@ -14,7 +14,8 @@ public record MyLessonResponse(long id,
                                String detailedAddress,
                                LocalDateTime startDateTime,
                                LocalDateTime endDateTime,
-                               ApplyStatus applyStatus) {
+                               ApplyStatus applyStatus,
+                               LocalDateTime lessonDateTime) {
     public static MyLessonResponse from(Lesson lesson) {
         return new MyLessonResponse(
                 lesson.getId(),
@@ -26,7 +27,7 @@ public record MyLessonResponse(long id,
                 lesson.getDetailedAddress(),
                 lesson.getRounds().getStartTime(),
                 lesson.getRounds().getEndTime(),
-                ApplyStatus.calculate(lesson.getStartTime(), lesson.getReservationCount(), lesson.getMaxReservationCount()
-                ));
+                ApplyStatus.calculate(lesson.getStartTime(), lesson.getReservationCount(), lesson.getMaxReservationCount()),
+                lesson.getCreatedAt());
     }
 }

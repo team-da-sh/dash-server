@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import be.dash.dashserver.api.core.account.dto.AccountRequest;
 import be.dash.dashserver.api.core.member.MyLessonDetailedResponse;
+import be.dash.dashserver.api.core.member.dto.ApplyStatus;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherResponse;
+import be.dash.dashserver.api.core.teacher.dto.LessonStatusCountResponses;
+import be.dash.dashserver.api.core.teacher.dto.TeacherAccountResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherDetailResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherProfileDetailResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherProfileResponse;
@@ -25,6 +29,7 @@ import be.dash.dashserver.api.core.teacher.dto.TeacherResponses;
 import be.dash.dashserver.api.core.teacher.dto.TeacherUpdateRequest;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.Permission;
+import be.dash.dashserver.core.domain.account.service.AccountService;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
@@ -40,6 +45,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 public class TeacherController {
     private final TeacherService teacherService;
+    private final AccountService accountService;
 
     @GetMapping
     public ResponseEntity<TeacherResponses> search(@RequestParam(required = false, defaultValue = Keyword.ANY, name = "keyword") Keyword keyword) {
@@ -73,6 +79,19 @@ public class TeacherController {
     }
 
     @Permission(role = Role.TEACHER)
+    @GetMapping("/me/account")
+    public ResponseEntity<TeacherAccountResponse> findMyTeacherAccount(@MemberId Long memberId) {
+        return ResponseEntity.ok(TeacherAccountResponse.from(accountService.findMyTeacherAccount(memberId)));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @PostMapping("/me/account")
+    public ResponseEntity<Void> registerMyTeacherAccount(@MemberId Long memberId, @RequestBody @Valid AccountRequest teacherAccountRequest) {
+        accountService.registerMyTeacherAccount(memberId, teacherAccountRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @Permission(role = Role.TEACHER)
     @PatchMapping("/me")
     public ResponseEntity<Void> updateTeacherProfile(@MemberId Long memberId,
                                                      @Valid @RequestBody TeacherUpdateRequest request) {
@@ -88,13 +107,19 @@ public class TeacherController {
 
     @Permission(role = Role.TEACHER)
     @GetMapping("/me/lessons")
-    public ResponseEntity<MyLessonsResponse> getMyLessons(@MemberId Long memberId) {
-        return ResponseEntity.ok(teacherService.getMyLessons(memberId));
+    public ResponseEntity<MyLessonsResponse> getMyLessons(@MemberId Long memberId, @RequestParam(name = "status", required = false) ApplyStatus status) {
+        return ResponseEntity.ok(teacherService.getMyLessons(memberId, status));
     }
 
     @Permission(role = Role.TEACHER)
     @GetMapping("/me/lessons/thumbnails")
     public ResponseEntity<MyLessonsThumbnailResponse> getMyLessonsThumbnail(@MemberId Long memberId) {
         return ResponseEntity.ok(teacherService.getMyLessonsThumbnail(memberId));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @GetMapping("/me/lessons/status")
+    public ResponseEntity<LessonStatusCountResponses> getMyLessonsStatusCount(@MemberId Long memberId) {
+        return ResponseEntity.ok(teacherService.getMyLessonsStatusCount(memberId));
     }
 }

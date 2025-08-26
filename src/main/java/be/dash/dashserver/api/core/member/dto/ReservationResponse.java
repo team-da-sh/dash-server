@@ -5,6 +5,7 @@ import be.dash.dashserver.core.domain.common.AttendStatus;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.member.service.ReservationResult;
+import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 
 public record ReservationResponse(long lessonId,
                                   long reservationId,
@@ -16,7 +17,9 @@ public record ReservationResponse(long lessonId,
                                   LocalDateTime startDateTime,
                                   LocalDateTime endDateTime,
                                   int dDay,
-                                  AttendStatus attendStatus) {
+                                  AttendStatus attendStatus,
+                                  ReservationStatus reservationStatus,
+                                  LocalDateTime reservationDateTime) {
     public static ReservationResponse from(ReservationResult reservationResult) {
         return new ReservationResponse(
                 reservationResult.lessonId(),
@@ -29,7 +32,9 @@ public record ReservationResponse(long lessonId,
                 reservationResult.startDateTime(),
                 reservationResult.endDateTime(),
                 reservationResult.dDay(),
-                reservationResult.attendStatus()
+                reservationResult.attendStatus(),
+                reservationResult.reservationStatus(),
+                reservationResult.createdAt()
         );
     }
 }

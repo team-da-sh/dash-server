@@ -10,5 +10,14 @@ public class Reservation {
     private final long id;
     private final long lessonId;
     private final long memberId;
+    private ReservationStatus reservationStatus;
     private final LocalDateTime createdAt;
+
+    public boolean ownBy(long memberId) {
+        return this.memberId == memberId;
+    }
+
+    public void changeStatus(ReservationStatus status) {
+        this.reservationStatus = status;
+    }
 }

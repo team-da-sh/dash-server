@@ -1,7 +1,9 @@
 package be.dash.dashserver.core.domain.reservation.service;
 
 import be.dash.dashserver.core.domain.reservation.Reservation;
+import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import be.dash.dashserver.core.domain.reservation.Reservations;
+import be.dash.dashserver.core.domain.reservation.command.CancelReservationCommand;
 
 public interface ReservationRepository {
 
@@ -9,11 +11,13 @@ public interface ReservationRepository {
 
     long save(long memberId, long lessonId);
 
-    Reservations findAllByMemberId(long memberId);
+    Reservations findAllByMemberIdAndStatus(long memberId, ReservationStatus status);
 
     Reservation findById(long reservationId);
 
     Reservations findAllByLessonIdOrderByCreatedAtDesc(Long lessonId);
+
+    void cancel(long memberId, long reservationId, CancelReservationCommand cancelReservationCommand);
 
     int countUpcomingReservationsByMemberId(Long memberId);
 

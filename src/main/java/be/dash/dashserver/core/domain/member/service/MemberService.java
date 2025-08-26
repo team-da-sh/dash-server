@@ -4,14 +4,17 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import be.dash.dashserver.api.core.member.dto.ReservationCancelRequest;
 import be.dash.dashserver.api.core.member.dto.ReservationDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ReservationStatisticsResponse;
+import be.dash.dashserver.api.core.member.dto.ReservationStatusCountResponses;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.command.MemberUpdateCommand;
 import be.dash.dashserver.core.domain.member.command.OnboardCommand;
 import be.dash.dashserver.core.domain.reservation.Reservation;
+import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.core.exception.ConflictException;
@@ -40,13 +43,18 @@ public class MemberService {
         return memberRepository.findById(memberId);
     }
 
-    public List<ReservationResult> getMemberReservations(Long memberId) {
-        Reservations reservations = reservationRepository.findAllByMemberId(memberId);
+    public List<ReservationResult> getMemberReservations(Long memberId, ReservationStatus status) {
+        Reservations reservations = reservationRepository.findAllByMemberIdAndStatus(memberId, status);
         Set<Long> lessonIds = reservations.getLessonIds();
         List<Lesson> myLessons = lessonRepository.findAllByIdsOrderByStartDate(lessonIds);
         return myLessons.stream()
                 .map(lesson -> ReservationResult.of(lesson, reservations))
                 .toList();
+    }
+
+    public ReservationStatusCountResponses getMemberReservationsStatusCount(Long memberId) {
+        Reservations reservations = reservationRepository.findAllByMemberIdAndStatus(memberId, null);
+        return ReservationStatusCountResponses.from(reservations);
     }
 
     @Transactional
@@ -81,11 +89,23 @@ public class MemberService {
         }
     }
 
-    public ReservationDetailedResponse getMemberReservation(long memberId, long reservationId) {
+    public ReservationResult getMemberReservation(long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId);
+        Lesson lesson = lessonRepository.findLessonsById(reservation.getLessonId());
+        return ReservationResult.of(lesson, reservation);
+    }
+
+
+    public ReservationDetailedResponse getMemberReservationDetailed(long memberId, long reservationId) {
         Member member = memberRepository.findById(memberId);
         Reservation reservation = reservationRepository.findById(reservationId);
         Lesson lesson = lessonRepository.findLessonsById(reservation.getLessonId());
         return ReservationDetailedResponse.from(member, reservation, lesson);
+    }
+
+    @Transactional
+    public void cancelMemberReservation(long memberId, long reservationId, ReservationCancelRequest request) {
+        reservationRepository.cancel(memberId, reservationId, request.toCancelReservationCommand());
     }
 
     public ReservationStatisticsResponse getReservationStatistics(Long memberId) {
