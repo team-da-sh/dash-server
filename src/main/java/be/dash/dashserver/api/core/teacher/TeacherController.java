@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import be.dash.dashserver.api.core.account.dto.AccountRequest;
 import be.dash.dashserver.api.core.member.MyLessonDetailedResponse;
+import be.dash.dashserver.api.core.member.dto.ApplyStatus;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
@@ -106,8 +107,8 @@ public class TeacherController {
 
     @Permission(role = Role.TEACHER)
     @GetMapping("/me/lessons")
-    public ResponseEntity<MyLessonsResponse> getMyLessons(@MemberId Long memberId) {
-        return ResponseEntity.ok(teacherService.getMyLessons(memberId));
+    public ResponseEntity<MyLessonsResponse> getMyLessons(@MemberId Long memberId, @RequestParam(name = "status", required = false) ApplyStatus status) {
+        return ResponseEntity.ok(teacherService.getMyLessons(memberId, status));
     }
 
     @Permission(role = Role.TEACHER)

@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import be.dash.dashserver.api.core.member.MyLessonDetailedResponse;
+import be.dash.dashserver.api.core.member.dto.ApplyStatus;
 import be.dash.dashserver.api.core.member.dto.MyLessonResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
@@ -165,9 +166,15 @@ public class TeacherService {
         }
     }
 
-    public MyLessonsResponse getMyLessons(long memberId) {
+    public MyLessonsResponse getMyLessons(long memberId, ApplyStatus status) {
+        if(Objects.isNull(status)){
+            List<Lesson> lessons = getLessons(memberId);
+            return MyLessonsResponse.from(lessons.stream().map(MyLessonResponse::from).toList());
+        }
         List<Lesson> lessons = getLessons(memberId);
-        return MyLessonsResponse.from(lessons.stream().map(MyLessonResponse::from).toList());
+        List<MyLessonResponse> myLessonResponses = lessons.stream().map(MyLessonResponse::from)
+                .filter(myLessonResponse -> myLessonResponse.applyStatus() == status).toList();
+        return MyLessonsResponse.from(myLessonResponses);
     }
 
     public MyLessonsThumbnailResponse getMyLessonsThumbnail(long memberId) {
