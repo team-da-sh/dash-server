@@ -5,6 +5,7 @@ import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 
 public record CreateTeacherCommand(long memberId,
+                                   String nickname,
                                    String instagram,
                                    String youtube,
                                    List<String> educations,
@@ -16,6 +17,7 @@ public record CreateTeacherCommand(long memberId,
 
     public Teacher toDomain(Member member) {
         return Teacher.builder()
+                .nickname(nickname())
                 .member(member)
                 .detail(detail())
                 .educations(educations())

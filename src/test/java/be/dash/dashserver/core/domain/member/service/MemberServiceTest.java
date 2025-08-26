@@ -112,35 +112,9 @@ public class MemberServiceTest extends ServiceSliceTest {
                 new OnboardCommand(
                         onBoardMember.getId(),
                         "대쉬",
-                        "01087654321",
-                        "nickname",
-                        null)
+                        "01087654321"
+                )
         )).isInstanceOf(ConflictException.class)
                 .hasMessage("이미 사용 중인 전화번호입니다.");
-    }
-
-    @DisplayName("온보딩 시 닉네임이 중복되면 예외가 발생한다.")
-    @Test
-    void failOnboardOnDuplicatedNickname() {
-        MemberJpaEntity onBoardMember = MemberJpaEntity
-                .builder()
-                .email("email1")
-                .role(Role.MEMBER)
-                .provider(SocialProvider.KAKAO)
-                .socialId("socialId1")
-                .socialName("socialName1")
-                .build();
-        memberJpaRepository.save(onBoardMember);
-        memberJpaRepository.save(MemberJpaEntityFixture.createWithNickname("nickname1", 1));
-
-        Assertions.assertThatThrownBy(() -> memberService.onboard(
-                new OnboardCommand(
-                        onBoardMember.getId(),
-                        "대쉬",
-                        "01087654321",
-                        "nickname1",
-                        null)
-        )).isInstanceOf(ConflictException.class)
-                .hasMessage("이미 사용 중인 닉네임입니다.");
     }
 }

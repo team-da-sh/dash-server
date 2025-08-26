@@ -40,8 +40,6 @@ public class MemberRepositoryAdapter implements MemberRepository {
                 .email(member.getEmail())
                 .name(member.getName())
                 .phoneNumber(member.getPhoneNumber())
-                .nickname(member.getNickname())
-                .profileImageUrl(member.getProfileImageUrl())
                 .build();
     }
 

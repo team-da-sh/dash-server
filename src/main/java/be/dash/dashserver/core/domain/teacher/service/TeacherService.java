@@ -85,8 +85,7 @@ public class TeacherService {
         Teacher teacher = teacherRepository.findByTeacherId(teacherId);
         List<Genre> genres = lessonRepository.findDistinctGenresByTeacherIdOrderByCountDesc(teacher.getId());
         Lessons activeLessonsByTeacher = lessonRepository.findLessonsByTeacher(teacher);
-        Member member = memberRepository.findById(teacher.getMember().getId());
-        return new TeacherDetailResult(new TeacherLessonGenres(teacher, genres), member.getNickname(), activeLessonsByTeacher);
+        return new TeacherDetailResult(new TeacherLessonGenres(teacher, genres), teacher.getNickname(), activeLessonsByTeacher);
     }
 
     public MyTeacherProfileResult findMyTeacherProfile(long memberId) {

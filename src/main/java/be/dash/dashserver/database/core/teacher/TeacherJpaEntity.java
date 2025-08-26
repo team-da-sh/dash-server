@@ -56,12 +56,17 @@ public class TeacherJpaEntity extends BaseTimeEntity {
     @Column(nullable = true, unique = true)
     private String youtube;
 
+    @Column(nullable = false, unique = true)
+    private String nickname;
+
+
     @Builder
-    public TeacherJpaEntity(Long id, MemberJpaEntity member, String detail,
+    public TeacherJpaEntity(Long id, MemberJpaEntity member, String nickname, String detail,
                             List<String> education, List<String> experience,
                             String instagram, String youtube, List<String> prize) {
         this.member = member;
         this.detail = detail;
+        this.nickname = nickname;
         this.education = education;
         this.experience = experience;
         this.instagram = instagram;
@@ -72,6 +77,7 @@ public class TeacherJpaEntity extends BaseTimeEntity {
     public TeacherJpaEntity(Teacher teacher) {
         this.id = teacher.getId();
         this.member = new MemberJpaEntity(teacher.getMember());
+        this.nickname = teacher.getNickname();
         this.detail = teacher.getDetail();
         this.education = teacher.getEducations();
         this.experience = teacher.getExperiences();
@@ -83,6 +89,7 @@ public class TeacherJpaEntity extends BaseTimeEntity {
     public static TeacherJpaEntity fromDomain(Teacher teacher) {
         return TeacherJpaEntity.builder()
                 .member(new MemberJpaEntity(teacher.getMember()))
+                .nickname(teacher.getNickname())
                 .detail(teacher.getDetail())
                 .education(teacher.getEducations())
                 .experience(teacher.getExperiences())
@@ -96,6 +103,7 @@ public class TeacherJpaEntity extends BaseTimeEntity {
         return Teacher.builder()
                 .id(id)
                 .member(member.toDomain())
+                .nickname(nickname)
                 .detail(detail)
                 .educations(education)
                 .experiences(experience)
@@ -110,6 +118,7 @@ public class TeacherJpaEntity extends BaseTimeEntity {
                 .id(id)
                 .member(member.toDomain())
                 .detail(detail)
+                .nickname(nickname)
                 .educations(education)
                 .experiences(experience)
                 .prizes(prize)
@@ -124,6 +133,7 @@ public class TeacherJpaEntity extends BaseTimeEntity {
                 .id(id)
                 .member(member.toDomain())
                 .detail(detail)
+                .nickname(nickname)
                 .educations(education)
                 .experiences(experience)
                 .prizes(prize)
@@ -138,6 +148,7 @@ public class TeacherJpaEntity extends BaseTimeEntity {
         return Teacher.builder()
                 .id(id)
                 .member(member.toDomain())
+                .nickname(nickname)
                 .detail(detail)
                 .member(memberJpaEntity.toDomain())
                 .educations(education)
@@ -152,6 +163,7 @@ public class TeacherJpaEntity extends BaseTimeEntity {
 
     public void updateProfile(Teacher teacher) {
         this.detail = teacher.getDetail();
+        this.nickname = teacher.getNickname();
         this.education = teacher.getEducations();
         this.experience = teacher.getExperiences();
         this.prize = teacher.getPrizes();

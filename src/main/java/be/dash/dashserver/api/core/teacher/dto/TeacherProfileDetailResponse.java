@@ -4,6 +4,7 @@ import java.util.List;
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileDetailResult;
 
 public record TeacherProfileDetailResponse(
+        String nickname,
         String profileImage,
         String detail,
         String instagram,
@@ -15,6 +16,7 @@ public record TeacherProfileDetailResponse(
 ) {
     public static TeacherProfileDetailResponse from(MyTeacherProfileDetailResult result) {
         return new TeacherProfileDetailResponse(
+                result.nickname(),
                 result.profileImage(),
                 result.detail(),
                 result.instagram(),

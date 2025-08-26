@@ -9,6 +9,9 @@ import org.springframework.util.StringUtils;
 import be.dash.dashserver.core.domain.teacher.command.TeacherUpdateCommand;
 
 public record TeacherUpdateRequest(
+        @NotBlank(message = "닉네임은 공백일 수 없습니다.")
+        @Size(max = 20, message = "닉네임은 최대 20자입니다.")
+        String nickname,
         String instagram,
         String youtube,
         @NotNull(message = "학력은 null일 수 없습니다.")
@@ -30,18 +33,29 @@ public record TeacherUpdateRequest(
 
     @AssertTrue(message = "인스타그램과 유튜브 중 하나는 필수이며, 각 입력은 30자, 100자를 초과할 수 없습니다.")
     boolean isInstagramOrYoutubeValid() {
-        boolean hasInstagram = StringUtils.hasText(instagram);
-        boolean hasYoutube = StringUtils.hasText(youtube);
+        boolean hasInstagram = StringUtils.hasText(instagram());
+        boolean hasYoutube = StringUtils.hasText(youtube());
 
         boolean isLengthValid =
-                (!hasInstagram || instagram.length() <= 30) &&
-                        (!hasYoutube || youtube.length() <= 100);
+                (!hasInstagram || instagram().length() <= 30) &&
+                        (!hasYoutube || youtube().length() <= 100);
 
         boolean isOnePresent = hasInstagram || hasYoutube;
         return isOnePresent && isLengthValid;
     }
 
     public TeacherUpdateCommand toCommand(long memberId) {
-        return new TeacherUpdateCommand(memberId, detail, imageUrls, instagram, youtube, educations, experiences, prizes, videoUrls);
+        return new TeacherUpdateCommand(
+                memberId,
+                nickname(),
+                detail(),
+                imageUrls(),
+                instagram(),
+                youtube(),
+                educations(),
+                experiences(),
+                prizes(),
+                videoUrls()
+        );
     }
 }
