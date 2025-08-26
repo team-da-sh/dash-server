@@ -34,7 +34,6 @@ public class MemberServiceTest extends ServiceSliceTest {
                 new MemberUpdateCommand(1L,
                         "name",
                         "01011111111",
-                        "nickname2",
                         "url")
         );
         MemberJpaEntity savedMember = memberJpaRepository.findById(1L).get();
@@ -43,25 +42,8 @@ public class MemberServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> Assertions.assertThat(savedMember.getName()).isEqualTo("name"),
                 () -> Assertions.assertThat(savedMember.getPhoneNumber()).isEqualTo("01011111111"),
-                () ->Assertions.assertThat(savedMember.getNickname()).isEqualTo("nickname2"),
                 () -> Assertions.assertThat(savedMember.getProfileImageUrl()).isEqualTo("url")
         );
-    }
-
-    @DisplayName("멤버 정보를 변경할 때, 닉네임이 중복되면 예외가 발생한다.")
-    @Test
-    void failUpdateMemberInformationOnDuplicatedNickname() {
-        MemberJpaEntity member1 = memberJpaRepository.save(MemberJpaEntityFixture.createWithNickname("nickname1", 1));
-        MemberJpaEntity member2 = memberJpaRepository.save(MemberJpaEntityFixture.createWithNickname("nickname2", 2));
-
-        Assertions.assertThatThrownBy(() -> memberService.updateMemberInformation(
-                new MemberUpdateCommand(1L,
-                        "name",
-                        "01011111111",
-                        "nickname2",
-                        "url")
-        )).isInstanceOf(ConflictException.class)
-                .hasMessage("이미 사용 중인 닉네임입니다.");
     }
 
     @DisplayName("멤버 정보를 변경할 때, 전화번호가 중복되면 예외가 발생한다.")
@@ -74,7 +56,6 @@ public class MemberServiceTest extends ServiceSliceTest {
                 new MemberUpdateCommand(1L,
                         "name",
                         "01087654322",
-                        "nickname",
                         "url")
         )).isInstanceOf(ConflictException.class)
                 .hasMessage("이미 사용 중인 전화번호입니다.");
@@ -88,7 +69,6 @@ public class MemberServiceTest extends ServiceSliceTest {
                 new MemberUpdateCommand(2L,
                         "name",
                         "01011111111",
-                        "nickname2",
                         "url")
         )).isInstanceOf(NotFoundException.class)
                 .hasMessage("멤버를 찾을 수 없습니다.");

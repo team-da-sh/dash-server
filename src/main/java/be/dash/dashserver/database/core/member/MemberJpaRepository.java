@@ -14,14 +14,7 @@ public interface MemberJpaRepository extends JpaRepository<MemberJpaEntity, Long
     @Query("update MemberJpaEntity m set m.role = :role where m.id = :id")
     void updateRole(Long id, Role role);
 
-    @Query("select m.nickname from MemberJpaEntity m where m.id = :memberId")
-    Optional<String> findNicknameById(long memberId);
-
-    boolean existsByNickname(String nickname);
-
     boolean existsByPhoneNumber(String phoneNumber);
-
-    boolean existsByNicknameAndIdNot(String nickname, Long memberId);
 
     boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long memberId);
 }

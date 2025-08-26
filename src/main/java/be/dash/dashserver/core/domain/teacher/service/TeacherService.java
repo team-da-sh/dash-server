@@ -91,9 +91,7 @@ public class TeacherService {
     public MyTeacherProfileResult findMyTeacherProfile(long memberId) {
         Teacher teacher = findTeacherByMemberId(memberId);
         String image = findTeacherImageByTeacherId(teacher.getId());
-        String nickname = memberRepository.findNicknameById(memberId)
-                .orElseThrow(() -> new NotFoundException("멤버의 닉네임이 존재하지 않습니다."));
-        return MyTeacherProfileResult.of(image, nickname, teacher);
+        return MyTeacherProfileResult.of(image, teacher);
     }
 
     public MyTeacherProfileDetailResult findMyTeacherProfileDetail(long memberId) {

@@ -18,7 +18,6 @@ public class MemberFixture {
                 .email("admin@example.com")
                 .name("김영희")
                 .phoneNumber("01087654321")
-                .nickname("yeonghee")
                 .build();
     }
 
@@ -31,7 +30,6 @@ public class MemberFixture {
                 .email("admin@example.com")
                 .name("김영희")
                 .phoneNumber("01087654321")
-                .nickname("yeonghee")
                 .build();
     }
 
@@ -44,7 +42,6 @@ public class MemberFixture {
                 .email("admin@example.com")
                 .name("김영희")
                 .phoneNumber("01087654321")
-                .nickname("yeonghee")
                 .build();
     }
 
@@ -57,7 +54,6 @@ public class MemberFixture {
                 .email("admin@example.com")
                 .name("김영희")
                 .phoneNumber("0108765432" + index)
-                .nickname("yeonghee" + index)
                 .build();
     }
 
@@ -70,7 +66,6 @@ public class MemberFixture {
                 .email("admin@example.com")
                 .name("김영희")
                 .phoneNumber("0108765432" + index)
-                .nickname(nickname)
                 .build();
     }
 }

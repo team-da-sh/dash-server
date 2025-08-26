@@ -7,8 +7,7 @@ public record MyTeacherProfileResult(String profileImage,
                                      String instagram,
                                      String youtube) {
     public static MyTeacherProfileResult of(String profileImage,
-                                            String nickname,
                                             Teacher teacher) {
-        return new MyTeacherProfileResult(profileImage, nickname, teacher.getInstagram(), teacher.getYoutube());
+        return new MyTeacherProfileResult(profileImage, teacher.getNickname(), teacher.getInstagram(), teacher.getYoutube());
     }
 }

@@ -21,7 +21,7 @@ public record LessonReservationResponse(
         this(
                 lesson.getRepresentativeImageUrl(),
                 lesson.getName(),
-                lesson.getTeacher().getNickName(),
+                lesson.getTeacher().getNickname(),
                 lesson.getPrice(),
                 lesson.getDetail(),
                 lesson.getLevel(),

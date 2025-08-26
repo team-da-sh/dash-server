@@ -24,7 +24,7 @@ class MemberRepositoryAdapterTest {
     private MemberJpaRepository memberJpaRepository;
 
     @Test
-    @DisplayName("온보딩시에 멤버, 학생, 장르 엔티티가 저장된다.")
+    @DisplayName("온보딩시에 실명, 번호, 이 저장된다.")
     void onboard() {
         // given
         MemberJpaEntity member = MemberJpaEntityFixture.createWithoutOnboarding();
@@ -33,8 +33,6 @@ class MemberRepositoryAdapterTest {
                 .id(1L)
                 .name("실명")
                 .phoneNumber("01000000000")
-                .nickname("닉네임")
-                .profileImageUrl("image.com")
                 .build();
         // when
         memberRepository.onboard(domainMember);

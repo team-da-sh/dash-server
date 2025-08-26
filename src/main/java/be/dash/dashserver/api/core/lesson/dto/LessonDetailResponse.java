@@ -35,7 +35,7 @@ public record LessonDetailResponse(
                 lesson.getGenre(),
                 lesson.getName(),
                 lesson.getTeacher().getId(),
-                lesson.getTeacher().getNickName(),
+                lesson.getTeacher().getNickname(),
                 lesson.getTeacher().getRepresentativeImageUrl(),
                 lesson.getReservationCount(),
                 lesson.getMaxReservationCount(),

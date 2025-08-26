@@ -127,6 +127,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         // when
         teacherService.updateTeacherProfile(new TeacherUpdateCommand(
                 1L,
+                "nickname",
                 "updated_detail",
                 List.of("www.example.com/updated.png"),
                 "@updated_instagram",
@@ -143,6 +144,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> Assertions.assertThat(teacherImageJpaRepository.findAllByTeacherId(1L)).hasSize(1),
                 () -> Assertions.assertThat(teacherVideoJpaRepository.findAllByTeacherId(1L)).hasSize(2),
+                () -> Assertions.assertThat(updatedTeacher.getNickname()).isEqualTo("nickname"),
                 () -> Assertions.assertThat(updatedTeacher.getDetail()).isEqualTo("updated_detail"),
                 () -> Assertions.assertThat(updatedTeacher.getInstagram()).isEqualTo("@updated_instagram"),
                 () -> Assertions.assertThat(updatedTeacher.getYoutube()).isEqualTo("updated_youtube.com"),
@@ -162,6 +164,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         // when then
         Assertions.assertThatThrownBy(() -> teacherService.updateTeacherProfile(new TeacherUpdateCommand(
                 2L,
+                "nickname",
                 "updated_detail",
                 List.of("www.example.com/updated.png"),
                 "@hong_dancer",
@@ -183,6 +186,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         // when then
         Assertions.assertThatThrownBy(() -> teacherService.updateTeacherProfile(new TeacherUpdateCommand(
                         2L,
+                        "nickname",
                         "updated_detail",
                         List.of("www.example.com/updated.png"),
                         "@updated_instagram",
@@ -205,6 +209,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         // when
         teacherService.create(new CreateTeacherCommand(
                 1L,
+                "nickname",
                 "instagram",
                 "youtube",
                 List.of("한국예술대학교 댄스학과"),
@@ -218,6 +223,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         // then
         TeacherJpaEntity teacher = teacherJpaRepository.findById(1L).get();
         assertAll(
+                () -> assertThat(teacher.getNickname()).isEqualTo("nickname"),
                 () -> assertThat(teacher.getDetail()).isEqualTo("detaildetaildetaildetaildetail"),
                 () -> assertThat(teacher.getInstagram()).isEqualTo("instagram"),
                 () -> assertThat(teacher.getYoutube()).isEqualTo("youtube"),
@@ -229,7 +235,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("선생님 프로필을 등록시 instagram이 중복되면 예외를 발생한다..")
+    @DisplayName("선생님 프로필을 등록시 instagram이 중복되면 예외를 발생한다.")
     @Test
     void failCreateOnDuplicatedInstagram() {
         // given
@@ -239,6 +245,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         // when, then
         Assertions.assertThatThrownBy(() -> teacherService.create(new CreateTeacherCommand(
                 1L,
+                "nickname",
                 "@hong_dancer",
                 "youtube",
                 List.of("한국예술대학교 댄스학과"),
@@ -260,6 +267,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         // when, then
         Assertions.assertThatThrownBy(() -> teacherService.create(new CreateTeacherCommand(
                 1L,
+                "nickname",
                 "@hong_dancer2",
                 "youtube.com/hong_dancer",
                 List.of("한국예술대학교 댄스학과"),
