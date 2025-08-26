@@ -1,7 +1,6 @@
 package be.dash.dashserver.database.core.teacher.projection;
 
 import java.util.List;
-import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 
 public record TeacherLessonCount(Long teacherId, String nickname, Long lessonCount) {

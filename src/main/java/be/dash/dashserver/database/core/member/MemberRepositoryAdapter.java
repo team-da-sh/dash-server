@@ -1,7 +1,6 @@
 package be.dash.dashserver.database.core.member;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Component;
 import be.dash.dashserver.core.domain.member.AuthMember;
 import be.dash.dashserver.core.domain.member.Member;

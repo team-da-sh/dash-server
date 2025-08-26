@@ -1,7 +1,6 @@
 package be.dash.dashserver.core.domain.member.service;
 
 import java.util.List;
-import java.util.Optional;
 import be.dash.dashserver.core.domain.member.AuthMember;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.Role;
