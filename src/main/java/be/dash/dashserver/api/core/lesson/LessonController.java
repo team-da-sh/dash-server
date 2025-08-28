@@ -1,5 +1,6 @@
 package be.dash.dashserver.api.core.lesson;
 
+import java.net.URI;
 import java.util.List;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -21,6 +22,7 @@ import be.dash.dashserver.api.core.lesson.dto.LessonDetailResponse;
 import be.dash.dashserver.api.core.lesson.dto.LessonFilterRequest;
 import be.dash.dashserver.api.core.lesson.dto.LessonReservationResponse;
 import be.dash.dashserver.api.core.lesson.dto.LessonResponses;
+import be.dash.dashserver.api.core.lesson.dto.PaymentRequest;
 import be.dash.dashserver.api.core.lesson.dto.PopularGenres;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.Permission;
@@ -109,10 +111,11 @@ public class LessonController {
     }
 
     @PostMapping("/{lessonId}/reservations")
-    public ResponseEntity<LessonAccountResponse> createReservation(
+    public ResponseEntity<Void> createReservation(
             @MemberId Long memberId,
+            @Valid @RequestBody PaymentRequest paymentRequest,
             @PathVariable @Min(value = 1L, message = "수업의 식별자는 양수로 이루어져야 합니다.") long lessonId) {
-        LessonAccount account = reservationService.reserve(memberId, lessonId);
-        return ResponseEntity.ok(new LessonAccountResponse(account));
+        long reservationId = reservationService.reservePayment(paymentRequest.toCommand(memberId, lessonId));
+        return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
     }
 }
