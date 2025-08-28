@@ -27,7 +27,7 @@ public class ReservationService {
     private final LessonRepository lessonRepository;
     private final TeacherRepository teacherRepository;
     private final AccountRepository accountRepository;
-//    private final PaymentClientApi paymentClientApi;
+    private final PaymentClientApi paymentClientApi;
 
     public Reservation findById(long reservationId) {
         return reservationRepository.findById(reservationId);
@@ -35,6 +35,40 @@ public class ReservationService {
 
     public boolean isBooked(long memberId, long lessonId) {
         return reservationRepository.existsByMemberIdAndLessonId(memberId, lessonId);
+    }
+
+    @Transactional
+    public long reservePayment(CreateReservationCommand command) {
+        validateReservationAvailability(command);
+        Member member = memberRepository.findById(command.memberId());
+        paymentClientApi.purchase(command.toPaymentInformation());
+        long reservationId;
+        try {
+            reservationId = reservationRepository.save(member.getId(), command.lessonId());
+        } catch (DataIntegrityViolationException e) {
+            paymentClientApi.cancelByInternalError(command.paymentKey());
+            throw new ConflictException("이미 예약된 수업입니다.");
+        }
+        lessonRepository.increaseReservationCount(command.lessonId());
+        return reservationId;
+    }
+  
+    @Transactional
+    public LessonAccount reserve(long memberId, long lessonId) {
+        validateReservationAvailability(memberId, lessonId);
+        Member member = memberRepository.findById(memberId);
+        reservationRepository.save(member.getId(), lessonId);
+        Lesson lesson = lessonRepository.findLessonsById(lessonId);
+        lessonRepository.increaseReservationCount(lessonId);
+        Account teacherAccount = accountRepository.findByLessonId(lessonId);
+        return new LessonAccount(lesson, teacherAccount);
+    }
+
+    private void validateReservationAvailability(long memberId, long lessonId) {
+        validateOwnerIfTeacher(memberId, lessonId);
+        if (lessonRepository.isFull(lessonId)) {
+            throw new ConflictException("잔여 좌석이 없습니다.");
+        }
     }
 
     @Transactional

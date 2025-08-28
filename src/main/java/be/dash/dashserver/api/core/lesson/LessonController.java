@@ -112,7 +112,7 @@ public class LessonController {
     public ResponseEntity<LessonAccountResponse> createReservation(
             @MemberId Long memberId,
             @PathVariable @Min(value = 1L, message = "수업의 식별자는 양수로 이루어져야 합니다.") long lessonId) {
-        LessonAccount account = reservationService.reserve(memberId, lessonId);
-        return ResponseEntity.ok(new LessonAccountResponse(account));
+        long reservationId = reservationService.reservePayment(paymentRequest.toCommand(memberId, lessonId));
+        return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
     }
 }
