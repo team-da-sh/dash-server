@@ -1,17 +1,19 @@
 package be.dash.dashserver.core.domain.reservation.service;
 
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import be.dash.dashserver.api.core.lesson.dto.LessonAccount;
 import be.dash.dashserver.core.domain.account.Account;
 import be.dash.dashserver.core.domain.account.service.AccountRepository;
-import be.dash.dashserver.core.domain.account.service.dto.AccountResult;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
+import be.dash.dashserver.core.domain.payment.PaymentClientApi;
 import be.dash.dashserver.core.domain.reservation.Reservation;
+import be.dash.dashserver.core.domain.reservation.command.CreateReservationCommand;
 import be.dash.dashserver.core.domain.teacher.service.TeacherRepository;
 import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.log.annotation.Trace;
@@ -52,21 +54,10 @@ public class ReservationService {
         lessonRepository.increaseReservationCount(command.lessonId());
         return reservationId;
     }
-  
-    @Transactional
-    public LessonAccount reserve(long memberId, long lessonId) {
-        validateReservationAvailability(memberId, lessonId);
-        Member member = memberRepository.findById(memberId);
-        reservationRepository.save(member.getId(), lessonId);
-        Lesson lesson = lessonRepository.findLessonsById(lessonId);
-        lessonRepository.increaseReservationCount(lessonId);
-        Account teacherAccount = accountRepository.findByLessonId(lessonId);
-        return new LessonAccount(lesson, teacherAccount);
-    }
 
-    private void validateReservationAvailability(long memberId, long lessonId) {
-        validateOwnerIfTeacher(memberId, lessonId);
-        if (lessonRepository.isFull(lessonId)) {
+    private void validateReservationAvailability(CreateReservationCommand command) {
+        validateOwnerIfTeacher(command.memberId(), command.lessonId());
+        if (lessonRepository.isFull(command.lessonId())) {
             throw new ConflictException("잔여 좌석이 없습니다.");
         }
     }
