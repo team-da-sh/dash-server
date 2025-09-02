@@ -47,4 +47,11 @@ toss:
   socket-timeout: ${SOCKET_TIMEOUT}
   cancel-uri: ${TOSS_CANCEL_URI}
 
+solapi:
+  api-key: ${SOLAPI_API_KEY}
+  api-secret: ${SOLAPI_API_SECRET}
+  base-url: https://api.solapi.com
+  from: ${SOLAPI_SENDER_PHONE}
+  verification-template: ${SOLAPI_VERIFICATION_TEMPLATE}
+
 

@@ -40,10 +40,10 @@ class MemberControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("적절한 요청에 대해 응답을 반환한다.")
+    @DisplayName("온보딩 요청에 대해 성공 응답을 반환한다.")
     void onboard() throws Exception {
         // given
-        OnBoardRequest onBoardRequest = new OnBoardRequest("name", "01011111111", "nick", "www.");
+        OnBoardRequest onBoardRequest = new OnBoardRequest("name", "01011111111");
         // when
         doNothing().when(memberService).onboard(any(OnboardCommand.class));
         // then
@@ -57,7 +57,7 @@ class MemberControllerTest {
     @DisplayName("유효하지 않은 요청에 대해 400 에러를 반환한다.")
     void failOnboard() throws Exception {
         // given
-        OnBoardRequest onBoardRequest = new OnBoardRequest("name", "01011111111", "n".repeat(11), "www.");
+        OnBoardRequest onBoardRequest = new OnBoardRequest(" ", "01011111111");
         // when
         doNothing().when(memberService).onboard(any(OnboardCommand.class));
         // then

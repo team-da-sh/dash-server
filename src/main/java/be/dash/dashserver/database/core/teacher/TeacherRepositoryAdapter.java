@@ -100,4 +100,9 @@ public class TeacherRepositoryAdapter implements TeacherRepository {
     public boolean existByInstagramAndMemberIdNot(String instagram, long memberId) {
         return teacherJpaRepository.existsByInstagramAndMemberIdNot(instagram, memberId);
     }
+
+    @Override
+    public boolean existsByNickname(String nickname) {
+        return teacherJpaRepository.existsByNickname(nickname);
+    }
 }

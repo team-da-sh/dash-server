@@ -64,15 +64,13 @@ class TeacherControllerTest {
                         .param("keyword", ""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.teachers[0].id").value(teacherLessonGenres1.teacher().getId()))
-                .andExpect(jsonPath("$.teachers[0].nickname").value(teacherLessonGenres1.teacher().getMember()
-                        .getNickname()))
+                .andExpect(jsonPath("$.teachers[0].nickname").value(teacherLessonGenres1.teacher().getNickname()))
                 .andExpect(jsonPath("$.teachers[0].profileImage").value(teacherLessonGenres1.teacher()
                         .getRepresentativeImageUrl()))
                 .andExpect(jsonPath("$.teachers[0].genres[0]").value(teacherLessonGenres1.genres().get(0).name()))
                 .andExpect(jsonPath("$.teachers[0].genres[1]").value(teacherLessonGenres1.genres().get(1).name()))
                 .andExpect(jsonPath("$.teachers[1].id").value(teacherLessonGenres2.teacher().getId()))
-                .andExpect(jsonPath("$.teachers[1].nickname").value(teacherLessonGenres2.teacher().getMember()
-                        .getNickname()))
+                .andExpect(jsonPath("$.teachers[1].nickname").value(teacherLessonGenres2.teacher().getNickname()))
                 .andExpect(jsonPath("$.teachers[1].profileImage").value(teacherLessonGenres2.teacher()
                         .getRepresentativeImageUrl()))
                 .andExpect(jsonPath("$.teachers[1].genres").value(empty()));
@@ -81,7 +79,9 @@ class TeacherControllerTest {
     @DisplayName("주어진 요청으로 댄서 생성 요청을 처리하고 올바른 응답을 반환한다.")
     @Test
     void create() throws Exception {
-        CreateTeacherRequest createTeacherRequest = new CreateTeacherRequest("instagram",
+        CreateTeacherRequest createTeacherRequest = new CreateTeacherRequest(
+                "nickname",
+                "instagram",
                 "youtube",
                 List.of("education1", "education2"),
                 List.of("experience1", "experience2"),
@@ -97,14 +97,14 @@ class TeacherControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createTeacherRequest)))
                 .andExpect(status().isOk());
-
-
     }
 
     @DisplayName("요청 검증을 통과하지 못하면 에러를 반환한다.(유튜브, 인스타그램 검증 실패)")
     @Test
     void failCreate() throws Exception {
-        CreateTeacherRequest createTeacherRequest = new CreateTeacherRequest(null,
+        CreateTeacherRequest createTeacherRequest = new CreateTeacherRequest(
+                "nickname",
+                null,
                 null,
                 List.of("education1education1education1education1", "education2"),
                 List.of("experience1", "experience2"),
@@ -120,8 +120,5 @@ class TeacherControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createTeacherRequest)))
                 .andExpect(status().isBadRequest());
-
-
     }
-
 }

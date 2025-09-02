@@ -1,7 +1,6 @@
 package be.dash.dashserver.core.domain.member.service;
 
 import java.util.List;
-import java.util.Optional;
 import be.dash.dashserver.core.domain.member.AuthMember;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.Role;
@@ -24,13 +23,7 @@ public interface MemberRepository {
 
     void update(Member member);
 
-    Optional<String> findNicknameById(long memberId);
-
-    boolean existsByNickname(String nickname);
-
     boolean existsByPhoneNumber(String phoneNumber);
-
-    boolean existsByNicknameAndIdNot(String nickname, Long memberId);
 
     boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long memberId);
 }

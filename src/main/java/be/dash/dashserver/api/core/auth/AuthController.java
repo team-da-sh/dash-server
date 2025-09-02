@@ -1,5 +1,6 @@
 package be.dash.dashserver.api.core.auth;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import be.dash.dashserver.api.core.auth.dto.LoginRequest;
 import be.dash.dashserver.api.core.auth.dto.LoginResponse;
+import be.dash.dashserver.api.core.auth.dto.PhoneVerificationApprovalRequest;
+import be.dash.dashserver.api.core.auth.dto.PhoneVerificationRequest;
+import be.dash.dashserver.api.core.auth.dto.PhoneVerificationResponse;
 import be.dash.dashserver.api.core.auth.dto.ReissueResponse;
 import be.dash.dashserver.api.core.auth.dto.RoleResponse;
 import be.dash.dashserver.api.support.MemberId;
@@ -18,7 +22,10 @@ import be.dash.dashserver.core.auth.LogoutService;
 import be.dash.dashserver.core.auth.ReissueService;
 import be.dash.dashserver.core.auth.Token;
 import be.dash.dashserver.core.auth.TokenService;
+import be.dash.dashserver.core.auth.VerificationService;
 import be.dash.dashserver.core.auth.command.LoginCommand;
+import be.dash.dashserver.core.auth.command.PhoneVerificationApprovalCommand;
+import be.dash.dashserver.core.auth.command.PhoneVerificationCommand;
 import be.dash.dashserver.core.auth.dto.LoginResult;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.log.annotation.Trace;
@@ -34,6 +41,7 @@ public class AuthController {
     private final ReissueService reissueService;
     private final LogoutService logoutService;
     private final TokenService tokenService;
+    private final VerificationService verificationService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
@@ -59,5 +67,20 @@ public class AuthController {
     @PostMapping("/role")
     public ResponseEntity<RoleResponse> role(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
         return ResponseEntity.ok(new RoleResponse(tokenService.getRole(accessToken)));
+    }
+
+    @Permission(role = Role.MEMBER)
+    @PostMapping("/phone/request")
+    public ResponseEntity<Void> requestPhoneVerification(@MemberId Long memberId, @RequestBody @Valid PhoneVerificationRequest request) {
+        verificationService.requestPhoneVerification(PhoneVerificationCommand.of(memberId, request.phoneNumber()));
+        return ResponseEntity.noContent().build();
+    }
+
+    @Permission(role = Role.MEMBER)
+    @PostMapping("/phone/verify")
+    public ResponseEntity<PhoneVerificationResponse> verifyPhone(@MemberId Long memberId, @RequestBody @Valid PhoneVerificationApprovalRequest request) {
+        return ResponseEntity.ok(
+                new PhoneVerificationResponse(verificationService.verifyPhone(PhoneVerificationApprovalCommand.of(memberId, request.phoneNumber(), request.code())))
+        );
     }
 }

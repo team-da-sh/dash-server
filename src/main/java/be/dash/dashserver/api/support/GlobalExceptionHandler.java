@@ -22,6 +22,8 @@ import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.exception.ForbiddenException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.exception.PaymentClientException;
+import be.dash.dashserver.core.exception.SmsException;
+import be.dash.dashserver.core.exception.VerificationException;
 import be.dash.dashserver.core.log.LogForm;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.s3.model.S3Exception;
@@ -125,6 +127,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> handlePaymentClientException(PaymentClientException e) {
         log.warn("handlePaymentClientException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
         return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
+    }
+
+    @ExceptionHandler(VerificationException.class)
+    public ResponseEntity<ErrorMessage> handlePaymentClientException(VerificationException e) {
+        log.warn("handleVerificationException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
+        return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
+    }
+
+    @ExceptionHandler(SmsException.class)
+    public ResponseEntity<ErrorMessage> handleSmsException(SmsException e) {
+        log.warn("handleSmsException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
+        if (e.getReason() == SmsException.Reason.BUSINESS) {
+            return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
+        }
+        return ResponseEntity.internalServerError().body(new ErrorMessage(e.getMessage()));
     }
 
     @ExceptionHandler(DashApiException.class)

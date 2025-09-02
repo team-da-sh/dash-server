@@ -12,9 +12,6 @@ public record MemberUpdateRequest(
         @NotBlank(message = "전화번호는 공백일 수 없습니다.")
         @Size(min = 11, max = 11, message = "전화번호는 11자입니다.")
         String phoneNumber,
-        @NotBlank(message = "닉네임은 공백일 수 없습니다.")
-        @Size(max = 8, message = "댄서네임은 최대 8자입니다.")
-        String nickname,
         String profileImageUrl
 ) {
     @AssertTrue(message = "이미지 url은 null이거나 공백이 아니어야 합니다.")
@@ -23,6 +20,6 @@ public record MemberUpdateRequest(
     }
 
     public MemberUpdateCommand toCommand(Long memberId) {
-        return new MemberUpdateCommand(memberId, name, phoneNumber, nickname, profileImageUrl);
+        return new MemberUpdateCommand(memberId, name, phoneNumber, profileImageUrl);
     }
 }

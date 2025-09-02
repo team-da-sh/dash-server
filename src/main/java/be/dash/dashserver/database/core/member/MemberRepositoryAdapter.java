@@ -1,7 +1,6 @@
 package be.dash.dashserver.database.core.member;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Component;
 import be.dash.dashserver.core.domain.member.AuthMember;
 import be.dash.dashserver.core.domain.member.Member;
@@ -40,8 +39,6 @@ public class MemberRepositoryAdapter implements MemberRepository {
                 .email(member.getEmail())
                 .name(member.getName())
                 .phoneNumber(member.getPhoneNumber())
-                .nickname(member.getNickname())
-                .profileImageUrl(member.getProfileImageUrl())
                 .build();
     }
 
@@ -82,23 +79,8 @@ public class MemberRepositoryAdapter implements MemberRepository {
     }
 
     @Override
-    public Optional<String> findNicknameById(long memberId) {
-        return memberJpaRepository.findNicknameById(memberId);
-    }
-
-    @Override
-    public boolean existsByNickname(String nickname) {
-        return memberJpaRepository.existsByNickname(nickname);
-    }
-
-    @Override
     public boolean existsByPhoneNumber(String phoneNumber) {
         return memberJpaRepository.existsByPhoneNumber(phoneNumber);
-    }
-
-    @Override
-    public boolean existsByNicknameAndIdNot(String nickname, Long memberId) {
-        return memberJpaRepository.existsByNicknameAndIdNot(nickname, memberId);
     }
 
     @Override

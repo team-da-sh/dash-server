@@ -46,3 +46,10 @@ toss:
   socket-timeout: 1234
   cancel-uri: 1234
 
+solapi:
+  api-key: 1234
+  api-secret: 1234
+  base-url: https://api.base.com
+  from: 01000000000
+  verification-template: "template"
+

@@ -11,6 +11,7 @@ public class TeacherFixture {
         return Teacher.builder()
                 .id(id)
                 .member(MemberFixture.createTeacher(memberId))
+                .nickname("홍길동" + id)
                 .detail("경력 10년의 힙합 댄서")
                 .educations(List.of("한국예술대학교 댄스학과"))
                 .experiences(List.of("다양한 공연 및 강의 경험"))
@@ -24,6 +25,7 @@ public class TeacherFixture {
     public static Teacher createWithoutId(long memberId) {
         return Teacher.builder()
                 .member(MemberFixture.createTeacher(memberId))
+                .nickname("홍길동" + memberId)
                 .detail("경력 10년의 힙합 댄서")
                 .educations(List.of("한국예술대학교 댄스학과"))
                 .experiences(List.of("다양한 공연 및 강의 경험"))

@@ -85,16 +85,13 @@ public class TeacherService {
         Teacher teacher = teacherRepository.findByTeacherId(teacherId);
         List<Genre> genres = lessonRepository.findDistinctGenresByTeacherIdOrderByCountDesc(teacher.getId());
         Lessons activeLessonsByTeacher = lessonRepository.findLessonsByTeacher(teacher);
-        Member member = memberRepository.findById(teacher.getMember().getId());
-        return new TeacherDetailResult(new TeacherLessonGenres(teacher, genres), member.getNickname(), activeLessonsByTeacher);
+        return new TeacherDetailResult(new TeacherLessonGenres(teacher, genres), teacher.getNickname(), activeLessonsByTeacher);
     }
 
     public MyTeacherProfileResult findMyTeacherProfile(long memberId) {
         Teacher teacher = findTeacherByMemberId(memberId);
         String image = findTeacherImageByTeacherId(teacher.getId());
-        String nickname = memberRepository.findNicknameById(memberId)
-                .orElseThrow(() -> new NotFoundException("멤버의 닉네임이 존재하지 않습니다."));
-        return MyTeacherProfileResult.of(image, nickname, teacher);
+        return MyTeacherProfileResult.of(image, teacher);
     }
 
     public MyTeacherProfileDetailResult findMyTeacherProfileDetail(long memberId) {
@@ -191,5 +188,9 @@ public class TeacherService {
         List<Lesson> lessons = getLessons(memberId);
         return LessonStatusCountResponses.from(lessons);
 
+    }
+
+    public boolean checkNicknameDuplication(String nickname) {
+        return teacherRepository.existsByNickname(nickname);
     }
 }

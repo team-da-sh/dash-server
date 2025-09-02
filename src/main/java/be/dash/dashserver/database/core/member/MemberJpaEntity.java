@@ -52,9 +52,6 @@ public class MemberJpaEntity extends BaseTimeEntity {
     @Column(nullable = true, unique = true)
     private String phoneNumber;
 
-    @Column(nullable = true, unique = true)
-    private String nickname;
-
     @Column(nullable = true, columnDefinition = "TEXT")
     private String profileImageUrl;
 
@@ -79,7 +76,7 @@ public class MemberJpaEntity extends BaseTimeEntity {
     }
 
     @Builder
-    public MemberJpaEntity(SocialProvider provider, String socialId, String socialName, Role role, String email, String name, String phoneNumber, String nickname, String profileImageUrl) {
+    public MemberJpaEntity(SocialProvider provider, String socialId, String socialName, Role role, String email, String name, String phoneNumber, String profileImageUrl) {
         this.provider = provider;
         this.socialId = socialId;
         this.socialName = socialName;
@@ -87,7 +84,6 @@ public class MemberJpaEntity extends BaseTimeEntity {
         this.email = email;
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
     }
 
@@ -100,7 +96,6 @@ public class MemberJpaEntity extends BaseTimeEntity {
         this.email = member.getEmail();
         this.name = member.getName();
         this.phoneNumber = member.getPhoneNumber();
-        this.nickname = member.getNickname();
         this.profileImageUrl = member.getProfileImageUrl();
     }
 
@@ -114,7 +109,6 @@ public class MemberJpaEntity extends BaseTimeEntity {
                 .email(email)
                 .name(name)
                 .phoneNumber(phoneNumber)
-                .nickname(nickname)
                 .profileImageUrl(profileImageUrl)
                 .build();
     }
@@ -122,15 +116,12 @@ public class MemberJpaEntity extends BaseTimeEntity {
     public void updateOnboardDetails(Member member) {
         this.name = member.getName();
         this.phoneNumber = member.getPhoneNumber();
-        this.nickname = member.getNickname();
-        this.profileImageUrl = member.getProfileImageUrl();
     }
 
 
     public void update(Member member) {
         this.name = member.getName();
         this.phoneNumber = member.getPhoneNumber();
-        this.nickname = member.getNickname();
         this.profileImageUrl = member.getProfileImageUrl();
     }
 }

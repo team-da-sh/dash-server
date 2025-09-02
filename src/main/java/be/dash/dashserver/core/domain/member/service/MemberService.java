@@ -32,7 +32,6 @@ public class MemberService {
 
     @Transactional
     public void onboard(OnboardCommand command) {
-        validateNickname(command.nickname());
         validatePhoneNumber(command.phoneNumber());
 
         Member member = command.toMember();
@@ -59,27 +58,13 @@ public class MemberService {
 
     @Transactional
     public void updateMemberInformation(MemberUpdateCommand command) {
-        validateNicknameOnUpdate(command.nickname(), command.memberId());
         validatePhoneNumberOnUpdate(command.phoneNumber(), command.memberId());
-
         memberRepository.update(command.toMember());
-    }
-
-    private void validateNicknameOnUpdate(String nickname, Long memberId) {
-        if (memberRepository.existsByNicknameAndIdNot(nickname, memberId)) {
-            throw new ConflictException("이미 사용 중인 닉네임입니다.");
-        }
     }
 
     private void validatePhoneNumberOnUpdate(String phoneNumber, Long memberId) {
         if (memberRepository.existsByPhoneNumberAndIdNot(phoneNumber, memberId)) {
             throw new ConflictException("이미 사용 중인 전화번호입니다.");
-        }
-    }
-
-    private void validateNickname(String nickname) {
-        if (memberRepository.existsByNickname(nickname)) {
-            throw new ConflictException("이미 사용 중인 닉네임입니다.");
         }
     }
 

@@ -12,6 +12,7 @@ public class Teacher {
 
     private final Long id;
     private final Member member;
+    private final String nickname;
     private final String detail;
     private final List<String> educations;
     private final List<String> experiences;
@@ -26,6 +27,7 @@ public class Teacher {
     public Teacher(
             Long id,
             Member member,
+            String nickname,
             String detail,
             List<String> educations,
             List<String> experiences,
@@ -37,6 +39,7 @@ public class Teacher {
             long lessonCount) {
         this.id = id;
         this.member = member;
+        this.nickname = nickname;
         this.detail = detail;
         this.educations = educations;
         this.experiences = experiences;
@@ -60,11 +63,4 @@ public class Teacher {
         return videos.getVideoUrls();
     }
 
-    public String getNickName() {
-        return member.getNickname();
-    }
-
-    public String getNickname() {
-        return member.getNickname();
-    }
 }
