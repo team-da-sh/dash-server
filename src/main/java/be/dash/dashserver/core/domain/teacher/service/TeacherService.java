@@ -23,6 +23,7 @@ import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
+import be.dash.dashserver.core.domain.reservation.ReservationStatusType;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
@@ -142,14 +143,13 @@ public class TeacherService {
         }
     }
 
-    public MyLessonDetailedResponse getMyLesson(long memberId, long lessonId) {
+    public MyLessonDetailedResponse getMyLesson(long memberId, long lessonId, ReservationStatusType status) {
         Teacher teacher = findTeacherByMemberId(memberId);
         Lesson lesson = lessonRepository.findLessonsById(lessonId);
         validateOwner(teacher, lesson);
-        Reservations reservations = reservationRepository.findAllByLessonIdOrderByCreatedAtDesc(lessonId);
-        List<LocalDateTime> reservationDateTimes = reservations.getCreatedAt();
+        Reservations reservations = reservationRepository.findAllByLessonIdAndReservationStatusOrderByCreatedAtDesc(lessonId, status.getReservationStatuses());
         List<Member> members = memberRepository.findAllByMemberIds(reservations.getMemberIds());
-        return MyLessonDetailedResponse.from(lesson, members, reservationDateTimes);
+        return MyLessonDetailedResponse.from(lesson, members, reservations);
     }
 
     private Teacher findTeacherByMemberId(long memberId) {
@@ -164,7 +164,7 @@ public class TeacherService {
     }
 
     public MyLessonsResponse getMyLessons(long memberId, ApplyStatus status) {
-        if(Objects.isNull(status)){
+        if (Objects.isNull(status)) {
             List<Lesson> lessons = getLessons(memberId);
             return MyLessonsResponse.from(lessons.stream().map(MyLessonResponse::from).toList());
         }

@@ -1,5 +1,6 @@
 package be.dash.dashserver.database.core.reservation;
 
+import java.util.List;
 import org.springframework.stereotype.Repository;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
@@ -34,9 +35,11 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     }
 
     @Override
-    public Reservations findAllByLessonIdOrderByCreatedAtDesc(Long lessonId) {
+    public Reservations findAllByLessonIdAndReservationStatusOrderByCreatedAtDesc(Long lessonId, List<ReservationStatus> reservationStatusList) {
         return new Reservations(reservationJpaRepository.findAllByLessonIdOrderByCreatedAtDesc(lessonId).stream()
-                .map(ReservationJpaEntity::toDomain).toList());
+                .filter(reservation -> reservationStatusList.contains(reservation.getStatus()))
+                .map(ReservationJpaEntity::toDomain)
+                .toList());
     }
 
     @Override

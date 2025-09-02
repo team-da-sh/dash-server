@@ -33,6 +33,7 @@ import be.dash.dashserver.api.support.Permission;
 import be.dash.dashserver.core.domain.account.service.AccountService;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.member.Role;
+import be.dash.dashserver.core.domain.reservation.ReservationStatusType;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
 import be.dash.dashserver.core.domain.teacher.service.TeacherService;
 import be.dash.dashserver.core.domain.teacher.service.dto.TeacherDetailResult;
@@ -102,8 +103,8 @@ public class TeacherController {
 
     @Permission(role = Role.TEACHER)
     @GetMapping("/me/lessons/{lessonId}")
-    public ResponseEntity<MyLessonDetailedResponse> getMyLesson(@MemberId Long memberId, @PathVariable Long lessonId) {
-        return ResponseEntity.ok(teacherService.getMyLesson(memberId, lessonId));
+    public ResponseEntity<MyLessonDetailedResponse> getMyLesson(@MemberId Long memberId, @PathVariable Long lessonId, @RequestParam(name = "status") ReservationStatusType status) {
+        return ResponseEntity.ok(teacherService.getMyLesson(memberId, lessonId, status));
     }
 
     @Permission(role = Role.TEACHER)
