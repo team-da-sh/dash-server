@@ -4,11 +4,14 @@ import org.springframework.stereotype.Component;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import be.dash.dashserver.core.exception.SmsException;
 import be.dash.dashserver.core.external.MessageSender;
 import be.dash.dashserver.external.config.sms.SolProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class SmsSender implements MessageSender {
 
@@ -24,11 +27,9 @@ public class SmsSender implements MessageSender {
         try {
             messageService.send(message);
         } catch (NurigoMessageNotReceivedException exception) {
-            System.out.println(exception.getFailedMessageList());
-            System.out.println(exception.getMessage());
+            throw SmsException.failBusiness();
         } catch (Exception exception) {
-            System.out.println(exception.getMessage());
+            throw SmsException.failTransient();
         }
-
     }
 }
