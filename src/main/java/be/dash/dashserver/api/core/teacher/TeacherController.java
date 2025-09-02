@@ -21,6 +21,7 @@ import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherResponse;
 import be.dash.dashserver.api.core.teacher.dto.LessonStatusCountResponses;
+import be.dash.dashserver.api.core.teacher.dto.NicknameValidationResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherAccountResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherDetailResponse;
 import be.dash.dashserver.api.core.teacher.dto.TeacherProfileDetailResponse;
@@ -122,4 +123,11 @@ public class TeacherController {
     public ResponseEntity<LessonStatusCountResponses> getMyLessonsStatusCount(@MemberId Long memberId) {
         return ResponseEntity.ok(teacherService.getMyLessonsStatusCount(memberId));
     }
+
+    @Permission(role = {Role.MEMBER, Role.TEACHER})
+    @GetMapping("/nickname-validation")
+    public ResponseEntity<NicknameValidationResponse> validateNickname(@RequestParam String nickname) {
+        return ResponseEntity.ok(NicknameValidationResponse.from(teacherService.checkNicknameDuplication(nickname)));
+    }
+
 }

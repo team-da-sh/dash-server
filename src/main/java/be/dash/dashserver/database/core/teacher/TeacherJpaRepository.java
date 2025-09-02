@@ -26,4 +26,6 @@ public interface TeacherJpaRepository extends JpaRepository<TeacherJpaEntity, Lo
     boolean existsByYoutubeAndMemberIdNot(String youtube, long memberId);
 
     boolean existsByInstagramAndMemberIdNot(String instagram, long memberId);
+
+    boolean existsByNickname(String nickname);
 }

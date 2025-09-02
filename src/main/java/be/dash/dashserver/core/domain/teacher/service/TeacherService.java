@@ -189,4 +189,8 @@ public class TeacherService {
         return LessonStatusCountResponses.from(lessons);
 
     }
+
+    public boolean checkNicknameDuplication(String nickname) {
+        return teacherRepository.existsByNickname(nickname);
+    }
 }

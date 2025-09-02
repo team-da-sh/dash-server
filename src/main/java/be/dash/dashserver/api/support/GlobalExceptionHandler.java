@@ -22,6 +22,7 @@ import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.exception.ForbiddenException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.exception.PaymentClientException;
+import be.dash.dashserver.core.exception.VerificationException;
 import be.dash.dashserver.core.log.LogForm;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.s3.model.S3Exception;
@@ -124,6 +125,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PaymentClientException.class)
     public ResponseEntity<ErrorMessage> handlePaymentClientException(PaymentClientException e) {
         log.warn("handlePaymentClientException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
+        return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
+    }
+
+    @ExceptionHandler(VerificationException.class)
+    public ResponseEntity<ErrorMessage> handlePaymentClientException(VerificationException e) {
+        log.warn("handleVerificationException in GlobalExceptionHandler throw {} : {}", e.getClass(), e.getMessage());
         return ResponseEntity.badRequest().body(new ErrorMessage(e.getMessage()));
     }
 
