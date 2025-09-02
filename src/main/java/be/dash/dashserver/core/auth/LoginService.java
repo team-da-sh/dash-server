@@ -1,20 +1,15 @@
 package be.dash.dashserver.core.auth;
 
-import java.security.SecureRandom;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import be.dash.dashserver.core.auth.command.LoginCommand;
-import be.dash.dashserver.core.auth.command.PhoneVerificationCommand;
 import be.dash.dashserver.core.auth.dto.LoginResult;
 import be.dash.dashserver.core.auth.dto.OauthTokenResult;
 import be.dash.dashserver.core.auth.dto.SocialInfoResult;
 import be.dash.dashserver.core.domain.member.AuthMember;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
-import be.dash.dashserver.core.exception.VerificationException;
-import be.dash.dashserver.core.external.MessageSender;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
