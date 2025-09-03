@@ -16,8 +16,4 @@ public class Reservation {
     public boolean ownBy(long memberId) {
         return this.memberId == memberId;
     }
-
-    public void changeStatus(ReservationStatus status) {
-        this.reservationStatus = status;
-    }
 }

@@ -134,6 +134,11 @@ public class LessonRepositoryAdapter implements LessonRepository {
     }
 
     @Override
+    public void decreaseReservationCount(long lessonId) {
+        lessonJpaRepository.decreaseReservationCount(lessonId);
+    }
+
+    @Override
     public boolean isFull(long lessonId) {
         return lessonJpaRepository.findById(lessonId)
                 .map(lessonJpaEntity -> lessonJpaEntity.getReservationCount() >= lessonJpaEntity.getMaxReservationCount())

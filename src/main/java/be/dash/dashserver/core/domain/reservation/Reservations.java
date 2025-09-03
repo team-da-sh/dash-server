@@ -35,4 +35,8 @@ public class Reservations {
                 .map(Reservation::getCreatedAt)
                 .toList();
     }
+
+    public List<Long> getReservationIds() {
+        return reservations.stream().map(Reservation::getId).toList();
+    }
 }

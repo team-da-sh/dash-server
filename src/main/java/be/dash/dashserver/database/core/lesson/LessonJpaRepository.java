@@ -51,4 +51,10 @@ public interface LessonJpaRepository extends JpaRepository<LessonJpaEntity, Long
             "set l.reservationCount = l.reservationCount + 1 " +
             "where l.id = :lessonId")
     void increaseReservationCount(long lessonId);
+
+    @Modifying
+    @Query("update LessonJpaEntity l " +
+            "set l.reservationCount = l.reservationCount - 1 " +
+            "where l.id = :lessonId and l.reservationCount > 0")
+    void decreaseReservationCount(long lessonId);
 }

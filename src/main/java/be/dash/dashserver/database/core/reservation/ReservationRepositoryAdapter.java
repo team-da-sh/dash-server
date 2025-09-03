@@ -1,12 +1,11 @@
 package be.dash.dashserver.database.core.reservation;
 
+import java.util.List;
 import org.springframework.stereotype.Repository;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import be.dash.dashserver.core.domain.reservation.Reservations;
-import be.dash.dashserver.core.domain.reservation.command.CancelReservationCommand;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
-import be.dash.dashserver.core.exception.ForbiddenException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -34,20 +33,11 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     }
 
     @Override
-    public Reservations findAllByLessonIdOrderByCreatedAtDesc(Long lessonId) {
+    public Reservations findAllByLessonIdAndReservationStatusOrderByCreatedAtDesc(Long lessonId, List<ReservationStatus> reservationStatusList) {
         return new Reservations(reservationJpaRepository.findAllByLessonIdOrderByCreatedAtDesc(lessonId).stream()
-                .map(ReservationJpaEntity::toDomain).toList());
-    }
-
-    @Override
-    public void cancel(long memberId, long reservationId, CancelReservationCommand cancelReservationCommand) {
-        Reservation reservation = reservationJpaRepository.findById(reservationId).map(ReservationJpaEntity::toDomain)
-                .orElseThrow(() -> new NotFoundException("예약을 찾을 수 없습니다."));
-        if (!reservation.ownBy(memberId)) {
-            throw new ForbiddenException("예약을 취소할 권한이 없습니다.");
-        }
-        reservation.changeStatus(cancelReservationCommand.reservationStatus());
-        // 문자 발송, 아직 수강생의 계좌정보를 저장할지는 모르겠음.
+                .filter(reservation -> reservationStatusList.contains(reservation.getStatus()))
+                .map(ReservationJpaEntity::toDomain)
+                .toList());
     }
 
     @Override
@@ -63,6 +53,26 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     @Override
     public int countPastReservationsByMemberId(Long memberId) {
         return reservationJpaRepository.countPastReservationsByMemberId(memberId);
+    }
+
+    @Override
+    public void pendingApprove(Long reservationId) {
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.PENDING_APPROVAL);
+    }
+
+    @Override
+    public void approve(Long reservationId) {
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.APPROVED);
+    }
+
+    @Override
+    public void pendingCancel(Long reservationId) {
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.PENDING_CANCELLATION);
+    }
+
+    @Override
+    public void cancel(Long reservationId) {
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.CANCELLED);
     }
 
     @Override

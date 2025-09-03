@@ -70,6 +70,10 @@ public class Lesson {
         return location.getDetailedAddress();
     }
 
+    public boolean isFull() {
+        return reservationCount >= maxReservationCount;
+    }
+
     public int calculateDDay() {
         return getStartTime().getDayOfYear() - LocalDateTime.now().getDayOfYear();
     }

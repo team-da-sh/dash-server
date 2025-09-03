@@ -9,6 +9,7 @@ import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.member.Member;
+import be.dash.dashserver.core.domain.reservation.Reservations;
 
 public record MyLessonDetailedResponse(long id,
                                        String name,
@@ -23,7 +24,7 @@ public record MyLessonDetailedResponse(long id,
                                        List<MemberReservationResponse> students,
                                        int studentCount
 ) {
-    public static MyLessonDetailedResponse from(Lesson lesson, List<Member> members, List<LocalDateTime> reservationDateTimes) {
+    public static MyLessonDetailedResponse from(Lesson lesson, List<Member> members, Reservations reservations) {
         return new MyLessonDetailedResponse(
                 lesson.getId(),
                 lesson.getName(),
@@ -36,7 +37,8 @@ public record MyLessonDetailedResponse(long id,
                 lesson.getRounds().getEndTime(),
                 ApplyStatus.calculate(lesson.getStartTime(), lesson.getReservationCount(), lesson.getMaxReservationCount()),
                 IntStream.range(0, members.size())
-                        .mapToObj(i -> MemberReservationResponse.from(members.get(i), reservationDateTimes.get(i)))
+                        .mapToObj(i -> MemberReservationResponse.from(members.get(i), reservations.getCreatedAt()
+                                .get(i), reservations.getReservationIds().get(i)))
                         .toList(),
                 members.size()
         );

@@ -1,6 +1,5 @@
 package be.dash.dashserver.core.domain.teacher.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -12,6 +11,7 @@ import be.dash.dashserver.api.core.member.dto.MyLessonResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse.MyLessonThumbnailResponse;
+import be.dash.dashserver.api.core.teacher.dto.ChangeApproveStatusResponse;
 import be.dash.dashserver.api.core.teacher.dto.LessonStatusCountResponses;
 import be.dash.dashserver.core.auth.JwtTokenGenerator;
 import be.dash.dashserver.core.auth.Token;
@@ -23,6 +23,9 @@ import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
+import be.dash.dashserver.core.domain.reservation.Reservation;
+import be.dash.dashserver.core.domain.reservation.ReservationStatus;
+import be.dash.dashserver.core.domain.reservation.ReservationStatusType;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
@@ -34,6 +37,7 @@ import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileDetail
 import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult;
 import be.dash.dashserver.core.domain.teacher.service.dto.TeacherDetailResult;
 import be.dash.dashserver.core.exception.ConflictException;
+import be.dash.dashserver.core.exception.DashException;
 import be.dash.dashserver.core.exception.ForbiddenException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import be.dash.dashserver.core.log.annotation.Trace;
@@ -142,14 +146,13 @@ public class TeacherService {
         }
     }
 
-    public MyLessonDetailedResponse getMyLesson(long memberId, long lessonId) {
+    public MyLessonDetailedResponse getMyLesson(long memberId, long lessonId, ReservationStatusType status) {
         Teacher teacher = findTeacherByMemberId(memberId);
         Lesson lesson = lessonRepository.findLessonsById(lessonId);
         validateOwner(teacher, lesson);
-        Reservations reservations = reservationRepository.findAllByLessonIdOrderByCreatedAtDesc(lessonId);
-        List<LocalDateTime> reservationDateTimes = reservations.getCreatedAt();
+        Reservations reservations = reservationRepository.findAllByLessonIdAndReservationStatusOrderByCreatedAtDesc(lessonId, status.getReservationStatuses());
         List<Member> members = memberRepository.findAllByMemberIds(reservations.getMemberIds());
-        return MyLessonDetailedResponse.from(lesson, members, reservationDateTimes);
+        return MyLessonDetailedResponse.from(lesson, members, reservations);
     }
 
     private Teacher findTeacherByMemberId(long memberId) {
@@ -164,7 +167,7 @@ public class TeacherService {
     }
 
     public MyLessonsResponse getMyLessons(long memberId, ApplyStatus status) {
-        if(Objects.isNull(status)){
+        if (Objects.isNull(status)) {
             List<Lesson> lessons = getLessons(memberId);
             return MyLessonsResponse.from(lessons.stream().map(MyLessonResponse::from).toList());
         }
@@ -192,5 +195,47 @@ public class TeacherService {
 
     public boolean checkNicknameDuplication(String nickname) {
         return teacherRepository.existsByNickname(nickname);
+    }
+
+    @Transactional
+    public ChangeApproveStatusResponse changeApproveStatus(Long memberId, Long lessonId, Long reservationId) {
+        Teacher teacher = findTeacherByMemberId(memberId);
+        Lesson lesson = lessonRepository.findLessonsById(lessonId);
+        validateOwner(teacher, lesson);
+        Reservation reservation = reservationRepository.findById(reservationId);
+        if (reservation.getReservationStatus() == ReservationStatus.APPROVED) {
+            return changeStatusToPendingApprove(lessonId, reservationId);
+        } else if (reservation.getReservationStatus() == ReservationStatus.PENDING_APPROVAL && !lessonRepository.isFull(lessonId)) {
+            return changeStatusToApprove(lessonId, reservationId);
+        } else if (reservation.getReservationStatus() == ReservationStatus.PENDING_APPROVAL && lessonRepository.isFull(lessonId)) {
+            return new ChangeApproveStatusResponse(true);
+        }
+        throw new DashException("승인과 관련된 예약 상태를 변경할 수 없습니다.");
+    }
+
+    private ChangeApproveStatusResponse changeStatusToApprove(Long lessonId, Long reservationId) {
+        reservationRepository.approve(reservationId);
+        lessonRepository.increaseReservationCount(lessonId);
+        return new ChangeApproveStatusResponse(false);
+    }
+
+    private ChangeApproveStatusResponse changeStatusToPendingApprove(Long lessonId, Long reservationId) {
+        reservationRepository.pendingApprove(reservationId);
+        lessonRepository.decreaseReservationCount(lessonId);
+        return new ChangeApproveStatusResponse(false);
+    }
+
+    @Transactional
+    public void changeCancelStatus(Long memberId, Long lessonId, Long reservationId) {
+        Teacher teacher = findTeacherByMemberId(memberId);
+        Lesson lesson = lessonRepository.findLessonsById(lessonId);
+        validateOwner(teacher, lesson);
+        Reservation reservation = reservationRepository.findById(reservationId);
+        if (reservation.getReservationStatus() == ReservationStatus.CANCELLED) {
+            reservationRepository.pendingCancel(reservationId);
+        } else if (reservation.getReservationStatus() == ReservationStatus.PENDING_CANCELLATION) {
+            reservationRepository.cancel(reservationId);
+        }
+        throw new DashException("취소와 관련된 예약 상태를 변경할 수 없습니다.");
     }
 }
