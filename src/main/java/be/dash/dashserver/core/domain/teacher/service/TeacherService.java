@@ -40,6 +40,7 @@ import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.exception.DashException;
 import be.dash.dashserver.core.exception.ForbiddenException;
 import be.dash.dashserver.core.exception.NotFoundException;
+import be.dash.dashserver.core.external.MessageSender;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 
@@ -55,6 +56,7 @@ public class TeacherService {
     private final JwtTokenGenerator jwtTokenGenerator;
     private final TeacherVideoRepository teacherVideoRepository;
     private final ReservationRepository reservationRepository;
+    private final MessageSender messageSender;
 
     public List<TeacherLessonGenres> search(Keyword keyword) {
         Teachers teachers = teacherRepository.findTeachersSortByLessonCountsDesc(keyword.getValue());
@@ -206,17 +208,28 @@ public class TeacherService {
         if (reservation.getReservationStatus() == ReservationStatus.APPROVED) {
             return changeStatusToPendingApprove(lessonId, reservationId);
         } else if (reservation.getReservationStatus() == ReservationStatus.PENDING_APPROVAL && !lessonRepository.isFull(lessonId)) {
-            return changeStatusToApprove(lessonId, reservationId);
+            return changeStatusToApprove(teacher, lesson, reservation);
         } else if (reservation.getReservationStatus() == ReservationStatus.PENDING_APPROVAL && lessonRepository.isFull(lessonId)) {
             return new ChangeApproveStatusResponse(true);
         }
         throw new DashException("승인과 관련된 예약 상태를 변경할 수 없습니다.");
     }
 
-    private ChangeApproveStatusResponse changeStatusToApprove(Long lessonId, Long reservationId) {
-        reservationRepository.approve(reservationId);
-        lessonRepository.increaseReservationCount(lessonId);
+    private ChangeApproveStatusResponse changeStatusToApprove(Teacher teacher, Lesson lesson, Reservation reservation) {
+        reservationRepository.approve(reservation.getId());
+        lessonRepository.increaseReservationCount(lesson.getId());
+        Member member = memberRepository.findById(reservation.getMemberId());
+        sendClassConfirmed(teacher, lesson, member);
+
         return new ChangeApproveStatusResponse(false);
+    }
+
+    private void sendClassConfirmed(Teacher teacher, Lesson lesson, Member member) {
+        String to = member.getPhoneNumber();
+        String studentName = member.getName();
+        String instructorName = teacher.getNickname();
+        String className = lesson.getName();
+        messageSender.sendClassConfirmed(to, studentName, instructorName, className);
     }
 
     private ChangeApproveStatusResponse changeStatusToPendingApprove(Long lessonId, Long reservationId) {
@@ -235,7 +248,23 @@ public class TeacherService {
             reservationRepository.pendingCancel(reservationId);
         } else if (reservation.getReservationStatus() == ReservationStatus.PENDING_CANCELLATION) {
             reservationRepository.cancel(reservationId);
+            Member member = memberRepository.findById(reservation.getMemberId());
+            sendCancelDone(member, teacher, lesson);
         }
         throw new DashException("취소와 관련된 예약 상태를 변경할 수 없습니다.");
+    }
+
+    private void sendCancelDone(Member member, Teacher teacher, Lesson lesson) {
+        String to = member.getPhoneNumber();          // 수강생 번호
+        String studentName = member.getName();        // 수강생 이름
+        String instructorName = teacher.getNickname();  // 강사 이름
+        String className = lesson.getName();          // 클래스 이름
+
+        messageSender.sendCancelDone(
+                to,
+                studentName,
+                instructorName,
+                className
+        );
     }
 }

@@ -14,8 +14,10 @@ import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.core.domain.payment.PaymentClientApi;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.command.CreateReservationCommand;
+import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.service.TeacherRepository;
 import be.dash.dashserver.core.exception.ConflictException;
+import be.dash.dashserver.core.external.MessageSender;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +32,7 @@ public class ReservationService {
     private final TeacherRepository teacherRepository;
     private final AccountRepository accountRepository;
     private final PaymentClientApi paymentClientApi;
+    private final MessageSender messageSender;
 
     public Reservation findById(long reservationId) {
         return reservationRepository.findById(reservationId);
@@ -68,8 +71,26 @@ public class ReservationService {
         Member member = memberRepository.findById(memberId);
         reservationRepository.save(member.getId(), lessonId);
         Lesson lesson = lessonRepository.findLessonsById(lessonId);
+        Teacher teacher = lesson.getTeacher();
         Account teacherAccount = accountRepository.findByLessonId(lessonId);
+        sendClassApply(teacher, lesson, member);
         return new LessonAccount(lesson, teacherAccount);
+    }
+
+    private void sendClassApply(Teacher teacher, Lesson lesson, Member member) {
+        String instructorPhone = teacher.getMember().getPhoneNumber();
+        String instructorName = teacher.getNickname();
+        String className = lesson.getName();
+        String studentName = member.getName();
+        String studentPhone = member.getPhoneNumber();
+
+        messageSender.sendClassApply(
+                instructorPhone,
+                instructorName,
+                className,
+                studentName,
+                studentPhone
+        );
     }
 
     private void validateReservationAvailability(long memberId, long lessonId) {

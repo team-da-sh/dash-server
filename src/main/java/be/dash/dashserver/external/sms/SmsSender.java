@@ -20,15 +20,53 @@ public class SmsSender implements MessageSender {
 
     @Override
     public void sendVerification(String to, String number) {
+        String text = String.format(properties.verificationTemplate(), number);
+        sendMessage(to, text);
+    }
+
+    public void sendClassApply(String to, String instructorName, String className, String studentName, String studentPhone) {
+        String template = properties.templates().get("class-apply");
+        String text = String.format(template, instructorName, className, studentName, studentPhone);
+        sendMessage(to, text);
+    }
+
+    public void sendClassConfirmed(String to, String studentName, String instructorName, String className) {
+        String template = properties.templates().get("class-confirmed");
+        String text = String.format(template, studentName, instructorName, className);
+        sendMessage(to, text);
+    }
+
+    public void sendCancelledBySystem(String to, String studentName, String instructorName, String className) {
+        String template = properties.templates().get("class-cancelled-by-system");
+        String text = String.format(template, studentName, instructorName, className);
+        sendMessage(to, text);
+    }
+
+    public void sendCancelledByStudent(String to, String instructorName, String className, String studentName, String studentPhone, String bankName, String refundAccount) {
+        String template = properties.templates().get("class-cancelled-by-student");
+        String text = String.format(template, instructorName, className, studentName, studentPhone, bankName, refundAccount);
+        sendMessage(to, text);
+    }
+
+    public void sendCancelDone(String to, String studentName, String instructorName, String className) {
+        String template = properties.templates().get("class-cancel-done");
+        String text = String.format(template, studentName, instructorName, className);
+        sendMessage(to, text);
+    }
+
+    private void sendMessage(String to, String text) {
         Message message = new Message();
-            message.setFrom(properties.from());
-            message.setTo(to);
-            message.setText(String.format(properties.verificationTemplate(), number));
+        message.setFrom(properties.from());
+        message.setTo(to);
+        message.setText(text);
+
         try {
             messageService.send(message);
-        } catch (NurigoMessageNotReceivedException exception) {
+        } catch (NurigoMessageNotReceivedException e) {
+            log.error("Business SMS send failure: {}", e.getMessage());
             throw SmsException.failBusiness();
-        } catch (Exception exception) {
+        } catch (Exception e) {
+            log.error("Transient SMS send failure: {}", e.getMessage());
             throw SmsException.failTransient();
         }
     }

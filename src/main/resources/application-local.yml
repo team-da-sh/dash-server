@@ -53,5 +53,9 @@ solapi:
   base-url: https://api.solapi.com
   from: ${SOLAPI_SENDER_PHONE}
   verification-template: ${SOLAPI_VERIFICATION_TEMPLATE}
-
-
+  templates:
+    class-apply: "[TEST] %s님의 %s 클래스에 신청자 %s (%s)가 신청했습니다."
+    class-confirmed: "[TEST] %s님, %s 강사의 %s 수강이 확정되었습니다."
+    class-cancelled-by-system: "[TEST] %s님, %s 강사의 %s 신청이 자동 취소되었습니다."
+    class-cancelled-by-student: "[TEST] %s님, %s 클래스 수강생 %s (%s)가 환불 요청 (%s / %s)을 보냈습니다."
+    class-cancel-done: "[TEST] %s님, %s 강사가 %s 신청을 취소 완료 처리했습니다. 환불 계좌: %s"
