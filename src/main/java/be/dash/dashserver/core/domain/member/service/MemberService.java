@@ -18,8 +18,12 @@ import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.core.exception.ConflictException;
+import be.dash.dashserver.core.exception.ForbiddenException;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
+
+import static be.dash.dashserver.core.domain.reservation.ReservationStatus.CANCELLED;
+import static be.dash.dashserver.core.domain.reservation.ReservationStatus.PENDING_CANCELLATION;
 
 @Trace
 @Service
@@ -90,7 +94,18 @@ public class MemberService {
 
     @Transactional
     public void cancelMemberReservation(long memberId, long reservationId, ReservationCancelRequest request) {
-        reservationRepository.cancel(memberId, reservationId, request.toCancelReservationCommand());
+        Reservation reservation = reservationRepository.findById(reservationId);
+        if (!reservation.ownBy(memberId)) {
+            throw new ForbiddenException("예약을 취소할 권한이 없습니다.");
+        }
+        if (request.toCancelReservationCommand().reservationStatus() == CANCELLED) {
+            reservationRepository.cancel(reservationId);
+            return;
+        }
+        if (request.toCancelReservationCommand().reservationStatus() == PENDING_CANCELLATION) {
+            reservationRepository.pendingCancel(reservationId);
+            // 문자 여기서 보내야함.
+        }
     }
 
     public ReservationStatisticsResponse getReservationStatistics(Long memberId) {

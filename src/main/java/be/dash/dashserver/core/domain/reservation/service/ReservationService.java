@@ -68,7 +68,6 @@ public class ReservationService {
         Member member = memberRepository.findById(memberId);
         reservationRepository.save(member.getId(), lessonId);
         Lesson lesson = lessonRepository.findLessonsById(lessonId);
-        lessonRepository.increaseReservationCount(lessonId);
         Account teacherAccount = accountRepository.findByLessonId(lessonId);
         return new LessonAccount(lesson, teacherAccount);
     }

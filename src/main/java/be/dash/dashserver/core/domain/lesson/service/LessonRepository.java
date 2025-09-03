@@ -35,5 +35,7 @@ public interface LessonRepository {
 
     void increaseReservationCount(long lessonId);
 
+    void decreaseReservationCount(long lessonId);
+
     boolean isFull(long lessonId);
 }

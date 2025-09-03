@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import be.dash.dashserver.core.domain.account.Bank;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,4 +27,13 @@ public class BankJpaEntity {
     @Column(nullable = false)
     private String bankName;
 
+    public BankJpaEntity(Long id, String bankImageUrl, String bankName) {
+        this.id = id;
+        this.bankImageUrl = bankImageUrl;
+        this.bankName = bankName;
+    }
+
+    public Bank toDomain() {
+        return new Bank(id, bankImageUrl, bankName);
+    }
 }

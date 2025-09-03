@@ -18,6 +18,7 @@ import be.dash.dashserver.api.core.member.MyLessonDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ApplyStatus;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
+import be.dash.dashserver.api.core.teacher.dto.ChangeApproveStatusResponse;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherRequest;
 import be.dash.dashserver.api.core.teacher.dto.CreateTeacherResponse;
 import be.dash.dashserver.api.core.teacher.dto.LessonStatusCountResponses;
@@ -131,4 +132,16 @@ public class TeacherController {
         return ResponseEntity.ok(NicknameValidationResponse.from(teacherService.checkNicknameDuplication(nickname)));
     }
 
+    @Permission(role = Role.TEACHER)
+    @PostMapping("/me/lessons/{lessonId}/{reservationId}/change-approve")
+    public ResponseEntity<ChangeApproveStatusResponse> changeApproveStatus(@MemberId Long memberId, @PathVariable Long lessonId, @PathVariable Long reservationId) {
+        return ResponseEntity.ok(teacherService.changeApproveStatus(memberId, lessonId, reservationId));
+    }
+
+    @Permission(role = Role.TEACHER)
+    @PostMapping("/me/lessons/{lessonId}/{reservationId}/change-cancel")
+    public ResponseEntity<Void> changeCancelStatus(@MemberId Long memberId, @PathVariable Long lessonId, @PathVariable Long reservationId) {
+        teacherService.changeCancelStatus(memberId, lessonId, reservationId);
+        return ResponseEntity.ok().build();
+    }
 }
