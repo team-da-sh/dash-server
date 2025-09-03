@@ -17,8 +17,10 @@ import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
+import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.exception.ForbiddenException;
+import be.dash.dashserver.core.external.MessageSender;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +35,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final LessonRepository lessonRepository;
     private final ReservationRepository reservationRepository;
+    private final MessageSender messageSender;
 
     @Transactional
     public void onboard(OnboardCommand command) {
@@ -104,8 +107,32 @@ public class MemberService {
         }
         if (request.toCancelReservationCommand().reservationStatus() == PENDING_CANCELLATION) {
             reservationRepository.pendingCancel(reservationId);
-            // 문자 여기서 보내야함.
+            Lesson lesson = lessonRepository.findLessonsById(reservation.getLessonId());
+            Member member = memberRepository.findById(memberId);
+            Teacher teacher = lesson.getTeacher();
+
+            sendCancelledByStudent(request, teacher, lesson, member);
         }
+    }
+
+    private void sendCancelledByStudent(ReservationCancelRequest request, Teacher teacher, Lesson lesson, Member member) {
+        String to = teacher.getMember().getPhoneNumber();
+        String instructorName = teacher.getNickname();
+        String className = lesson.getName();
+        String studentName = member.getName();
+        String studentPhone = member.getPhoneNumber();
+        String bankName = request.bankName();
+        String refundAccount = request.accountNumber();
+
+        messageSender.sendCancelledByStudent(
+                to,
+                instructorName,
+                className,
+                studentName,
+                studentPhone,
+                bankName,
+                refundAccount
+        );
     }
 
     public ReservationStatisticsResponse getReservationStatistics(Long memberId) {
