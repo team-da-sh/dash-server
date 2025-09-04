@@ -1,6 +1,7 @@
 package be.dash.dashserver.core.domain.lesson;
 
 import java.time.LocalDateTime;
+import be.dash.dashserver.api.core.member.dto.ApplyStatus;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.teacher.Teacher;
@@ -72,6 +73,10 @@ public class Lesson {
 
     public boolean isFull() {
         return reservationCount >= maxReservationCount;
+    }
+
+    public ApplyStatus getApplyStatus() {
+        return ApplyStatus.calculate(rounds.getStartTime(), reservationCount, maxReservationCount);
     }
 
     public int calculateDDay() {
