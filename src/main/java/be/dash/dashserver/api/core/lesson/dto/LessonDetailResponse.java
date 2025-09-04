@@ -1,5 +1,7 @@
 package be.dash.dashserver.api.core.lesson.dto;
 
+import java.time.LocalDateTime;
+import be.dash.dashserver.api.core.member.dto.ApplyStatus;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.lesson.Lesson;
@@ -27,7 +29,9 @@ public record LessonDetailResponse(
         String oldStreetAddress,
         long favoriteCount,
         boolean bookStatus,
-        LessonStatus status
+        LessonStatus status,
+        ApplyStatus applyStatus,
+        LocalDateTime createdAt
 ) {
 
     public LessonDetailResponse(Lesson lesson, boolean booked) {
@@ -51,6 +55,8 @@ public record LessonDetailResponse(
                 lesson.getLocation().getAddress(),
                 lesson.getFavoriteCount(),
                 booked,
-                LessonStatus.from(lesson));
+                LessonStatus.from(lesson),
+                lesson.getApplyStatus(),
+                lesson.getCreatedAt());
     }
 }
