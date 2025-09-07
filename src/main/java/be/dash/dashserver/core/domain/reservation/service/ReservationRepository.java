@@ -4,6 +4,7 @@ import java.util.List;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import be.dash.dashserver.core.domain.reservation.Reservations;
+import be.dash.dashserver.database.core.reservation.ReservationJpaEntity;
 
 public interface ReservationRepository {
 
@@ -30,4 +31,10 @@ public interface ReservationRepository {
     void pendingCancel(Long reservationId);
 
     void cancel(Long reservationId);
+
+    void inProgress(Long reservationId);
+
+    void completed(Long reservationId);
+
+    List<ReservationJpaEntity> findByStatus(ReservationStatus status);
 }

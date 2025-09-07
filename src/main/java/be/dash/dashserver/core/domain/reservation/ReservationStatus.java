@@ -5,7 +5,9 @@ public enum ReservationStatus {
     PENDING_APPROVAL("승인대기"),
     APPROVED("승인완료"),
     PENDING_CANCELLATION("취소대기"),
-    CANCELLED("취소완료");
+    CANCELLED("취소완료"),
+    IN_PROGRESS("수강중"),
+    COMPLETED("수강완료");
 
     private final String description;
 

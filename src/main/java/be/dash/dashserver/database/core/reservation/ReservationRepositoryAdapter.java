@@ -76,6 +76,21 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     }
 
     @Override
+    public void inProgress(Long reservationId) {
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.IN_PROGRESS);
+    }
+
+    @Override
+    public void completed(Long reservationId) {
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.COMPLETED);
+    }
+
+    @Override
+    public List<ReservationJpaEntity> findByStatus(ReservationStatus status) {
+        return reservationJpaRepository.findByStatus(status);
+    }
+
+    @Override
     public long save(long memberId, long lessonId) {
         ReservationJpaEntity reservationJpaEntity = new ReservationJpaEntity(lessonId, memberId, ReservationStatus.PENDING_APPROVAL);
         reservationJpaRepository.save(reservationJpaEntity);
