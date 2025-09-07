@@ -15,9 +15,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountRepositoryAdapter implements AccountRepository {
 
-    private AccountJpaRepository accountJpaRepository;
-    private BankJpaRepository bankJpaRepository;
-    private LessonJpaRepository lessonJpaRepository;
+    private final AccountJpaRepository accountJpaRepository;
+    private final BankJpaRepository bankJpaRepository;
+    private final LessonJpaRepository lessonJpaRepository;
 
     @Override
     public Account findByMemberIdAndIsTeacherAccount(long memberId) {
