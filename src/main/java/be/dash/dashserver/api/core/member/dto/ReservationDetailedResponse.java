@@ -6,6 +6,7 @@ import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.reservation.Reservation;
+import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 
 import static java.util.stream.Collectors.toList;
 
@@ -18,7 +19,8 @@ public record ReservationDetailedResponse(int dDay,
                                           Level level,
                                           String name,
                                           String phoneNumber,
-                                          LocalDateTime reservationDateTime) {
+                                          LocalDateTime reservationDateTime,
+                                          ReservationStatus reservationStatus) {
     public static ReservationDetailedResponse from(Member member, Reservation reservation, Lesson lesson) {
         return new ReservationDetailedResponse(lesson.calculateDDay(),
                 lesson.getName(),
@@ -29,7 +31,8 @@ public record ReservationDetailedResponse(int dDay,
                 lesson.getLevel(),
                 member.getName(),
                 member.getPhoneNumber(),
-                reservation.getCreatedAt()
+                reservation.getCreatedAt(),
+                reservation.getReservationStatus()
         );
     }
 }
