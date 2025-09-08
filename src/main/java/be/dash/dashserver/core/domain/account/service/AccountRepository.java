@@ -8,6 +8,8 @@ public interface AccountRepository {
 
     void saveByMemberIdAndIsTeacherAccount(Account account);
 
+    void updateByMemberIdAndIsTeacherAccount(Account account);
+
     boolean existsByMemberIdAndIsTeacherAccount(long memberId, boolean isTeacherAccount);
 
     Account findByLessonId(long lessonID);

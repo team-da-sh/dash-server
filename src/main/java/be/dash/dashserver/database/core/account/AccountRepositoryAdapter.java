@@ -37,6 +37,12 @@ public class AccountRepositoryAdapter implements AccountRepository {
     }
 
     @Override
+    public void updateByMemberIdAndIsTeacherAccount(Account command) {
+        AccountJpaEntity entity = new AccountJpaEntity(command);
+        accountJpaRepository.updateAccount(entity);
+    }
+
+    @Override
     public boolean existsByMemberIdAndIsTeacherAccount(long memberId, boolean isTeacherAccount) {
         return accountJpaRepository.existsByMemberIdAndIsTeacherAccount(memberId, isTeacherAccount);
     }

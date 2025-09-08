@@ -22,10 +22,11 @@ public class AccountService {
 
     @Transactional
     public void registerMyTeacherAccount(long memberId, AccountRequest teacherAccountRequest) {
-        if (accountRepository.existsByMemberIdAndIsTeacherAccount(memberId, true)) {
-            throw new IllegalStateException("이미 등록된 선생님 계좌가 있습니다.");
-        }
         Account command = teacherAccountRequest.toCommand(memberId, true);
+        if (accountRepository.existsByMemberIdAndIsTeacherAccount(memberId, true)) {
+            accountRepository.updateByMemberIdAndIsTeacherAccount(command);
+            return;
+        }
         accountRepository.saveByMemberIdAndIsTeacherAccount(command);
     }
 }

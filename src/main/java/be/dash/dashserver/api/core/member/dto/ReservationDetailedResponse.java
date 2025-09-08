@@ -2,6 +2,7 @@ package be.dash.dashserver.api.core.member.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.member.Member;
@@ -20,7 +21,9 @@ public record ReservationDetailedResponse(int dDay,
                                           String name,
                                           String phoneNumber,
                                           LocalDateTime reservationDateTime,
-                                          ReservationStatus reservationStatus) {
+                                          ReservationStatus reservationStatus,
+                                          Genre genre,
+                                          String lessonImageUrl) {
     public static ReservationDetailedResponse from(Member member, Reservation reservation, Lesson lesson) {
         return new ReservationDetailedResponse(lesson.calculateDDay(),
                 lesson.getName(),
@@ -32,7 +35,9 @@ public record ReservationDetailedResponse(int dDay,
                 member.getName(),
                 member.getPhoneNumber(),
                 reservation.getCreatedAt(),
-                reservation.getReservationStatus()
+                reservation.getReservationStatus(),
+                lesson.getGenre(),
+                lesson.getRepresentativeImageUrl()
         );
     }
 }
