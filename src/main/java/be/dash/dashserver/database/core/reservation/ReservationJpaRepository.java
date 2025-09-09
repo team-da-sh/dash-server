@@ -1,5 +1,6 @@
 package be.dash.dashserver.database.core.reservation;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -39,4 +40,6 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
     int updateStatusById(@Param("reservationId") Long reservationId, @Param("status") ReservationStatus status);
 
     List<ReservationJpaEntity> findByStatus(ReservationStatus status);
+
+    List<ReservationJpaEntity> findByStatusAndCreatedAtBetween(ReservationStatus status, LocalDateTime start, LocalDateTime end);
 }

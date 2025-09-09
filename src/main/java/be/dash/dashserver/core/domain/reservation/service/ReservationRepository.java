@@ -1,5 +1,6 @@
 package be.dash.dashserver.core.domain.reservation.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
@@ -36,5 +37,7 @@ public interface ReservationRepository {
 
     void completed(Long reservationId);
 
-    List<ReservationJpaEntity> findByStatus(ReservationStatus status);
+    List<Reservation> findByStatus(ReservationStatus status);
+
+    List<Reservation> findByStatusAndCreatedAtBetween(ReservationStatus status, LocalDateTime start, LocalDateTime end);
 }

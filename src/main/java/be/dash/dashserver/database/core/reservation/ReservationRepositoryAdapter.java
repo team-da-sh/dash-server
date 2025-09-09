@@ -1,5 +1,6 @@
 package be.dash.dashserver.database.core.reservation;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import be.dash.dashserver.core.domain.reservation.Reservation;
@@ -86,8 +87,14 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     }
 
     @Override
-    public List<ReservationJpaEntity> findByStatus(ReservationStatus status) {
-        return reservationJpaRepository.findByStatus(status);
+    public List<Reservation> findByStatus(ReservationStatus status) {
+        return reservationJpaRepository.findByStatus(status).stream().map(ReservationJpaEntity::toDomain).toList();
+    }
+
+    @Override
+    public List<Reservation> findByStatusAndCreatedAtBetween(ReservationStatus status, LocalDateTime start, LocalDateTime end) {
+        return reservationJpaRepository.findByStatusAndCreatedAtBetween(status, start, end).stream()
+                .map(ReservationJpaEntity::toDomain).toList();
     }
 
     @Override
