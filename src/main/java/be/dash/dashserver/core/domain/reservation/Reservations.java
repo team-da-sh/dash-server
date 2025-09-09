@@ -18,6 +18,11 @@ public class Reservations {
                 .findFirst().orElseThrow(() -> new NotFoundException("해당하는 예약을 찾을 수 없습니다."));
     }
 
+    public Reservation findReservationByMemberId(long id) {
+        return reservations.stream().filter(reservation -> reservation.getMemberId() == id)
+                .findFirst().orElseThrow(() -> new NotFoundException("해당하는 예약을 찾을 수 없습니다."));
+    }
+
     public int getSize() {
         return reservations.size();
     }
