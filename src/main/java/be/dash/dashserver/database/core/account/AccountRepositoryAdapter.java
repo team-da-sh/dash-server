@@ -38,8 +38,7 @@ public class AccountRepositoryAdapter implements AccountRepository {
 
     @Override
     public void updateByMemberIdAndIsTeacherAccount(Account command) {
-        AccountJpaEntity entity = new AccountJpaEntity(command);
-        accountJpaRepository.updateAccount(entity);
+        accountJpaRepository.updateAccountByMemberIdAndType(command.depositor(), command.accountNumber(), command.bankId(), command.memberId(), command.isTeacherAccount());
     }
 
     @Override

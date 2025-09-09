@@ -13,12 +13,16 @@ public interface AccountJpaRepository extends JpaRepository<AccountJpaEntity, Lo
 
     @Modifying
     @Query("""
-                UPDATE AccountJpaEntity a
-                SET a.depositor = :#{#account.depositor},
-                    a.accountNumber = :#{#account.accountNumber},
-                    a.bankId = :#{#account.bankId},
-                    a.isTeacherAccount = :#{#account.isTeacherAccount}
-                WHERE a.id = :#{#account.id}
+            UPDATE AccountJpaEntity a
+            SET a.depositor = :depositor,
+                a.accountNumber = :accountNumber,
+                a.bankId = :bankId
+            WHERE a.memberId = :memberId
+              AND a.isTeacherAccount = :isTeacherAccount
             """)
-    void updateAccount(@Param("account") AccountJpaEntity account);
+    void updateAccountByMemberIdAndType(@Param("depositor") String depositor,
+                                        @Param("accountNumber") String accountNumber,
+                                        @Param("bankId") Long bankId,
+                                        @Param("memberId") Long memberId,
+                                        @Param("isTeacherAccount") Boolean isTeacherAccount);
 }
