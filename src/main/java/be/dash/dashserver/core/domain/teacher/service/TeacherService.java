@@ -246,10 +246,12 @@ public class TeacherService {
         Reservation reservation = reservationRepository.findById(reservationId);
         if (reservation.getReservationStatus() == ReservationStatus.CANCELLED) {
             reservationRepository.pendingCancel(reservationId);
+            return;
         } else if (reservation.getReservationStatus() == ReservationStatus.PENDING_CANCELLATION) {
             reservationRepository.cancel(reservationId);
             Member member = memberRepository.findById(reservation.getMemberId());
             sendCancelDone(member, teacher, lesson);
+            return;
         }
         throw new DashException("취소와 관련된 예약 상태를 변경할 수 없습니다.");
     }
