@@ -2,6 +2,7 @@ package be.dash.dashserver.api.core.teacher.dto;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import be.dash.dashserver.api.core.lesson.dto.LessonRoundResponse;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 
 public record LessonSummary(long id,
@@ -17,7 +18,6 @@ public record LessonSummary(long id,
     }
 
     private static long calculateRemainingDays(LocalDateTime startDateTime) {
-        Duration duration = Duration.between(LocalDateTime.now(), startDateTime);
-        return duration.toDays();
+        return LessonRoundResponse.calculateRemainingDays(startDateTime);
     }
 }
