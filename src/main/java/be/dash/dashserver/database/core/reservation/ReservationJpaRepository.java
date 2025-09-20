@@ -16,9 +16,10 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
 
     @Query("SELECT r FROM ReservationJpaEntity r " +
             "WHERE r.memberId = :memberId " +
-            "AND (:status IS NULL OR r.status = :status)")
-    List<ReservationJpaEntity> findAllByMemberIdAndStatusNullable(
-            @Param("memberId") long memberId,
+            "AND (:status IS NULL OR r.status = :status) " +
+            "ORDER BY r.createdAt DESC")
+    List<ReservationJpaEntity> findByMemberIdAndStatusOrderByCreatedAtDesc(
+            @Param("memberId") Long memberId,
             @Param("status") ReservationStatus status);
 
     List<ReservationJpaEntity> findAllByLessonIdOrderByCreatedAtDesc(Long lessonId);

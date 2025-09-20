@@ -124,8 +124,8 @@ public class LessonRepositoryAdapter implements LessonRepository {
     }
 
     @Override
-    public List<Lesson> findAllByTeacherIdOrderByStartDateTime(long teacherId) {
-        return getLessons(lessonJpaRepository.findAllByTeacherIdOOrderByStartDateTime(teacherId));
+    public List<Lesson> findAllByTeacherIdOOrderByCreatedAtDesc(long teacherId) {
+        return getLessons(lessonJpaRepository.findAllByTeacherIdOOrderByCreatedAtDesc(teacherId));
     }
 
     @Override

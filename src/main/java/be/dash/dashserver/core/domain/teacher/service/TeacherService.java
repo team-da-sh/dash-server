@@ -186,7 +186,7 @@ public class TeacherService {
 
     private List<Lesson> getLessons(long memberId) {
         Teacher teacher = findTeacherByMemberId(memberId);
-        return lessonRepository.findAllByTeacherIdOrderByStartDateTime(teacher.getId());
+        return lessonRepository.findAllByTeacherIdOOrderByCreatedAtDesc(teacher.getId());
     }
 
     public LessonStatusCountResponses getMyLessonsStatusCount(Long memberId) {

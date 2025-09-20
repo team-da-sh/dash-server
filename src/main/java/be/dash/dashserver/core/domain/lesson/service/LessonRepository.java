@@ -31,7 +31,7 @@ public interface LessonRepository {
 
     boolean existsByTeacherIdAndLessonId(long teacherId, long lessonId);
 
-    List<Lesson> findAllByTeacherIdOrderByStartDateTime(long teacherId);
+    List<Lesson> findAllByTeacherIdOOrderByCreatedAtDesc(long teacherId);
 
     void increaseReservationCount(long lessonId);
 
