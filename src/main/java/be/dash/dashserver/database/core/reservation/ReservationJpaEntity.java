@@ -38,10 +38,13 @@ public class ReservationJpaEntity extends BaseCreatedAtEntity {
     @Column(name = "status", nullable = false)
     private ReservationStatus status;
 
-
     public ReservationJpaEntity(Long lessonId, Long memberId, ReservationStatus status) {
         this.lessonId = lessonId;
         this.memberId = memberId;
+        this.status = status;
+    }
+
+    public void changeStatus(ReservationStatus status) {
         this.status = status;
     }
 
