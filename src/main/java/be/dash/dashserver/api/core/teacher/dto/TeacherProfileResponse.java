@@ -5,13 +5,15 @@ import be.dash.dashserver.core.domain.teacher.service.dto.MyTeacherProfileResult
 public record TeacherProfileResponse(String profileImage,
                                      String nickname,
                                      String instagram,
-                                     String youtube) {
+                                     String youtube,
+                                     Boolean accountRegistered) {
     public static TeacherProfileResponse from(MyTeacherProfileResult myTeacherProfileResult) {
         return new TeacherProfileResponse(
                 myTeacherProfileResult.profileImage(),
                 myTeacherProfileResult.nickname(),
                 myTeacherProfileResult.instagram(),
-                myTeacherProfileResult.youtube()
+                myTeacherProfileResult.youtube(),
+                myTeacherProfileResult.accountRegistered()
         );
     }
 }

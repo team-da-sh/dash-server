@@ -15,6 +15,8 @@ import be.dash.dashserver.api.core.teacher.dto.ChangeApproveStatusResponse;
 import be.dash.dashserver.api.core.teacher.dto.LessonStatusCountResponses;
 import be.dash.dashserver.core.auth.JwtTokenGenerator;
 import be.dash.dashserver.core.auth.Token;
+import be.dash.dashserver.core.domain.account.Account;
+import be.dash.dashserver.core.domain.account.service.AccountRepository;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.lesson.Lesson;
@@ -56,6 +58,7 @@ public class TeacherService {
     private final JwtTokenGenerator jwtTokenGenerator;
     private final TeacherVideoRepository teacherVideoRepository;
     private final ReservationRepository reservationRepository;
+    private final AccountRepository accountRepository;
     private final MessageSender messageSender;
 
     public List<TeacherLessonGenres> search(Keyword keyword) {
@@ -96,8 +99,9 @@ public class TeacherService {
 
     public MyTeacherProfileResult findMyTeacherProfile(long memberId) {
         Teacher teacher = findTeacherByMemberId(memberId);
+        Account account = accountRepository.findByMemberIdAndIsTeacherAccount(memberId);
         String image = findTeacherImageByTeacherId(teacher.getId());
-        return MyTeacherProfileResult.of(image, teacher);
+        return MyTeacherProfileResult.of(image, teacher, account);
     }
 
     public MyTeacherProfileDetailResult findMyTeacherProfileDetail(long memberId) {
