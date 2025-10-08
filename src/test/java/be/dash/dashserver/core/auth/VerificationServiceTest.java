@@ -29,6 +29,6 @@ class VerificationServiceTest {
         verificationService.requestPhoneVerification(new PhoneVerificationCommand(1L, "01012345678"));
         String code = phoneVerificationRepository.getCode(1L, "01012345678");
         Assertions.assertThat(code).isNotNull();
-        Assertions.assertThat(quotaRepository.getRemainingDailyQuota(1L)).isEqualTo(4);
+        Assertions.assertThat(quotaRepository.getRemainingDailyQuota(1L)).isEqualTo(9);
     }
 }
