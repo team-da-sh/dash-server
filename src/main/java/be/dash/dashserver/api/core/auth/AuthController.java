@@ -69,14 +69,14 @@ public class AuthController {
         return ResponseEntity.ok(new RoleResponse(tokenService.getRole(accessToken)));
     }
 
-    @Permission(role = Role.MEMBER)
+    @Permission(role = {Role.MEMBER, Role.TEACHER})
     @PostMapping("/phone/request")
     public ResponseEntity<Void> requestPhoneVerification(@MemberId Long memberId, @RequestBody @Valid PhoneVerificationRequest request) {
         verificationService.requestPhoneVerification(PhoneVerificationCommand.of(memberId, request.phoneNumber()));
         return ResponseEntity.noContent().build();
     }
 
-    @Permission(role = Role.MEMBER)
+    @Permission(role = {Role.MEMBER, Role.TEACHER})
     @PostMapping("/phone/verify")
     public ResponseEntity<PhoneVerificationResponse> verifyPhone(@MemberId Long memberId, @RequestBody @Valid PhoneVerificationApprovalRequest request) {
         return ResponseEntity.ok(
