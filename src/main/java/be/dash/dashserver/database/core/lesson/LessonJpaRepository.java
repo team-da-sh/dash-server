@@ -21,11 +21,13 @@ public interface LessonJpaRepository extends JpaRepository<LessonJpaEntity, Long
 
     List<LessonJpaEntity> findByStartDateTimeGreaterThan(LocalDateTime endDateTime);
 
-    @Query("select l.genre " +
-            "from LessonJpaEntity l " +
-            "where l.startDateTime > :now " +
-            "group by l.genre " +
-            "order by sum(l.reservationCount) desc")
+    @Query("""
+       select l.genre
+       from LessonJpaEntity l
+       where l.startDateTime > :now
+       group by l.genre
+       order by count(l.id) desc
+       """)
     List<Genre> findPopularGenresByActiveLessons(@Param("now") LocalDateTime now);
 
     int countByTeacherId(Long teacherId);

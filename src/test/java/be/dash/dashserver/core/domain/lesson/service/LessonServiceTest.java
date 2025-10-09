@@ -108,7 +108,7 @@ class LessonServiceTest extends ServiceSliceTest {
                 startDateTime.minusDays(20), endDateTime.minusDays(1), 30));
     }
 
-    @DisplayName("예약이 가장 많은 순서대로 장르를 반환한다.")
+    @DisplayName("클래스 등록이 가장 많은 순서대로 장르를 반환한다.")
     @Test
     void getPopularGenres() {
         LocalDateTime startDateTime = LocalDateTime.now().plusDays(10);
@@ -118,9 +118,9 @@ class LessonServiceTest extends ServiceSliceTest {
         List<Genre> popularGenres = lessonService.getPopularGenres();
         assertAll(
                 () -> assertThat(popularGenres.size()).isEqualTo(4),
-                () -> assertThat(popularGenres.get(0)).isEqualTo(FEMALE_HIPHOP),
-                () -> assertThat(popularGenres.get(1)).isEqualTo(KPOP),
-                () -> assertThat(popularGenres.get(2)).isEqualTo(CHOREOGRAPHY),
+                () -> assertThat(popularGenres.get(0)).isEqualTo(KPOP),
+                () -> assertThat(popularGenres.get(1)).isEqualTo(CHOREOGRAPHY),
+                () -> assertThat(popularGenres.get(2)).isEqualTo(FEMALE_HIPHOP),
                 () -> assertThat(popularGenres.get(3)).isEqualTo(HIPHOP)
         );
     }
