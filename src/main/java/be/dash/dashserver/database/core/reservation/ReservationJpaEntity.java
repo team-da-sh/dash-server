@@ -51,4 +51,8 @@ public class ReservationJpaEntity extends BaseCreatedAtEntity {
     public Reservation toDomain() {
         return new Reservation(id, lessonId, memberId, status, getCreatedAt());
     }
+
+    public boolean isStatusApprove(){
+        return status == ReservationStatus.APPROVED || status == ReservationStatus.PENDING_APPROVAL;
+    }
 }

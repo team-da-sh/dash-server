@@ -39,7 +39,7 @@ public class ReservationService {
     }
 
     public boolean isBooked(long memberId, long lessonId) {
-        return reservationRepository.existsByMemberIdAndLessonId(memberId, lessonId);
+        return reservationRepository.existsApproveReservation(memberId, lessonId);
     }
 
     @Transactional

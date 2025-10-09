@@ -5,11 +5,10 @@ import java.util.List;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import be.dash.dashserver.core.domain.reservation.Reservations;
-import be.dash.dashserver.database.core.reservation.ReservationJpaEntity;
 
 public interface ReservationRepository {
 
-    boolean existsByMemberIdAndLessonId(long memberId, long lessonId);
+    boolean existsApproveReservation(long memberId, long lessonId);
 
     long save(long memberId, long lessonId);
 

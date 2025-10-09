@@ -2,6 +2,7 @@ package be.dash.dashserver.database.core.reservation;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.stereotype.Repository;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
@@ -17,8 +18,12 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     private final ReservationJpaRepository reservationJpaRepository;
 
     @Override
-    public boolean existsByMemberIdAndLessonId(long memberId, long lessonId) {
-        return reservationJpaRepository.existsByMemberIdAndLessonId(memberId, lessonId);
+    public boolean existsApproveReservation(long memberId, long lessonId) {
+        ReservationJpaEntity reservationJpaEntity = reservationJpaRepository.findByMemberIdAndLessonId(memberId, lessonId);
+        if(Objects.isNull(reservationJpaEntity) || !reservationJpaEntity.isStatusApprove()){
+            return false;
+        }
+        return true;
     }
 
     @Override
