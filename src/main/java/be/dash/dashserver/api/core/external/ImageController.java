@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/images")
 @RequiredArgsConstructor
-public class ImageController {
+public class ImageController implements ImageControllerDocs {
     private final ImageService imageService;
 
     @Permission(role = {Role.MEMBER, Role.TEACHER})

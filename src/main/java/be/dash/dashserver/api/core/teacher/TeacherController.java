@@ -46,7 +46,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/teachers")
 @Validated
-public class TeacherController {
+public class TeacherController implements TeacherControllerDocs {
     private final TeacherService teacherService;
     private final AccountService accountService;
 

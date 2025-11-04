@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/bank")
-public class BankController {
+public class BankController implements BankControllerDocs {
 
     private final BankService bankService;
 

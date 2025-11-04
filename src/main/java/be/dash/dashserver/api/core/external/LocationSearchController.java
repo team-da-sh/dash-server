@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @Validated
-public class LocationSearchController {
+public class LocationSearchController implements LocationSearchControllerDocs {
     private final LocationSearchService locationSearchService;
 
     @Permission(role = {Role.MEMBER, Role.TEACHER})

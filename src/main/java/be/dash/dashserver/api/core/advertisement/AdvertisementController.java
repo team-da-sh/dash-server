@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/advertisements")
-public class AdvertisementController {
+public class AdvertisementController implements AdvertisementControllerDocs {
 
     private final AdvertisementService advertisementService;
 
