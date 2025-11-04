@@ -12,6 +12,9 @@ public class Images {
     }
 
     public String getFirstImage() {
-        return imageUrls.get(0);
+        if (!imageUrls.isEmpty()) {
+            return imageUrls.get(0);
+        }
+        return null;
     }
 }
