@@ -19,6 +19,7 @@ import be.dash.dashserver.core.auth.Token;
 import be.dash.dashserver.core.auth.TokenParser;
 import be.dash.dashserver.core.auth.TokenService;
 import be.dash.dashserver.core.auth.VerificationService;
+import be.dash.dashserver.core.auth.WithdrawService;
 import be.dash.dashserver.core.auth.command.LoginCommand;
 import be.dash.dashserver.core.auth.dto.LoginResult;
 
@@ -43,6 +44,8 @@ class AuthControllerTest {
     private LogoutService logoutService;
     @MockitoBean
     private TokenService tokenService;
+    @MockitoBean
+    private WithdrawService withdrawService;
     @MockitoBean
     private JwtTokenExtractor jwtTokenExtractor;
     @MockitoBean

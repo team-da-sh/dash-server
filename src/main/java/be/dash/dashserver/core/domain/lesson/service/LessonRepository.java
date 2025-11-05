@@ -38,4 +38,6 @@ public interface LessonRepository {
     void decreaseReservationCount(long lessonId);
 
     boolean isFull(long lessonId);
+
+    void update(Lesson teacher, long lessonId);
 }

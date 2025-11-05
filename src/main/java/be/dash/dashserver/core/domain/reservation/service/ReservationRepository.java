@@ -16,6 +16,8 @@ public interface ReservationRepository {
 
     Reservation findById(long reservationId);
 
+    Reservations findAllByMemberId(long memberId);
+
     Reservations findAllByLessonIdAndReservationStatusOrderByCreatedAtDesc(Long lessonId, List<ReservationStatus> reservationStatusList);
 
     int countUpcomingReservationsByMemberId(Long memberId);
@@ -39,4 +41,6 @@ public interface ReservationRepository {
     List<Reservation> findByStatus(ReservationStatus status);
 
     List<Reservation> findByStatusAndCreatedAtBetween(ReservationStatus status, LocalDateTime start, LocalDateTime end);
+
+    Reservations findAllByLessonIds(List<Long> teacherLessonIds);
 }

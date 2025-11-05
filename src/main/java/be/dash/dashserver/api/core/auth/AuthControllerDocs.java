@@ -125,6 +125,34 @@ public interface AuthControllerDocs {
 		@Parameter(hidden = true) @MemberId Long memberId,
 		@Parameter(description = "휴대폰 인증 확인 바디", required = true)
 		@RequestBody @Valid PhoneVerificationApprovalRequest request);
+
+	@Operation(
+			summary = "회원 탈퇴",
+			description = """
+        회원 탈퇴를 진행합니다.
+
+        <발생 가능한 케이스>
+        (1) 인증 정보 누락
+        (2) 이미 탈퇴된 회원
+        (3) 진행중인 수업 또는 예약 존재
+        """
+			// 필요 시 인증 스키마 쓰면 추가
+			// , security = { @SecurityRequirement(name = "bearerAuth") }
+	)
+	@ApiResponses({
+			@ApiResponse(responseCode = "204", description = "탈퇴 성공"),
+			@ApiResponse(responseCode = "401", description = "인증 실패"),
+			@ApiResponse(responseCode = "400", description = "탈퇴 불가 상태")
+	})
+	ResponseEntity<Void> withdraw(
+			@Parameter(hidden = true) @MemberId Long memberId,
+			@Parameter(
+					name = HttpHeaders.AUTHORIZATION,
+					description = "Refresh 토큰 (예: Bearer {token})",
+					required = true
+			)
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken
+	);
 }
 
 

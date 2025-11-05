@@ -2,6 +2,7 @@ package be.dash.dashserver.database.core.lesson;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.stereotype.Repository;
 import be.dash.dashserver.core.domain.common.Genre;
@@ -150,5 +151,12 @@ public class LessonRepositoryAdapter implements LessonRepository {
     @Override
     public boolean existsByTeacherIdAndLessonId(long teacherId, long lessonId) {
         return lessonJpaRepository.existsByTeacherIdAndId(teacherId, lessonId);
+    }
+
+    @Override
+    public void update(Lesson lesson, long lessonId) {
+        LessonJpaEntity lessonJpaEntity = lessonJpaRepository.findById(lessonId)
+                .orElseThrow(() -> new NotFoundException("해당하는 수업을 찾을 수 없습니다."));
+        lessonJpaEntity.update(lesson);
     }
 }

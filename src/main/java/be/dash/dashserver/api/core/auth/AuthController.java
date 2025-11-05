@@ -23,6 +23,7 @@ import be.dash.dashserver.core.auth.ReissueService;
 import be.dash.dashserver.core.auth.Token;
 import be.dash.dashserver.core.auth.TokenService;
 import be.dash.dashserver.core.auth.VerificationService;
+import be.dash.dashserver.core.auth.WithdrawService;
 import be.dash.dashserver.core.auth.command.LoginCommand;
 import be.dash.dashserver.core.auth.command.PhoneVerificationApprovalCommand;
 import be.dash.dashserver.core.auth.command.PhoneVerificationCommand;
@@ -40,6 +41,7 @@ public class AuthController implements AuthControllerDocs {
     private final LoginService loginService;
     private final ReissueService reissueService;
     private final LogoutService logoutService;
+    private final WithdrawService withdrawService;
     private final TokenService tokenService;
     private final VerificationService verificationService;
 
@@ -60,6 +62,13 @@ public class AuthController implements AuthControllerDocs {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@MemberId Long memberId) {
         logoutService.logout(memberId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Permission(role = {Role.MEMBER, Role.TEACHER})
+    @PostMapping("/withdraw")
+    public ResponseEntity<Void> withdraw(@MemberId Long memberId, @RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken) {
+        withdrawService.withdraw(memberId, tokenService.getRole(refreshToken));
         return ResponseEntity.noContent().build();
     }
 

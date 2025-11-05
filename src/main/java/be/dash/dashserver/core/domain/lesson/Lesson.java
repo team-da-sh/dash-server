@@ -82,4 +82,9 @@ public class Lesson {
     public int calculateDDay() {
         return getStartTime().getDayOfYear() - LocalDateTime.now().getDayOfYear();
     }
+
+    public boolean isOngoing() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.isBefore(getEndTime());
+    }
 }

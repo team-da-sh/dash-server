@@ -55,7 +55,10 @@ public class MemberJpaEntity extends BaseTimeEntity {
     @Column(nullable = true, columnDefinition = "TEXT")
     private String profileImageUrl;
 
-    private MemberJpaEntity(SocialProvider provider, String socialId, String socialName, Role role, String email) {
+    @Column(nullable = false)
+    private boolean isDeleted = false;
+
+    private MemberJpaEntity(SocialProvider provider, String socialId, String socialName, Role role, String email, boolean isDeleted) {
         this.provider = provider;
         this.socialId = socialId;
         this.socialName = socialName;
@@ -68,7 +71,8 @@ public class MemberJpaEntity extends BaseTimeEntity {
                 authMember.getSocialId(),
                 authMember.getSocialName(),
                 authMember.getRole(),
-                authMember.getEmail());
+                authMember.getEmail(),
+                false);
     }
 
     AuthMember toAuthMember() {
@@ -76,7 +80,7 @@ public class MemberJpaEntity extends BaseTimeEntity {
     }
 
     @Builder
-    public MemberJpaEntity(SocialProvider provider, String socialId, String socialName, Role role, String email, String name, String phoneNumber, String profileImageUrl) {
+    public MemberJpaEntity(SocialProvider provider, String socialId, String socialName, Role role, String email, String name, String phoneNumber, String profileImageUrl, boolean isDeleted) {
         this.provider = provider;
         this.socialId = socialId;
         this.socialName = socialName;
@@ -85,6 +89,7 @@ public class MemberJpaEntity extends BaseTimeEntity {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.profileImageUrl = profileImageUrl;
+        this.isDeleted = isDeleted;
     }
 
     public MemberJpaEntity(Member member) {

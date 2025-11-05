@@ -8,4 +8,6 @@ public interface OauthClientApi {
 
     SocialInfoResult getSocialUserInfo(String accessToken);
 
+
+
 }

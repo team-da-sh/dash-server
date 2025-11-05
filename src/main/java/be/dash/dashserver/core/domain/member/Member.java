@@ -15,6 +15,7 @@ public class Member {
     private final String name;
     private final String phoneNumber;
     private final String profileImageUrl;
+    private final boolean isDeleted;
 
     @Builder
     public Member(
@@ -26,7 +27,8 @@ public class Member {
             String email,
             String name,
             String phoneNumber,
-            String profileImageUrl) {
+            String profileImageUrl,
+            boolean isDeleted) {
         this.id = id;
         this.provider = provider;
         this.socialId = socialId;
@@ -36,9 +38,18 @@ public class Member {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.profileImageUrl = profileImageUrl;
+        this.isDeleted = isDeleted;
     }
 
     public boolean isOnboarded() {
         return name != null;
+    }
+
+    public String getName() {
+        if (isDeleted) {
+            return "알수 없음";
+        } else {
+            return name;
+        }
     }
 }

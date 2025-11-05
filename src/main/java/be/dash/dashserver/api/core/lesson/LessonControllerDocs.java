@@ -15,6 +15,7 @@ import be.dash.dashserver.api.core.lesson.dto.LessonReservationResponse;
 import be.dash.dashserver.api.core.lesson.dto.LessonResponses;
 import be.dash.dashserver.api.core.lesson.dto.PaymentRequest;
 import be.dash.dashserver.api.core.lesson.dto.PopularGenres;
+import be.dash.dashserver.api.core.lesson.dto.UpdateLessonRequest;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.lesson.LessonSortOption;
@@ -142,6 +143,33 @@ public interface LessonControllerDocs {
 		@Parameter(description = "결제 요청 바디", required = true) @Valid @RequestBody PaymentRequest paymentRequest,
 		@Parameter(description = "수업 ID", example = "1", required = true)
 		@PathVariable @Min(value = 1L, message = "수업의 식별자는 양수로 이루어져야 합니다.") long lessonId);
+
+	@Operation(
+			summary = "수업 수정",
+			description = """
+        댄서가 수업을 수정합니다.
+        <발생 가능한 케이스>
+        (1) 필수 값 누락(제목, 일정 등)
+        (2) 형식 오류(문자 수 제한, 날짜 형식 등)
+        (3) 권한 없음(댄서가 아님)
+        """
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "수업 수정 성공"),
+			@ApiResponse(responseCode = "400", description = "요청 값 검증 실패"),
+			@ApiResponse(responseCode = "401", description = "인증 실패"),
+			@ApiResponse(responseCode = "403", description = "권한 없음")
+	})
+	ResponseEntity<Void> update(
+			@io.swagger.v3.oas.annotations.parameters.RequestBody(
+					required = true,
+					description = "수업 수정 요청 바디",
+					content = @Content(schema = @Schema(implementation = UpdateLessonRequest.class))
+			)
+			@Valid @RequestBody UpdateLessonRequest request,
+			@Parameter(description = "수업 ID", example = "1", required = true)
+			@PathVariable Long lessonId
+	);
 }
 
 

@@ -26,4 +26,5 @@ public interface TeacherRepository {
     boolean existByInstagramAndMemberIdNot(String instagram, long memberId);
 
     boolean existsByNickname(String nickname);
+
 }

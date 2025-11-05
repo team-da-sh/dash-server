@@ -39,6 +39,12 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     }
 
     @Override
+    public Reservations findAllByMemberId(long memberId) {
+        return new Reservations(reservationJpaRepository.findAllByMemberId(memberId)
+                .stream().map(ReservationJpaEntity::toDomain).toList());
+    }
+
+    @Override
     public Reservations findAllByLessonIdAndReservationStatusOrderByCreatedAtDesc(Long lessonId, List<ReservationStatus> reservationStatusList) {
         return new Reservations(reservationJpaRepository.findAllByLessonIdOrderByCreatedAtDesc(lessonId).stream()
                 .filter(reservation -> reservationStatusList.contains(reservation.getStatus()))
@@ -100,6 +106,12 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     public List<Reservation> findByStatusAndCreatedAtBetween(ReservationStatus status, LocalDateTime start, LocalDateTime end) {
         return reservationJpaRepository.findByStatusAndCreatedAtBetween(status, start, end).stream()
                 .map(ReservationJpaEntity::toDomain).toList();
+    }
+
+    @Override
+    public Reservations findAllByLessonIds(List<Long> teacherLessonIds) {
+        return new Reservations(reservationJpaRepository.findAllByLessonIdIn(teacherLessonIds).stream()
+                .map(ReservationJpaEntity::toDomain).toList());
     }
 
     @Override
