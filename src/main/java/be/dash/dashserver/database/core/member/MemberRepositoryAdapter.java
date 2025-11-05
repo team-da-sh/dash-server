@@ -92,4 +92,9 @@ public class MemberRepositoryAdapter implements MemberRepository {
     public void withdraw(Long memberId) {
         memberJpaRepository.withdraw(memberId);
     }
+
+    @Override
+    public void rejoin(long id) {
+        memberJpaRepository.rejoin(id);
+    }
 }
