@@ -30,9 +30,10 @@ public class OpenApiConfig {
 		return new Components().addSecuritySchemes("Auth",
 				new SecurityScheme()
 						.name("Authorization")
-						.type(Type.APIKEY)
-						.in(In.HEADER)
-						.description("Enter your token in the Authorization header"));
+						.type(Type.HTTP)
+						.scheme("bearer")
+						.bearerFormat("JWT")
+						.description("Use 'Authorization: Bearer <token>' header"));
 	}
 
 	@Bean
