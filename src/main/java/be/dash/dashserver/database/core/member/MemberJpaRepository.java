@@ -17,4 +17,12 @@ public interface MemberJpaRepository extends JpaRepository<MemberJpaEntity, Long
     boolean existsByPhoneNumber(String phoneNumber);
 
     boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long memberId);
+
+    @Modifying
+    @Query("update MemberJpaEntity m set m.isDeleted = false where m.id = :memberId")
+    void withdraw(Long memberId);
+
+    @Modifying
+    @Query("update MemberJpaEntity m set m.isDeleted = true where m.id = :id")
+    void rejoin(long id);
 }

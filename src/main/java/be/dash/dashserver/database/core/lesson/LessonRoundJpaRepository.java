@@ -7,4 +7,6 @@ public interface LessonRoundJpaRepository extends JpaRepository<LessonRoundJpaEn
     List<LessonRoundJpaEntity> findAllByLessonIdOrderByStartTime(Long id);
 
     List<LessonRoundJpaEntity> findAllByLessonId(Long lessonId);
+
+    void deleteAllByLessonId(Long lessonId);
 }

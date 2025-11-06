@@ -11,29 +11,32 @@ public class AuthMember {
     private final String email;
     private final String socialName;
     private final Role role;
+    private boolean isDeleted;
 
-    private AuthMember(SocialProvider socialProvider, String socialId, String email, String socialName, Role role) {
+    private AuthMember(SocialProvider socialProvider, String socialId, String email, String socialName, Role role, boolean isDeleted) {
         this.socialProvider = socialProvider;
         this.socialId = socialId;
         this.email = email;
         this.socialName = socialName;
         this.role = role;
+        this.isDeleted = isDeleted;
     }
 
-    private AuthMember(long id, SocialProvider socialProvider, String socialId, String email, String socialName, Role role) {
+    private AuthMember(long id, SocialProvider socialProvider, String socialId, String email, String socialName, Role role, boolean isDeleted) {
         this.id = id;
         this.socialProvider = socialProvider;
         this.socialId = socialId;
         this.email = email;
         this.socialName = socialName;
         this.role = role;
+        this.isDeleted = isDeleted;
     }
 
     public static AuthMember create(SocialProvider socialProvider,
                                     String socialId,
                                     String email,
                                     String socialName) {
-        return new AuthMember(socialProvider, socialId, email, socialName, Role.MEMBER);
+        return new AuthMember(socialProvider, socialId, email, socialName, Role.MEMBER, false);
     }
 
     public static AuthMember createWithId(long id,
@@ -42,6 +45,10 @@ public class AuthMember {
                                           String email,
                                           String socialName,
                                           Role role) {
-        return new AuthMember(id, socialProvider, socialId, email, socialName, role);
+        return new AuthMember(id, socialProvider, socialId, email, socialName, role, false);
+    }
+
+    public void rejoin() {
+        this.isDeleted = false;
     }
 }

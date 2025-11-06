@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LessonImageJpaRepository extends JpaRepository<LessonImageJpaEntity, Long> {
 
+    void deleteAllByLessonId(long lessonId);
+
     List<LessonImageJpaEntity> findAllByLessonId(Long lessonId);
 }

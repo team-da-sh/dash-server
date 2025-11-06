@@ -52,9 +52,17 @@ public class LoginService {
                 socialUserInfo.id(),
                 command.provider()
         );
+
         if (retrievedAuthMember != null) {
+            if (!retrievedAuthMember.isDeleted()) {
+                return retrievedAuthMember;
+            }
+            memberRepository.rejoin(retrievedAuthMember.getId());
+            retrievedAuthMember.rejoin();
             return retrievedAuthMember;
         }
+
+
         return memberRepository.save(
                 AuthMember.create(command.provider(),
                         socialUserInfo.id(),

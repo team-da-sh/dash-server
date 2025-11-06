@@ -10,7 +10,9 @@ import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.LessonSortOption;
 import be.dash.dashserver.core.domain.lesson.Lessons;
+import be.dash.dashserver.core.domain.lesson.Round;
 import be.dash.dashserver.core.domain.lesson.command.CreateLessonCommand;
+import be.dash.dashserver.core.domain.lesson.command.UpdateLessonCommand;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.service.TeacherRepository;
 import be.dash.dashserver.core.exception.NotFoundException;
@@ -25,6 +27,8 @@ public class LessonService {
 
     private final LessonRepository lessonRepository;
     private final TeacherRepository teacherRepository;
+    private final LessonImageRepository lessonImageRepository;
+    private final LessonRoundRepository lessonRoundRepository;
 
     public Lessons search(Genre genre, Level level, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword keyword, LessonSortOption sortOption) {
         Lessons lessons = new Lessons(
@@ -53,5 +57,13 @@ public class LessonService {
 
     public Lesson findById(long lessonId) {
         return lessonRepository.findLessonsById(lessonId);
+    }
+
+    @Transactional
+    public void update(UpdateLessonCommand command) {
+        lessonRepository.update(command.toDomain(), command.lessonId());
+        lessonRoundRepository.replace(command.lessonId(),
+                command.times().stream().map(round -> new Round(round.startTime(), round.endTime())).toList());
+        lessonImageRepository.replace(command.lessonId(), command.imageUrls());
     }
 }

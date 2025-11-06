@@ -189,4 +189,20 @@ public class LessonJpaEntity extends BaseTimeEntity {
                 .createdAt(getCreatedAt())
                 .build();
     }
+
+    public void update(Lesson lesson) {
+        name = lesson.getName();
+        genre = lesson.getGenre();
+        level = lesson.getLevel();
+        startDateTime = lesson.getStartTime();
+        endDateTime = lesson.getEndTime();
+        location = lesson.getLocation().getTitle();
+        streetAddress = lesson.getLocation().getRoadAddress();
+        oldStreetAddress = lesson.getLocation().getAddress();
+        detailedAddress = lesson.getLocation().getDetailedAddress();
+        detail = lesson.getDetail();
+        recommendation = lesson.getRecommendation();
+        price = lesson.getPrice();
+        maxReservationCount = lesson.getMaxReservationCount();
+    }
 }

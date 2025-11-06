@@ -26,4 +26,8 @@ public interface MemberRepository {
     boolean existsByPhoneNumber(String phoneNumber);
 
     boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long memberId);
+
+    void withdraw(Long memberId);
+
+    void rejoin(long id);
 }

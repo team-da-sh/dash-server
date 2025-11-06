@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,8 @@ import be.dash.dashserver.api.core.lesson.dto.LessonReservationResponse;
 import be.dash.dashserver.api.core.lesson.dto.LessonResponses;
 import be.dash.dashserver.api.core.lesson.dto.PaymentRequest;
 import be.dash.dashserver.api.core.lesson.dto.PopularGenres;
+import be.dash.dashserver.api.core.lesson.dto.UpdateLessonRequest;
+import be.dash.dashserver.api.core.teacher.dto.TeacherUpdateRequest;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.Permission;
 import be.dash.dashserver.core.domain.common.Genre;
@@ -68,6 +71,15 @@ public class LessonController implements LessonControllerDocs {
         return ResponseEntity.ok().build();
 
     }
+
+    @Permission(role = Role.TEACHER)
+    @PatchMapping("/{lessonId}")
+    public ResponseEntity<Void> update(@Valid @RequestBody UpdateLessonRequest request, @PathVariable Long lessonId) {
+        lessonService.update(request.toCommand(lessonId));
+        return ResponseEntity.noContent().build();
+    }
+
+
 
     @GetMapping("/latest")
     public ResponseEntity<LessonResponses> latest() {

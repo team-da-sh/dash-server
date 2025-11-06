@@ -51,16 +51,81 @@ public class Teacher {
         this.lessonCount = lessonCount;
     }
 
+    public String getNickname() {
+        if (member.isDeleted()) {
+            return "알 수 없음";
+        } else {
+            return nickname;
+        }
+    }
+
+    public String getInstagram() {
+        if (member.isDeleted()) {
+            return "알 수 없음";
+        } else {
+            return instagram;
+        }
+    }
+    public String getYoutube() {
+        if (member.isDeleted()) {
+            return "알 수 없음";
+        } else {
+            return youtube;
+        }
+    }
+
+    public String getDetail() {
+        if (member.isDeleted()) {
+            return "탈퇴한 회원입니다.";
+        } else {
+            return detail;
+        }
+    }
+
+    public List<String> getEducations() {
+        if (member.isDeleted()) {
+            return List.of();
+        } else {
+            return educations;
+        }
+    }
+    public List<String> getExperiences() {
+        if (member.isDeleted()) {
+            return List.of();
+        } else {
+            return experiences;
+        }
+    }
+
+    public List<String> getPrizes() {
+        if (member.isDeleted()) {
+            return List.of();
+        } else {
+            return prizes;
+        }
+    }
+
     public String getRepresentativeImageUrl() {
+        if (member.isDeleted()) {
+            return null;
+        }
         return images.getFirstImage();
     }
 
     public List<String> getImageUrls() {
-        return images.getImageUrls();
+        if (member.isDeleted()) {
+            return List.of();
+        } else {
+            return images.getImageUrls();
+        }
     }
 
     public List<String> getVideoUrls() {
-        return videos.getVideoUrls();
+        if (member.isDeleted()) {
+            return List.of();
+        } else {
+            return videos.getVideoUrls();
+        }
     }
 
 }
