@@ -14,8 +14,7 @@ public class LessonImageRepositoryAdapter implements LessonImageRepository {
     public void replace(long lessonId, List<String> imageUrls) {
         lessonImageJpaRepository.deleteAllByLessonId(lessonId);
         lessonImageJpaRepository.saveAll(
-                imageUrls.stream().map(imageUrl -> new LessonImageJpaEntity(lessonId, imageUrl) {
-                }).toList()
+                imageUrls.stream().map(imageUrl -> new LessonImageJpaEntity(lessonId, imageUrl)).toList()
         );
     }
 }
