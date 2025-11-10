@@ -58,7 +58,7 @@ class AuthControllerTest {
     @Test
     @DisplayName("주어진 로그인 요청을 처리하고 올바른 응답을 반환한다.")
     void login() throws Exception {
-        LoginResult result = new LoginResult("at", "rt", true);
+        LoginResult result = new LoginResult("at", "rt", true, true);
         when(loginService.login(any(LoginCommand.class))).thenReturn(result);
 
         mockMvc.perform(post("/api/v1/auth/login")
@@ -67,7 +67,8 @@ class AuthControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value(result.accessToken()))
                 .andExpect(jsonPath("$.refreshToken").value(result.refreshToken()))
-                .andExpect(jsonPath("$.isOnboarded").value(result.isOnboarded()));
+                .andExpect(jsonPath("$.isOnboarded").value(result.isOnboarded()))
+                .andExpect(jsonPath("$.isDeleted").value(result.isDeleted()));
     }
 
     @Test

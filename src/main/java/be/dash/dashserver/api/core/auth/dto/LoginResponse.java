@@ -5,9 +5,10 @@ import be.dash.dashserver.core.auth.dto.LoginResult;
 public record LoginResponse(
         String accessToken,
         String refreshToken,
-        boolean isOnboarded
+        boolean isOnboarded,
+        boolean isDeleted
 ) {
     public static LoginResponse of(LoginResult result) {
-        return new LoginResponse(result.accessToken(), result.refreshToken(), result.isOnboarded());
+        return new LoginResponse(result.accessToken(), result.refreshToken(), result.isOnboarded(), result.isDeleted());
     }
 }
