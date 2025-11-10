@@ -29,7 +29,7 @@ public class LoginService {
         upsertRefreshToken(token.refreshToken(), authMember.getId());
         Member member = memberRepository.findById(authMember.getId());
 
-        return LoginResult.of(token, member.isOnboarded());
+        return LoginResult.of(token, member.isOnboarded(), member.isDeleted());
     }
 
     private void upsertRefreshToken(String refreshToken, long id) {
