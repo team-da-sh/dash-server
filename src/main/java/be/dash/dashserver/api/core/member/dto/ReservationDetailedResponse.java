@@ -12,6 +12,7 @@ import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import static java.util.stream.Collectors.toList;
 
 public record ReservationDetailedResponse(int dDay,
+                                          long lessonId,
                                           String lessonName,
                                           String nickname,
                                           List<RoundResponse> rounds,
@@ -26,6 +27,7 @@ public record ReservationDetailedResponse(int dDay,
                                           String lessonImageUrl) {
     public static ReservationDetailedResponse from(Member member, Reservation reservation, Lesson lesson) {
         return new ReservationDetailedResponse(lesson.calculateDDay(),
+                lesson.getId(),
                 lesson.getName(),
                 lesson.getTeacherNickName(),
                 lesson.getRounds().getRounds().stream().map(RoundResponse::from).collect(toList()),

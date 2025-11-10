@@ -39,7 +39,7 @@ public class OpenApiConfig {
     public GroupedOpenApi v1Api() {
         return GroupedOpenApi.builder()
                 .group("V1 API")
-                .pathsToExclude("/v2/**", "/v3/**", "/v4/**")
+                .pathsToExclude("/api/v2/**", "/api/v3/**", "/api/v4/**")
                 .build();
     }
 
@@ -47,7 +47,7 @@ public class OpenApiConfig {
     public GroupedOpenApi v2Api() {
         return GroupedOpenApi.builder()
                 .group("V2 API")
-                .pathsToMatch("/v2/**")
+                .pathsToMatch("/api/v2/**")
                 .build();
     }
 
@@ -55,7 +55,7 @@ public class OpenApiConfig {
     public GroupedOpenApi v3Api() {
         return GroupedOpenApi.builder()
                 .group("V3 API")
-                .pathsToMatch("/v3/**")
+                .pathsToMatch("/api/v3/**")
                 .build();
     }
 
@@ -63,7 +63,7 @@ public class OpenApiConfig {
     public GroupedOpenApi v4Api() {
         return GroupedOpenApi.builder()
                 .group("V4 API")
-                .pathsToMatch("/v4/**")
+                .pathsToMatch("/api/v4/**")
                 .build();
     }
 }
