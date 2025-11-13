@@ -5,6 +5,7 @@ import be.dash.dashserver.core.domain.reservation.Reservations;
 
 import static be.dash.dashserver.core.domain.reservation.ReservationStatus.APPROVED;
 import static be.dash.dashserver.core.domain.reservation.ReservationStatus.CANCELLED;
+import static be.dash.dashserver.core.domain.reservation.ReservationStatus.COMPLETED;
 import static be.dash.dashserver.core.domain.reservation.ReservationStatus.PENDING_APPROVAL;
 import static be.dash.dashserver.core.domain.reservation.ReservationStatus.PENDING_CANCELLATION;
 
@@ -25,6 +26,9 @@ public record ReservationStatusCountResponses(List<StatusCount> reservationStatu
         StatusCount cancelled = new StatusCount(CANCELLED.name(), reservations.getReservations()
                 .stream()
                 .filter(reservation -> reservation.getReservationStatus() == CANCELLED).count());
-        return new ReservationStatusCountResponses(List.of(all, pendingApproval, approved, pendingCancellation, cancelled));
+        StatusCount completed = new StatusCount(COMPLETED.name(), reservations.getReservations()
+                .stream()
+                .filter(reservation -> reservation.getReservationStatus() == COMPLETED).count());
+        return new ReservationStatusCountResponses(List.of(all, pendingApproval, approved, pendingCancellation, cancelled, completed));
     }
 }

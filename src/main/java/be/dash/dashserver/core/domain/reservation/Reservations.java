@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import be.dash.dashserver.core.exception.BadRequestException;
+import be.dash.dashserver.core.exception.ConflictException;
 import be.dash.dashserver.core.exception.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -57,7 +58,7 @@ public class Reservations {
             if (reservation.getReservationStatus() == ReservationStatus.PENDING_APPROVAL ||
                     reservation.getReservationStatus() == ReservationStatus.PENDING_CANCELLATION ||
                     reservation.getReservationStatus() == ReservationStatus.IN_PROGRESS) {
-                throw new BadRequestException("예약 상태를 먼저 처리해야 탈퇴할 수 있습니다.");
+                throw new ConflictException("예약 상태를 먼저 처리해야 탈퇴할 수 있습니다.");
             }
         }
     }

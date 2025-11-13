@@ -126,6 +126,7 @@ public interface AuthControllerDocs {
 		@Parameter(description = "휴대폰 인증 확인 바디", required = true)
 		@RequestBody @Valid PhoneVerificationApprovalRequest request);
 
+
 	@Operation(
 			summary = "회원 탈퇴",
 			description = """
@@ -142,9 +143,37 @@ public interface AuthControllerDocs {
 	@ApiResponses({
 			@ApiResponse(responseCode = "204", description = "탈퇴 성공"),
 			@ApiResponse(responseCode = "401", description = "인증 실패"),
-			@ApiResponse(responseCode = "400", description = "탈퇴 불가 상태")
+			@ApiResponse(responseCode = "409", description = "탈퇴 불가 상태")
 	})
 	ResponseEntity<Void> withdraw(
+			@Parameter(hidden = true) @MemberId Long memberId,
+			@Parameter(
+					name = HttpHeaders.AUTHORIZATION,
+					description = "Refresh 토큰 (예: Bearer {token})",
+					required = true
+			)
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken
+	);
+
+	@Operation(
+			summary = "회원 탈퇴 사전 검증",
+			description = """
+        회원 탈퇴가 가능한 상태인지 사전에 검증합니다.
+
+        <발생 가능한 케이스>
+        (1) 인증 정보 누락 또는 유효하지 않은 토큰
+        (2) 이미 탈퇴된 회원
+        (3) 진행 중인 수업 또는 예약 존재로 인한 탈퇴 불가
+        """
+			// 필요 시 인증 스키마 쓰면 추가
+			// , security = { @SecurityRequirement(name = "bearerAuth") }
+	)
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "탈퇴 가능 상태 (사전 검증 성공)"),
+			@ApiResponse(responseCode = "401", description = "인증 실패"),
+			@ApiResponse(responseCode = "409", description = "탈퇴 불가 상태")
+	})
+	ResponseEntity<Void> validateWithdrawal(
 			@Parameter(hidden = true) @MemberId Long memberId,
 			@Parameter(
 					name = HttpHeaders.AUTHORIZATION,

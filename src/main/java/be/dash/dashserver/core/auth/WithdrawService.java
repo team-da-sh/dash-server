@@ -13,6 +13,7 @@ import be.dash.dashserver.core.domain.reservation.service.ReservationRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.service.TeacherRepository;
 import be.dash.dashserver.core.exception.BadRequestException;
+import be.dash.dashserver.core.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,6 +27,16 @@ public class WithdrawService {
 
     @Transactional
     public void withdraw(Long memberId, Role role) {
+        validateConditions(memberId, role);
+
+        memberRepository.withdraw(memberId);
+    }
+
+    public void validateWithdrawal(Long memberId, Role role) {
+        validateConditions(memberId, role);
+    }
+
+    private void validateConditions(Long memberId, Role role) {
         Reservations reservations = reservationRepository.findAllByMemberId(memberId);
         reservations.validateMemberWithdrawal();
 
@@ -36,14 +47,12 @@ public class WithdrawService {
 
             boolean hasOngoingLesson = list.stream().anyMatch(Lesson::isOngoing);
             if (hasOngoingLesson) {
-                throw new BadRequestException("진행중인 수업이 있어 탈퇴할 수 없습니다.");
+                throw new ConflictException("진행중인 수업이 있어 탈퇴할 수 없습니다.");
             }
 
             List<Long> teacherLessonIds = list.stream().map(Lesson::getId).toList();
             Reservations teacherCustomerReservations = reservationRepository.findAllByLessonIds(teacherLessonIds);
             teacherCustomerReservations.validateTeacherWithdrawal();
         }
-
-        memberRepository.withdraw(memberId);
     }
 }

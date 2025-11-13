@@ -73,6 +73,13 @@ public class AuthController implements AuthControllerDocs {
     }
 
     @Permission(role = {Role.MEMBER, Role.TEACHER})
+    @PostMapping("/validate-withdraw")
+    public ResponseEntity<Void> validateWithdrawal(@MemberId Long memberId, @RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken) {
+        withdrawService.validateWithdrawal(memberId, tokenService.getRole(refreshToken));
+        return ResponseEntity.ok().build();
+    }
+
+    @Permission(role = {Role.MEMBER, Role.TEACHER})
     @PostMapping("/role")
     public ResponseEntity<RoleResponse> role(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
         return ResponseEntity.ok(new RoleResponse(tokenService.getRole(accessToken)));
