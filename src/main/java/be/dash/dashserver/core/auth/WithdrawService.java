@@ -26,10 +26,10 @@ public class WithdrawService {
     private final TeacherRepository teacherRepository;
 
     @Transactional
-    public void withdraw(Long memberId, Role role) {
+    public String withdraw(Long memberId, Role role) {
         validateConditions(memberId, role);
-
         memberRepository.withdraw(memberId);
+        return memberRepository.findById(memberId).getEmail();
     }
 
     public void validateWithdrawal(Long memberId, Role role) {

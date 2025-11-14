@@ -15,6 +15,7 @@ import be.dash.dashserver.api.core.auth.dto.PhoneVerificationRequest;
 import be.dash.dashserver.api.core.auth.dto.PhoneVerificationResponse;
 import be.dash.dashserver.api.core.auth.dto.ReissueResponse;
 import be.dash.dashserver.api.core.auth.dto.RoleResponse;
+import be.dash.dashserver.api.core.auth.dto.WithdrawResponse;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.Permission;
 import be.dash.dashserver.core.auth.LoginService;
@@ -67,9 +68,9 @@ public class AuthController implements AuthControllerDocs {
 
     @Permission(role = {Role.MEMBER, Role.TEACHER})
     @PostMapping("/withdraw")
-    public ResponseEntity<Void> withdraw(@MemberId Long memberId, @RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken) {
-        withdrawService.withdraw(memberId, tokenService.getRole(refreshToken));
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<WithdrawResponse> withdraw(@MemberId Long memberId, @RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken) {
+
+        return ResponseEntity.ok(new WithdrawResponse(withdrawService.withdraw(memberId, tokenService.getRole(refreshToken))));
     }
 
     @Permission(role = {Role.MEMBER, Role.TEACHER})
