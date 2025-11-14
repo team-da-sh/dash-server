@@ -58,10 +58,8 @@ public class LoginService {
                 return retrievedAuthMember;
             }
             memberRepository.rejoin(retrievedAuthMember.getId());
-            retrievedAuthMember.rejoin();
             return retrievedAuthMember;
         }
-
 
         return memberRepository.save(
                 AuthMember.create(command.provider(),
