@@ -29,7 +29,7 @@ public class LoginService {
         upsertRefreshToken(token.refreshToken(), authMember.getId());
         Member member = memberRepository.findById(authMember.getId());
 
-        return LoginResult.of(token, member.isOnboarded(), member.isDeleted());
+        return LoginResult.of(token, member.isOnboarded(), authMember.isDeleted());
     }
 
     private void upsertRefreshToken(String refreshToken, long id) {
@@ -54,9 +54,10 @@ public class LoginService {
         );
 
         if (retrievedAuthMember != null) {
-            if (!retrievedAuthMember.isDeleted()) {
+            if (!retrievedAuthMember.isDeleted()) { //삭제되지 않았다면
                 return retrievedAuthMember;
             }
+            //삭제되었다면
             memberRepository.rejoin(retrievedAuthMember.getId());
             return retrievedAuthMember;
         }
