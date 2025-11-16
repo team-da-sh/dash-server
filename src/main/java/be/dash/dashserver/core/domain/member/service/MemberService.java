@@ -39,8 +39,6 @@ public class MemberService {
 
     @Transactional
     public void onboard(OnboardCommand command) {
-        validatePhoneNumber(command.phoneNumber());
-
         Member member = command.toMember();
         memberRepository.onboard(member);
     }
