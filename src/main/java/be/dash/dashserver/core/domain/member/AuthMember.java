@@ -44,8 +44,9 @@ public class AuthMember {
                                           String socialId,
                                           String email,
                                           String socialName,
-                                          Role role) {
-        return new AuthMember(id, socialProvider, socialId, email, socialName, role, false);
+                                          Role role,
+                                          boolean isDeleted) {
+        return new AuthMember(id, socialProvider, socialId, email, socialName, role, isDeleted);
     }
 
     public void rejoin() {

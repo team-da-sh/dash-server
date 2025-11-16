@@ -76,7 +76,7 @@ public class MemberJpaEntity extends BaseTimeEntity {
     }
 
     AuthMember toAuthMember() {
-        return AuthMember.createWithId(id, provider, socialId, email, socialName, role);
+        return AuthMember.createWithId(id, provider, socialId, email, socialName, role, isDeleted);
     }
 
     @Builder
