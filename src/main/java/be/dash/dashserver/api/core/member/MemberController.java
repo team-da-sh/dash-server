@@ -37,7 +37,7 @@ public class MemberController implements MemberControllerDocs {
 
     private final MemberService memberService;
 
-    @Permission(role = Role.MEMBER)
+    @Permission(role = {Role.MEMBER, Role.TEACHER})
     @PostMapping("/onboard")
     public ResponseEntity<Void> onboard(@MemberId Long memberId,
                                         @Valid @RequestBody OnBoardRequest request) {
