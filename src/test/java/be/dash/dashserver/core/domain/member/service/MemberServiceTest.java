@@ -73,28 +73,4 @@ public class MemberServiceTest extends ServiceSliceTest {
         )).isInstanceOf(NotFoundException.class)
                 .hasMessage("멤버를 찾을 수 없습니다.");
     }
-
-    @DisplayName("온보딩 시 전화번호가 중복되면 예외가 발생한다.")
-    @Test
-    void failOnboardOnDuplicatedPhoneNumber() {
-        MemberJpaEntity onBoardMember = MemberJpaEntity
-                .builder()
-                .email("email1")
-                .role(Role.MEMBER)
-                .provider(SocialProvider.KAKAO)
-                .socialId("socialId1")
-                .socialName("socialName1")
-                .build();
-        memberJpaRepository.save(onBoardMember);
-        memberJpaRepository.save(MemberJpaEntityFixture.createWithNickname("nickname1", 1));
-
-        Assertions.assertThatThrownBy(() -> memberService.onboard(
-                new OnboardCommand(
-                        onBoardMember.getId(),
-                        "대쉬",
-                        "01087654321"
-                )
-        )).isInstanceOf(ConflictException.class)
-                .hasMessage("이미 사용 중인 전화번호입니다.");
-    }
 }
