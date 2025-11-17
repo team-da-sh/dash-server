@@ -10,6 +10,10 @@ import lombok.Getter;
 @Getter
 public class Teacher {
 
+    private static final Member UNKNOWN_MEMBER = Member.builder()
+            .isDeleted(true)
+            .build();
+
     private final Long id;
     private final Member member;
     private final String nickname;
@@ -38,7 +42,7 @@ public class Teacher {
             List<String> videoUrls,
             long lessonCount) {
         this.id = id;
-        this.member = member;
+        this.member = member != null ? member : UNKNOWN_MEMBER;
         this.nickname = nickname;
         this.detail = detail;
         this.educations = educations;
@@ -52,7 +56,7 @@ public class Teacher {
     }
 
     public String getNickname() {
-        if (member.isDeleted()) {
+        if (member == null || member.isDeleted()) {
             return "알 수 없음";
         } else {
             return nickname;
@@ -60,14 +64,14 @@ public class Teacher {
     }
 
     public String getInstagram() {
-        if (member.isDeleted()) {
+        if (member == null || member.isDeleted()) {
             return "알 수 없음";
         } else {
             return instagram;
         }
     }
     public String getYoutube() {
-        if (member.isDeleted()) {
+        if (member == null || member.isDeleted()) {
             return "알 수 없음";
         } else {
             return youtube;
@@ -75,7 +79,7 @@ public class Teacher {
     }
 
     public String getDetail() {
-        if (member.isDeleted()) {
+        if (member == null || member.isDeleted()) {
             return "탈퇴한 회원입니다.";
         } else {
             return detail;
@@ -83,14 +87,14 @@ public class Teacher {
     }
 
     public List<String> getEducations() {
-        if (member.isDeleted()) {
+        if (member == null || member.isDeleted()) {
             return List.of();
         } else {
             return educations;
         }
     }
     public List<String> getExperiences() {
-        if (member.isDeleted()) {
+        if (member == null || member.isDeleted()) {
             return List.of();
         } else {
             return experiences;
@@ -98,7 +102,7 @@ public class Teacher {
     }
 
     public List<String> getPrizes() {
-        if (member.isDeleted()) {
+        if (member == null || member.isDeleted()) {
             return List.of();
         } else {
             return prizes;
@@ -106,14 +110,14 @@ public class Teacher {
     }
 
     public String getRepresentativeImageUrl() {
-        if (member.isDeleted()) {
+        if (member == null || member.isDeleted()) {
             return null;
         }
         return images.getFirstImage();
     }
 
     public List<String> getImageUrls() {
-        if (member.isDeleted()) {
+        if (member == null || member.isDeleted()) {
             return List.of();
         } else {
             return images.getImageUrls();
@@ -121,7 +125,7 @@ public class Teacher {
     }
 
     public List<String> getVideoUrls() {
-        if (member.isDeleted()) {
+        if (member == null || member.isDeleted()) {
             return List.of();
         } else {
             return videos.getVideoUrls();
