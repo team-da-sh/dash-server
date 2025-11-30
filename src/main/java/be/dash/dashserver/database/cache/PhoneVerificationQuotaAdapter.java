@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class PhoneVerificationQuotaAdapter implements PhoneVerificationQuotaRepository {
 
     private final Cache<String, Integer> phoneVerificationDailyCountCache;
-    private static final int DAILY_LIMIT = 10;
+    private static final int DAILY_LIMIT = 5;
 
     @Override
     public boolean tryConsumeDailyQuota(long memberId) {

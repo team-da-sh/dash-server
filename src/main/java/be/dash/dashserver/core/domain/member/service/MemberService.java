@@ -39,6 +39,8 @@ public class MemberService {
 
     @Transactional
     public void onboard(OnboardCommand command) {
+        validatePhoneNumber(command.memberId(), command.phoneNumber());
+
         Member member = command.toMember();
         memberRepository.onboard(member);
     }
@@ -73,8 +75,8 @@ public class MemberService {
         }
     }
 
-    private void validatePhoneNumber(String phoneNumber) {
-        if (memberRepository.existsByPhoneNumber(phoneNumber)) {
+    private void validatePhoneNumber(long id, String phoneNumber) {
+        if (memberRepository.existsByPhoneNumber(id, phoneNumber)) {
             throw new ConflictException("이미 사용 중인 전화번호입니다.");
         }
     }

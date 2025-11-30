@@ -23,7 +23,7 @@ public interface MemberRepository {
 
     void update(Member member);
 
-    boolean existsByPhoneNumber(String phoneNumber);
+    boolean existsByPhoneNumber(long id, String phoneNumber);
 
     boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long memberId);
 

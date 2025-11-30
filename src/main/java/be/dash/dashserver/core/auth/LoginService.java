@@ -54,11 +54,6 @@ public class LoginService {
         );
 
         if (retrievedAuthMember != null) {
-            if (!retrievedAuthMember.isDeleted()) { //삭제되지 않았다면
-                return retrievedAuthMember;
-            }
-            //삭제되었다면
-            memberRepository.rejoin(retrievedAuthMember.getId());
             return retrievedAuthMember;
         }
 

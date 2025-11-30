@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import be.dash.dashserver.api.core.member.MyLessonDetailedResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ApplyStatus;
 import be.dash.dashserver.api.core.member.dto.MyLessonResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;

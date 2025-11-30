@@ -79,8 +79,6 @@ public class LessonController implements LessonControllerDocs {
         return ResponseEntity.noContent().build();
     }
 
-
-
     @GetMapping("/latest")
     public ResponseEntity<LessonResponses> latest() {
         Lessons searched = lessonService.searchBySortOption(LessonSortOption.LATEST);

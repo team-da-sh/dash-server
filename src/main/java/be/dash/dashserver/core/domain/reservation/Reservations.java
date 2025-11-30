@@ -47,7 +47,8 @@ public class Reservations {
         for (Reservation reservation : reservations) {
             if (reservation.getReservationStatus() == ReservationStatus.PENDING_APPROVAL ||
                     reservation.getReservationStatus() == ReservationStatus.PENDING_CANCELLATION ||
-                    reservation.getReservationStatus() == ReservationStatus.IN_PROGRESS) {
+                    reservation.getReservationStatus() == ReservationStatus.IN_PROGRESS ||
+                    reservation.getReservationStatus() == ReservationStatus.APPROVED) {
                 throw new BadRequestException("수강생의 예약 상태를 먼저 처리해야 탈퇴할 수 있습니다.");
             }
         }

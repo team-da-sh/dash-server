@@ -121,6 +121,7 @@ public class MemberJpaEntity extends BaseTimeEntity {
     public void updateOnboardDetails(Member member) {
         this.name = member.getName();
         this.phoneNumber = member.getPhoneNumber();
+        this.isDeleted = false;
     }
 
 

@@ -1,10 +1,7 @@
-package be.dash.dashserver.api.core.member;
+package be.dash.dashserver.api.core.member.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import be.dash.dashserver.api.core.member.dto.ApplyStatus;
-import be.dash.dashserver.api.core.member.dto.MemberReservationResponse;
-import be.dash.dashserver.api.core.member.dto.RoundResponse;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.lesson.Lesson;

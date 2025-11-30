@@ -33,7 +33,7 @@ class PhoneVerificationQuotaAdapterTest {
     @DisplayName("한도이상 시도하면 실패한다.")
     void failTryConsumeDailyQuota() {
         boolean allowed;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             allowed = phoneVerificationQuotaAdapter.tryConsumeDailyQuota(1L);
             Assertions.assertThat(allowed).isTrue();
         }
@@ -46,6 +46,6 @@ class PhoneVerificationQuotaAdapterTest {
     void getRemainingQuota() {
         boolean allowed = phoneVerificationQuotaAdapter.tryConsumeDailyQuota(1L);
         int remainingQuota = phoneVerificationQuotaAdapter.getRemainingDailyQuota(1L);
-        Assertions.assertThat(remainingQuota).isEqualTo(9);
+        Assertions.assertThat(remainingQuota).isEqualTo(4);
     }
 }

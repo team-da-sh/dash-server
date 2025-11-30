@@ -24,16 +24,32 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
 
     List<ReservationJpaEntity> findAllByLessonIdOrderByCreatedAtDesc(Long lessonId);
 
-    @Query("select count(r) from ReservationJpaEntity r join LessonJpaEntity l on r.lessonId = l.id " +
-            "where r.memberId = :memberId and l.startDateTime > current_timestamp")
+    @Query("""
+    SELECT COUNT(r)
+    FROM ReservationJpaEntity r
+    JOIN LessonJpaEntity l ON r.lessonId = l.id
+    WHERE r.memberId = :memberId
+      AND r.status = be.dash.dashserver.core.domain.reservation.ReservationStatus.APPROVED
+      AND l.startDateTime > CURRENT_TIMESTAMP""")
     int countUpcomingReservationsByMemberId(Long memberId);
 
-    @Query("select count(r) from ReservationJpaEntity r join LessonJpaEntity l on r.lessonId = l.id " +
-            "where r.memberId = :memberId and l.startDateTime <= current_timestamp and l.endDateTime >= current_timestamp")
+    @Query("""
+    SELECT COUNT(r)
+    FROM ReservationJpaEntity r
+    JOIN LessonJpaEntity l ON r.lessonId = l.id
+    WHERE r.memberId = :memberId
+      AND r.status = be.dash.dashserver.core.domain.reservation.ReservationStatus.IN_PROGRESS
+      AND l.startDateTime <= CURRENT_TIMESTAMP
+      AND l.endDateTime >= CURRENT_TIMESTAMP""")
     int countOngoingReservationsByMemberId(Long memberId);
 
-    @Query("select count(r) from ReservationJpaEntity r join LessonJpaEntity l on r.lessonId = l.id " +
-            "where r.memberId = :memberId and l.endDateTime < current_timestamp")
+    @Query("""
+    SELECT COUNT(r)
+    FROM ReservationJpaEntity r
+    JOIN LessonJpaEntity l ON r.lessonId = l.id
+    WHERE r.memberId = :memberId
+      AND r.status = be.dash.dashserver.core.domain.reservation.ReservationStatus.COMPLETED
+      AND l.endDateTime < CURRENT_TIMESTAMP""")
     int countPastReservationsByMemberId(Long memberId);
 
     @Modifying

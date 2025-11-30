@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import be.dash.dashserver.api.core.account.dto.AccountRequest;
-import be.dash.dashserver.api.core.member.MyLessonDetailedResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ApplyStatus;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;

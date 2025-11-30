@@ -1,6 +1,5 @@
 package be.dash.dashserver.api.core.teacher;
 
-import java.util.List;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import be.dash.dashserver.api.core.account.dto.AccountRequest;
-import be.dash.dashserver.api.core.member.MyLessonDetailedResponse;
+import be.dash.dashserver.api.core.member.dto.MyLessonDetailedResponse;
 import be.dash.dashserver.api.core.member.dto.ApplyStatus;
 import be.dash.dashserver.api.core.member.dto.MyLessonsResponse;
 import be.dash.dashserver.api.core.member.dto.MyLessonsThumbnailResponse;
@@ -26,7 +25,6 @@ import be.dash.dashserver.api.core.teacher.dto.TeacherUpdateRequest;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.reservation.ReservationStatusType;
-import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
