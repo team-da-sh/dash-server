@@ -26,7 +26,7 @@ public interface LessonJpaRepository extends JpaRepository<LessonJpaEntity, Long
        from LessonJpaEntity l
        where l.startDateTime > :now
        group by l.genre
-       order by count(l.id) desc
+       order by count(l.id) desc, max(l.createdAt) desc
        """)
     List<Genre> findPopularGenresByActiveLessons(@Param("now") LocalDateTime now);
 

@@ -29,7 +29,7 @@ public class AdvertisementJpaEntity {
     private String description;
 
     public Advertisement toDomain() {
-        return new Advertisement(imageUrl, description);
+        return new Advertisement(id, imageUrl, description);
     }
 
     public AdvertisementJpaEntity(Advertisement advertisement) {

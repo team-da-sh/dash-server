@@ -18,4 +18,8 @@ public class AdvertisementService {
     public List<Advertisement> getAdvertisement() {
         return advertisementRepository.getAdvertisement();
     }
+
+    public Advertisement findById(Long id) {
+        return advertisementRepository.findById(id);
+    }
 }

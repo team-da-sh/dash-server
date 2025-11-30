@@ -1,10 +1,14 @@
 package be.dash.dashserver.api.core.advertisement;
 
 import java.util.List;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import be.dash.dashserver.api.core.advertisement.dto.AdvertisementResponse;
 import be.dash.dashserver.api.core.advertisement.dto.AdvertisementResponses;
 import be.dash.dashserver.core.domain.advertisement.Advertisement;
 import be.dash.dashserver.core.domain.advertisement.service.AdvertisementService;
@@ -15,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/advertisements")
+@Validated
 public class AdvertisementController implements AdvertisementControllerDocs {
 
     private final AdvertisementService advertisementService;
@@ -23,5 +28,12 @@ public class AdvertisementController implements AdvertisementControllerDocs {
     public ResponseEntity<AdvertisementResponses> advertisement() {
         List<Advertisement> advertisement = advertisementService.getAdvertisement();
         return ResponseEntity.ok(AdvertisementResponses.from(advertisement));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AdvertisementResponse> findById(
+            @PathVariable @Min(value = 1L, message = "광고 식별자는 양수로 이루어져야 합니다.") Long id) {
+        Advertisement advertisement = advertisementService.findById(id);
+        return ResponseEntity.ok(new AdvertisementResponse(advertisement));
     }
 }

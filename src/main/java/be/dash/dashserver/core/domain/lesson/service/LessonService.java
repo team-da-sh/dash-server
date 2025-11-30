@@ -51,7 +51,11 @@ public class LessonService {
     }
 
     public Lessons searchBySortOption(LessonSortOption sortOption) {
-        Lessons lessons = new Lessons(lessonRepository.findActiveLessons(LocalDateTime.now()));
+        List<Lesson> activeLessons = lessonRepository.findActiveLessons(LocalDateTime.now())
+                .stream()
+                .limit(15)
+                .toList();
+        Lessons lessons = new Lessons(activeLessons);
         return lessons.sort(sortOption);
     }
 
