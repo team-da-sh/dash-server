@@ -104,7 +104,7 @@ public class LessonController implements LessonControllerDocs {
             @PathVariable @Min(value = 1L, message = "수업의 식별자는 양수로 이루어져야 합니다.") long lessonId) {
         Lesson lesson = lessonService.findById(lessonId);
         boolean booked = reservationService.isBooked(memberId, lessonId);
-        return ResponseEntity.ok(new LessonDetailResponse(lesson, booked));
+        return ResponseEntity.ok(new LessonDetailResponse(lesson, booked, memberId));
     }
 
     @GetMapping("/{lessonId}/reserve-progress")

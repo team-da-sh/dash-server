@@ -28,13 +28,14 @@ public record LessonDetailResponse(
         String streetDetailAddress,
         String oldStreetAddress,
         long favoriteCount,
+        boolean isMyLesson,
         boolean bookStatus,
         LessonStatus status,
         ApplyStatus applyStatus,
         LocalDateTime createdAt
 ) {
 
-    public LessonDetailResponse(Lesson lesson, boolean booked) {
+    public LessonDetailResponse(Lesson lesson, boolean booked, Long memberId) {
         this(lesson.getRepresentativeImageUrl(),
                 lesson.getGenre(),
                 lesson.getName(),
@@ -54,6 +55,7 @@ public record LessonDetailResponse(
                 lesson.getLocation().getDetailedAddress(),
                 lesson.getLocation().getAddress(),
                 lesson.getFavoriteCount(),
+                lesson.isMyLesson(memberId),
                 booked,
                 LessonStatus.from(lesson),
                 lesson.getApplyStatus(),

@@ -1,6 +1,7 @@
 package be.dash.dashserver.core.domain.lesson;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import be.dash.dashserver.api.core.member.dto.ApplyStatus;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
@@ -86,5 +87,9 @@ public class Lesson {
     public boolean isOngoing() {
         LocalDateTime now = LocalDateTime.now();
         return now.isBefore(getEndTime());
+    }
+
+    public boolean isMyLesson(Long memberId) {
+        return Objects.equals(teacher.getMember().getId(), memberId);
     }
 }
