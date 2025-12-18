@@ -25,7 +25,7 @@ public class NaverClientCaller implements LocationSearchClientApi {
                         .scheme(SCHEME)
                         .host(BASE_URL)
                         .path(PATH)
-                        .queryParam("query", query)
+                        .queryParam("query", "\"" + query + "\"")
                         .queryParam("display", display)
                         .build())
                 .header("X-Naver-Client-Id", naverProperties.clientId())
