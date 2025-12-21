@@ -115,6 +115,7 @@ public class MemberJpaEntity extends BaseTimeEntity {
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .profileImageUrl(profileImageUrl)
+                .isDeleted(isDeleted)
                 .build();
     }
 
