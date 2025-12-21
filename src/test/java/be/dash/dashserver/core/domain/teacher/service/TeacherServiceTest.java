@@ -6,11 +6,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import be.dash.dashserver.ServiceSliceTest;
+import be.dash.dashserver.core.auth.WithdrawService;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.lesson.service.LessonRepository;
 import be.dash.dashserver.core.domain.member.Member;
+import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.TeacherLessonGenres;
@@ -57,6 +59,8 @@ class TeacherServiceTest extends ServiceSliceTest {
     private TeacherImageJpaRepository teacherImageJpaRepository;
     @Autowired
     private TeacherVideoJpaRepository teacherVideoJpaRepository;
+    @Autowired
+    private WithdrawService withdrawService;
 
     @DisplayName("기본 정렬 조건에 맞게 댄서들을 정렬 후 조회한다.")
     @Test
@@ -64,6 +68,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         createLessons();
 
         List<TeacherLessonGenres> searched = teacherService.search(new Keyword());
+        System.out.println(searched.size());
 
         assertAll(
                 () -> assertThat(searched.get(0).teacher().getId()).isEqualTo(1),
@@ -74,6 +79,21 @@ class TeacherServiceTest extends ServiceSliceTest {
                 () -> assertThat(searched.get(2).genres()).containsExactly(Genre.FEMALE_HIPHOP)
         );
     }
+
+    @DisplayName("삭제된 댄서는 조회하지 않는다.")
+    @Test
+    void searchNotIncludeWithdrawnTeacher() {
+        // given
+        createTeacher(1);
+        withdrawService.withdraw(1L, Role.TEACHER);
+
+        // when
+        List<TeacherLessonGenres> searched = teacherService.search(new Keyword());
+
+        //then
+        Assertions.assertThat(searched.size()).isEqualTo(0);
+    }
+
 
     @DisplayName("유저의 선생님 프로필을 조회한다")
     @Test
@@ -257,7 +277,7 @@ class TeacherServiceTest extends ServiceSliceTest {
         )).isInstanceOf(ConflictException.class);
     }
 
-    @DisplayName("선생님 프로필을 등록시 youtube가 중복되면 예외를 발생한다..")
+    @DisplayName("선생님 프로필을 등록시 youtube가 중복되면 예외를 발생한다.")
     @Test
     void failCreateOnDuplicatedYoutube() {
         // given

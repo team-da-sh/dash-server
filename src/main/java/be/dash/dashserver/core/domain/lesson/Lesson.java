@@ -49,6 +49,9 @@ public class Lesson {
     }
 
     public String getRepresentativeImageUrl() {
+        if (teacher.getMember().isDeleted()) {
+            return null;
+        }
         return images.getFirstImage();
     }
 

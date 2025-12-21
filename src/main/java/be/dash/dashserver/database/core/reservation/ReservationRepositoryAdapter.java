@@ -46,7 +46,7 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
 
     @Override
     public Reservations findAllByLessonIdAndReservationStatusOrderByCreatedAtDesc(Long lessonId, List<ReservationStatus> reservationStatusList) {
-        return new Reservations(reservationJpaRepository.findAllByLessonIdOrderByCreatedAtDesc(lessonId).stream()
+        return new Reservations(reservationJpaRepository.findAllByLessonIdOrderByCreatedAtAsc(lessonId).stream()
                 .filter(reservation -> reservationStatusList.contains(reservation.getStatus()))
                 .map(ReservationJpaEntity::toDomain)
                 .toList());

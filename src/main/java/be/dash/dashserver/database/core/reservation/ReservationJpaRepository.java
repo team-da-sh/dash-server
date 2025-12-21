@@ -22,7 +22,7 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
             @Param("memberId") Long memberId,
             @Param("status") ReservationStatus status);
 
-    List<ReservationJpaEntity> findAllByLessonIdOrderByCreatedAtDesc(Long lessonId);
+    List<ReservationJpaEntity> findAllByLessonIdOrderByCreatedAtAsc(Long lessonId);
 
     @Query("""
     SELECT COUNT(r)

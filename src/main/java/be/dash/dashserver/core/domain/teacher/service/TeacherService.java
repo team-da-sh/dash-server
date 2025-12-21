@@ -114,7 +114,7 @@ public class TeacherService {
 
     private String findTeacherImageByTeacherId(long teacherId) {
         return teacherImageRepository.findTop1ImageUrlByTeacherId(teacherId)
-                .orElseThrow(() -> new NotFoundException("선생님 프로필 이미지가 존재하지 않습니다."));
+                .orElse(null);
     }
 
     @Transactional
