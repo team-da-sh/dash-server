@@ -1,6 +1,7 @@
 package be.dash.dashserver.api.core.member.dto;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
@@ -27,6 +28,7 @@ public record MyLessonDetailedResponse(long id,
     public static MyLessonDetailedResponse from(Lesson lesson, List<Member> members, Reservations reservations) {
         List<MemberReservationResponse> memberReservationResponses = members.stream()
                 .map(member -> MemberReservationResponse.from(member, reservations.findReservationByMemberId(member.getId())))
+                .sorted(Comparator.comparing(MemberReservationResponse::reservationDateTime))
                 .toList();
         return new MyLessonDetailedResponse(
                 lesson.getId(),
