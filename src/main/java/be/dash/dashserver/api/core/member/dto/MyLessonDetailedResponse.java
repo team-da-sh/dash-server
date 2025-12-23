@@ -7,6 +7,8 @@ import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
 import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.member.Member;
+import be.dash.dashserver.core.domain.reservation.Reservation;
+import be.dash.dashserver.core.domain.reservation.ReservationStatusType;
 import be.dash.dashserver.core.domain.reservation.Reservations;
 
 import static java.util.stream.Collectors.toList;
@@ -27,7 +29,13 @@ public record MyLessonDetailedResponse(long id,
 ) {
     public static MyLessonDetailedResponse from(Lesson lesson, List<Member> members, Reservations reservations) {
         List<MemberReservationResponse> memberReservationResponses = members.stream()
-                .map(member -> MemberReservationResponse.from(member, reservations.findReservationByMemberId(member.getId())))
+                .map(member -> {
+                    Reservation reservation = reservations.findReservationByMemberId(member.getId());
+                    if(ReservationStatusType.APPROVE.getReservationStatuses().contains(reservation.getReservationStatus())){
+                        return MemberReservationResponse.fromApprove(member, reservations.findReservationByMemberId(member.getId()));
+                    }
+                    return MemberReservationResponse.fromCancel(member, reservations.findReservationByMemberId(member.getId()));
+                })
                 .sorted(Comparator.comparing(MemberReservationResponse::reservationDateTime))
                 .toList();
         return new MyLessonDetailedResponse(

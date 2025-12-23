@@ -12,6 +12,7 @@ import jakarta.persistence.UniqueConstraint;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
 import be.dash.dashserver.database.core.common.BaseCreatedAtEntity;
+import be.dash.dashserver.database.core.common.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "reservation",
         uniqueConstraints = @UniqueConstraint(columnNames = {"lessonId", "memberId"}))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReservationJpaEntity extends BaseCreatedAtEntity {
+public class ReservationJpaEntity extends BaseTimeEntity {
 
     @Id
     @Column(name = "reservation_id")
@@ -49,7 +50,7 @@ public class ReservationJpaEntity extends BaseCreatedAtEntity {
     }
 
     public Reservation toDomain() {
-        return new Reservation(id, lessonId, memberId, status, getCreatedAt());
+        return new Reservation(id, lessonId, memberId, status, getCreatedAt(), getUpdatedAt());
     }
 
     public boolean isStatusApprove(){

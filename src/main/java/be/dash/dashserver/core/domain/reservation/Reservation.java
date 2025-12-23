@@ -12,6 +12,7 @@ public class Reservation {
     private final long memberId;
     private ReservationStatus reservationStatus;
     private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public boolean ownBy(long memberId) {
         return this.memberId == memberId;

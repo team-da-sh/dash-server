@@ -10,7 +10,11 @@ public record MemberReservationResponse(long reservationId,
                                         String phoneNumber,
                                         LocalDateTime reservationDateTime,
                                         ReservationStatus reservationStatus) {
-    public static MemberReservationResponse from(Member member, Reservation reservation) {
+    public static MemberReservationResponse fromApprove(Member member, Reservation reservation) {
         return new MemberReservationResponse(reservation.getId(), member.getName(), member.getPhoneNumber(), reservation.getCreatedAt(), reservation.getReservationStatus());
+    }
+
+    public static MemberReservationResponse fromCancel(Member member, Reservation reservation) {
+        return new MemberReservationResponse(reservation.getId(), member.getName(), member.getPhoneNumber(), reservation.getUpdatedAt(), reservation.getReservationStatus());
     }
 }
