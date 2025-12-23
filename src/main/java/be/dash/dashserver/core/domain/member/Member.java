@@ -47,7 +47,7 @@ public class Member {
 
     public String getName() {
         if (isDeleted) {
-            return "알수 없음";
+            return "알 수 없음";
         } else {
             return name;
         }

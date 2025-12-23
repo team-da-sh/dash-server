@@ -1,6 +1,8 @@
 package be.dash.dashserver.api.core.member.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Level;
@@ -16,7 +18,7 @@ public record MyLessonsThumbnailResponse(List<MyLessonThumbnailResponse> lessons
                                             String imageUrl,
                                             Genre genre,
                                             Level level,
-                                            int dDay) {
+                                            long dDay) {
         public static MyLessonThumbnailResponse from(Lesson lesson) {
             return new MyLessonThumbnailResponse(
                     lesson.getId(),
@@ -24,7 +26,8 @@ public record MyLessonsThumbnailResponse(List<MyLessonThumbnailResponse> lessons
                     lesson.getRepresentativeImageUrl(),
                     lesson.getGenre(),
                     lesson.getLevel(),
-                    (int) LocalDateTime.now().until(lesson.getStartTime(), java.time.temporal.ChronoUnit.DAYS));
+                    ChronoUnit.DAYS.between(LocalDate.now(), lesson.getStartTime())
+            );
         }
     }
 }

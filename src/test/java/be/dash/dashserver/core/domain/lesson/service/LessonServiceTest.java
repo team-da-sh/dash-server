@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import be.dash.dashserver.ServiceSliceTest;
+import be.dash.dashserver.core.auth.WithdrawService;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.common.Level;
@@ -13,6 +14,7 @@ import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.lesson.LessonSortOption;
 import be.dash.dashserver.core.domain.lesson.Lessons;
 import be.dash.dashserver.core.domain.member.Member;
+import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.member.service.MemberRepository;
 import be.dash.dashserver.core.domain.teacher.Teacher;
 import be.dash.dashserver.core.domain.teacher.service.TeacherImageRepository;
@@ -41,6 +43,8 @@ class LessonServiceTest extends ServiceSliceTest {
     private TeacherRepository teacherRepository;
     @Autowired
     private TeacherImageRepository teacherImageRepository;
+    @Autowired
+    private WithdrawService withdrawService;
 
     @DisplayName("동적으로 필터에 해당하며, 마감기한이 지나지 않은 수업들을 조회한다.")
     @Test
@@ -81,6 +85,28 @@ class LessonServiceTest extends ServiceSliceTest {
                 () -> assertThat(lessonsUpComing.lessons().stream().map(Lesson::getId)
                         .toList()).containsExactly(4L, 6L, 5L)
         );
+    }
+
+    @DisplayName("탈퇴한 강사의 수업 정보는 마스킹된다.")
+    @Test
+    void withdrawnTeacherLessonInfoIsMasked() {
+        Member memberWithoutId = MemberFixture.createTeacherWithoutId();
+        memberRepository.save(memberWithoutId);
+        Teacher teacherWithoutId = TeacherFixture.createWithoutId(1);
+        teacherRepository.save(teacherWithoutId);
+        Teacher teacher = TeacherFixture.create(1, 1);
+        teacherImageRepository.saveAll(teacher);
+        lessonRepository.save(LessonFixture.create(1, 1, HIPHOP, Level.BEGINNER,
+                LocalDateTime.now().minusDays(2), LocalDateTime.now().minusDays(1), 10));
+        withdrawService.withdraw(1L, Role.TEACHER);
+        Lesson lesson = lessonService.findById(1L);
+
+        assertAll(
+                () -> assertThat(lesson.getRepresentativeImageUrl()).isNull(),
+                () -> assertThat(lesson.getTeacher().getRepresentativeImageUrl()).isNull(),
+                () -> assertThat(lesson.getTeacher().getNickname()).isEqualTo("알 수 없음")
+        );
+
     }
 
     private void createLessons(LocalDateTime startDateTime, LocalDateTime endDateTime) {

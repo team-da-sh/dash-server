@@ -11,12 +11,18 @@ public interface TeacherJpaRepository extends JpaRepository<TeacherJpaEntity, Lo
     Optional<TeacherJpaEntity> findByMemberId(Long memberId);
 
 
-    @Query("select new be.dash.dashserver.database.core.teacher.projection.TeacherLessonCount(t.id, t.nickname, count(l)) " +
-            "from TeacherJpaEntity t " +
-            "left join LessonJpaEntity l on l.teacher.id = t.id " +
-            "where t.nickname like %:keyword% " +
-            "group by t.id, t.nickname " +
-            "order by count(l) desc")
+    @Query("""
+        select new be.dash.dashserver.database.core.teacher.projection.TeacherLessonCount(
+            t.id, t.nickname, count(l)
+        )
+        from TeacherJpaEntity t
+        join t.member m
+        left join LessonJpaEntity l on l.teacher.id = t.id
+        where t.nickname like %:keyword%
+        and m.isDeleted = false
+        group by t.id, t.nickname
+        order by count(l) desc
+    """)
     List<TeacherLessonCount> findTeacherLessonCountsDesc(@Param("keyword") String keyword);
 
     boolean existsByInstagram(String instagram);
