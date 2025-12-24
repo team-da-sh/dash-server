@@ -51,8 +51,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(      
-                        "https://stage.da-sh.kr",    
-                        "https://www.da-sh.kr"     
+                        "https://stage.da-sh.kr" 
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
