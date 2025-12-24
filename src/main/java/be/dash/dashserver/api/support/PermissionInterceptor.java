@@ -28,10 +28,11 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        // TODO: Nginx CORS 설정 제거 후 주석 해제
         // CORS preflight 요청은 통과
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            return true;
-        }
+        // if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        //     return true;
+        // }
         if (handler instanceof ResourceHttpRequestHandler)
             return true;
         HandlerMethod method = (HandlerMethod) handler;

@@ -47,15 +47,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/**");
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins(      
-                        "https://stage.da-sh.kr" 
-                )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
+    // TODO: Nginx CORS 설정 제거 후 주석 해제
+    // @Override
+    // public void addCorsMappings(CorsRegistry registry) {
+    //     registry.addMapping("/**")
+    //             .allowedOrigins(
+    //                     "https://www.da-sh.kr",
+    //                     "https://stage.da-sh.kr",
+    //                     "http://localhost:3000"
+    //             )
+    //             .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+    //             .allowedHeaders("*")
+    //             .allowCredentials(true)
+    //             .maxAge(3600);
+    // }
 }
