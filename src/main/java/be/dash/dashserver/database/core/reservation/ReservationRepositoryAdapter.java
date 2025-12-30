@@ -119,8 +119,8 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
           
        if (reservationJpaRepository.existsByMemberIdAndLessonId(memberId, lessonId)) {
            ReservationJpaEntity reservationJpaEntity = reservationJpaRepository.findByMemberIdAndLessonId(memberId, lessonId);
-
            reservationJpaEntity.changeStatus(ReservationStatus.PENDING_APPROVAL);
+           reservationJpaRepository.save(reservationJpaEntity);
            return reservationJpaEntity.getId();
        }
        
