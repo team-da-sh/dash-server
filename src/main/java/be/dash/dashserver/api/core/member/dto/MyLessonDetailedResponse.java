@@ -36,7 +36,7 @@ public record MyLessonDetailedResponse(long id,
                     }
                     return MemberReservationResponse.fromCancel(member, reservations.findReservationByMemberId(member.getId()));
                 })
-                .sorted(Comparator.comparing(MemberReservationResponse::reservationDateTime))
+                .sorted(Comparator.comparing(MemberReservationResponse::reservationDateTime, Comparator.nullsLast(Comparator.naturalOrder())))
                 .toList();
         return new MyLessonDetailedResponse(
                 lesson.getId(),
