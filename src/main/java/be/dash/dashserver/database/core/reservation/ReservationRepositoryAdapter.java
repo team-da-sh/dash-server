@@ -116,13 +116,14 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
 
     @Override
     public long save(long memberId, long lessonId) {
-        // TODO 이슈없으면 삭제 예정
-//        if (reservationJpaRepository.existsByMemberIdAndLessonId(memberId, lessonId)) {
-//            ReservationJpaEntity reservationJpaEntity = reservationJpaRepository.findByMemberIdAndLessonId(memberId, lessonId);
-//
-//            reservationJpaEntity.changeStatus(ReservationStatus.PENDING_APPROVAL);
-//            return reservationJpaEntity.getId();
-//        }
+          
+       if (reservationJpaRepository.existsByMemberIdAndLessonId(memberId, lessonId)) {
+           ReservationJpaEntity reservationJpaEntity = reservationJpaRepository.findByMemberIdAndLessonId(memberId, lessonId);
+
+           reservationJpaEntity.changeStatus(ReservationStatus.PENDING_APPROVAL);
+           return reservationJpaEntity.getId();
+       }
+       
         ReservationJpaEntity reservationJpaEntity = new ReservationJpaEntity(lessonId, memberId, ReservationStatus.PENDING_APPROVAL);
         reservationJpaRepository.save(reservationJpaEntity);
         return reservationJpaEntity.getId();
