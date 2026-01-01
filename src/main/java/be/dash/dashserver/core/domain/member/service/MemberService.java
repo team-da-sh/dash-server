@@ -52,10 +52,11 @@ public class MemberService {
 
     public List<ReservationResult> getMemberReservations(Long memberId, ReservationStatus status) {
         Reservations reservations = reservationRepository.findAllByMemberIdAndStatus(memberId, status);
-        Set<Long> lessonIds = reservations.getLessonIds();
-        List<Lesson> myLessons = lessonRepository.findAllByIdsOrderByStartDate(lessonIds);
-        return myLessons.stream()
-                .map(lesson -> ReservationResult.of(lesson, reservations))
+        return reservations.getReservations().stream()
+                .map(reservation -> {
+                    Lesson lesson = lessonRepository.findLessonsById(reservation.getLessonId());
+                    return ReservationResult.of(lesson, reservation);
+                })
                 .toList();
     }
 

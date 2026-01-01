@@ -29,13 +29,14 @@ public record MyLessonDetailedResponse(long id,
 ) {
     public static MyLessonDetailedResponse from(Lesson lesson, List<Member> members, Reservations reservations) {
         List<MemberReservationResponse> memberReservationResponses = members.stream()
-                .map(member -> {
-                    Reservation reservation = reservations.findReservationByMemberId(member.getId());
-                    if(ReservationStatusType.APPROVE.getReservationStatuses().contains(reservation.getReservationStatus())){
-                        return MemberReservationResponse.fromApprove(member, reservations.findReservationByMemberId(member.getId()));
-                    }
-                    return MemberReservationResponse.fromCancel(member, reservations.findReservationByMemberId(member.getId()));
-                })
+                .flatMap(member -> reservations.getReservations().stream()
+                        .filter(reservation -> reservation.getMemberId() == member.getId())
+                        .map(reservation -> {
+                            if(ReservationStatusType.APPROVE.getReservationStatuses().contains(reservation.getReservationStatus())){
+                                return MemberReservationResponse.fromApprove(member, reservation);
+                            }
+                            return MemberReservationResponse.fromCancel(member, reservation);
+                        }))
                 .sorted(Comparator.comparing(MemberReservationResponse::reservationDateTime, Comparator.nullsLast(Comparator.naturalOrder())))
                 .toList();
         return new MyLessonDetailedResponse(
