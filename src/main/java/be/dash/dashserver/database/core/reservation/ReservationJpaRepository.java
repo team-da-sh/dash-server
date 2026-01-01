@@ -30,8 +30,8 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
     JOIN LessonJpaEntity l ON r.lessonId = l.id
     WHERE r.memberId = :memberId
       AND r.status = be.dash.dashserver.core.domain.reservation.ReservationStatus.APPROVED
-      AND l.startDateTime > CURRENT_TIMESTAMP""")
-    int countUpcomingReservationsByMemberId(Long memberId);
+      AND l.startDateTime > :now""")
+    int countUpcomingReservationsByMemberId(@Param("memberId") Long memberId, @Param("now") LocalDateTime now);
 
     @Query("""
     SELECT COUNT(r)
@@ -39,9 +39,9 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
     JOIN LessonJpaEntity l ON r.lessonId = l.id
     WHERE r.memberId = :memberId
       AND r.status = be.dash.dashserver.core.domain.reservation.ReservationStatus.IN_PROGRESS
-      AND l.startDateTime <= CURRENT_TIMESTAMP
-      AND l.endDateTime >= CURRENT_TIMESTAMP""")
-    int countOngoingReservationsByMemberId(Long memberId);
+      AND l.startDateTime <= :now
+      AND l.endDateTime >= :now""")
+    int countOngoingReservationsByMemberId(@Param("memberId") Long memberId, @Param("now") LocalDateTime now);
 
     @Query("""
     SELECT COUNT(r)
@@ -49,8 +49,8 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
     JOIN LessonJpaEntity l ON r.lessonId = l.id
     WHERE r.memberId = :memberId
       AND r.status = be.dash.dashserver.core.domain.reservation.ReservationStatus.COMPLETED
-      AND l.endDateTime < CURRENT_TIMESTAMP""")
-    int countPastReservationsByMemberId(Long memberId);
+      AND l.endDateTime < :now""")
+    int countPastReservationsByMemberId(@Param("memberId") Long memberId, @Param("now") LocalDateTime now);
 
     @Modifying
     @Query("UPDATE ReservationJpaEntity r SET r.status = :status WHERE r.id = :reservationId")

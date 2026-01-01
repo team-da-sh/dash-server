@@ -53,18 +53,18 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
     }
 
     @Override
-    public int countUpcomingReservationsByMemberId(Long memberId) {
-        return reservationJpaRepository.countUpcomingReservationsByMemberId(memberId);
+    public int countUpcomingReservationsByMemberId(Long memberId, LocalDateTime now) {
+        return reservationJpaRepository.countUpcomingReservationsByMemberId(memberId, now);
     }
 
     @Override
-    public int countOngoingReservationsByMemberId(Long memberId) {
-        return reservationJpaRepository.countOngoingReservationsByMemberId(memberId);
+    public int countOngoingReservationsByMemberId(Long memberId, LocalDateTime now) {
+        return reservationJpaRepository.countOngoingReservationsByMemberId(memberId, now);
     }
 
     @Override
-    public int countPastReservationsByMemberId(Long memberId) {
-        return reservationJpaRepository.countPastReservationsByMemberId(memberId);
+    public int countPastReservationsByMemberId(Long memberId, LocalDateTime now) {
+        return reservationJpaRepository.countPastReservationsByMemberId(memberId, now);
     }
 
     @Override

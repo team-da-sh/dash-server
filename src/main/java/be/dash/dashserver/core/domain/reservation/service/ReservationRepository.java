@@ -20,11 +20,11 @@ public interface ReservationRepository {
 
     Reservations findAllByLessonIdAndReservationStatusOrderByCreatedAtDesc(Long lessonId, List<ReservationStatus> reservationStatusList);
 
-    int countUpcomingReservationsByMemberId(Long memberId);
+    int countUpcomingReservationsByMemberId(Long memberId, LocalDateTime now);
 
-    int countOngoingReservationsByMemberId(Long memberId);
+    int countOngoingReservationsByMemberId(Long memberId, LocalDateTime now);
 
-    int countPastReservationsByMemberId(Long memberId);
+    int countPastReservationsByMemberId(Long memberId, LocalDateTime now);
 
     void pendingApprove(Long reservationId);
 

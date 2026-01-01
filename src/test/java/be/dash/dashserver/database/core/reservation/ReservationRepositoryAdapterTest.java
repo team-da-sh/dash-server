@@ -50,7 +50,7 @@ class ReservationRepositoryAdapterTest {
         reservationRepository.approve(reservationId);
 
         // when
-        int count = reservationRepository.countUpcomingReservationsByMemberId(memberJpaEntity.getId());
+        int count = reservationRepository.countUpcomingReservationsByMemberId(memberJpaEntity.getId(), LocalDateTime.now());
         // then
         Assertions.assertThat(count).isEqualTo(1);
     }
@@ -69,7 +69,7 @@ class ReservationRepositoryAdapterTest {
         long reservationId = reservationRepository.save(memberJpaEntity.getId(), lessonJpaEntity.getId());
         reservationRepository.inProgress(reservationId);
         // when
-        int count = reservationRepository.countOngoingReservationsByMemberId(memberJpaEntity.getId());
+        int count = reservationRepository.countOngoingReservationsByMemberId(memberJpaEntity.getId(), LocalDateTime.now());
         // then
         Assertions.assertThat(count).isEqualTo(1);
     }
@@ -88,7 +88,7 @@ class ReservationRepositoryAdapterTest {
         long reservationId = reservationRepository.save(memberJpaEntity.getId(), lessonJpaEntity.getId());
         reservationRepository.completed(reservationId);
         // when
-        int count = reservationRepository.countPastReservationsByMemberId(memberJpaEntity.getId());
+        int count = reservationRepository.countPastReservationsByMemberId(memberJpaEntity.getId(), LocalDateTime.now());
         // then
         Assertions.assertThat(count).isEqualTo(1);
     }

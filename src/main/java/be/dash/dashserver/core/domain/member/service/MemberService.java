@@ -1,5 +1,6 @@
 package be.dash.dashserver.core.domain.member.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Service;
@@ -136,10 +137,11 @@ public class MemberService {
     }
 
     public ReservationStatisticsResponse getReservationStatistics(Long memberId) {
+        LocalDateTime now = LocalDateTime.now();
         return new ReservationStatisticsResponse(
-                reservationRepository.countUpcomingReservationsByMemberId(memberId),
-                reservationRepository.countOngoingReservationsByMemberId(memberId),
-                reservationRepository.countPastReservationsByMemberId(memberId)
+                reservationRepository.countUpcomingReservationsByMemberId(memberId, now),
+                reservationRepository.countOngoingReservationsByMemberId(memberId, now),
+                reservationRepository.countPastReservationsByMemberId(memberId, now)
         );
     }
 }
