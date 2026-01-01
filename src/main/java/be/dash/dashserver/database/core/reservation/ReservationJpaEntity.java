@@ -8,10 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
-import be.dash.dashserver.database.core.common.BaseCreatedAtEntity;
 import be.dash.dashserver.database.core.common.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,8 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "reservation",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"lessonId", "memberId"}))
+@Table(name = "reservation")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReservationJpaEntity extends BaseTimeEntity {
 
@@ -53,7 +50,7 @@ public class ReservationJpaEntity extends BaseTimeEntity {
         return new Reservation(id, lessonId, memberId, status, getCreatedAt(), getUpdatedAt());
     }
 
-    public boolean isStatusApprove(){
+    public boolean isStatusApprove() {
         return status == ReservationStatus.APPROVED || status == ReservationStatus.PENDING_APPROVAL;
     }
 }
