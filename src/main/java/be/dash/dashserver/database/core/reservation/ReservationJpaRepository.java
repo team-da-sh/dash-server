@@ -60,7 +60,7 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
 
     List<ReservationJpaEntity> findByStatusAndCreatedAtBetween(ReservationStatus status, LocalDateTime start, LocalDateTime end);
 
-    ReservationJpaEntity findByMemberIdAndLessonId(Long memberId, Long lessonId);
+    List<ReservationJpaEntity> findAllByMemberIdAndLessonIdOrderByCreatedAtDesc(Long memberId, Long lessonId);
 
     List<ReservationJpaEntity> findAllByMemberId(Long memberId);
 

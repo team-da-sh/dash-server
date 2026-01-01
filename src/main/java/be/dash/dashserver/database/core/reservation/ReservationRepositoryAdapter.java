@@ -2,7 +2,6 @@ package be.dash.dashserver.database.core.reservation;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.stereotype.Repository;
 import be.dash.dashserver.core.domain.reservation.Reservation;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
@@ -19,11 +18,9 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
 
     @Override
     public boolean existsApproveReservation(long memberId, long lessonId) {
-        ReservationJpaEntity reservationJpaEntity = reservationJpaRepository.findByMemberIdAndLessonId(memberId, lessonId);
-        if(Objects.isNull(reservationJpaEntity) || !reservationJpaEntity.isStatusApprove()){
-            return false;
-        }
-        return true;
+        List<ReservationJpaEntity> reservations = reservationJpaRepository.findAllByMemberIdAndLessonIdOrderByCreatedAtDesc(memberId, lessonId);
+        return reservations.stream()
+                .anyMatch(ReservationJpaEntity::isStatusApprove);
     }
 
     @Override
@@ -116,13 +113,6 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
 
     @Override
     public long save(long memberId, long lessonId) {
-//       if (reservationJpaRepository.existsByMemberIdAndLessonId(memberId, lessonId)) {
-//           ReservationJpaEntity reservationJpaEntity = reservationJpaRepository.findByMemberIdAndLessonId(memberId, lessonId);
-//           reservationJpaEntity.changeStatus(ReservationStatus.PENDING_APPROVAL);
-//           reservationJpaRepository.save(reservationJpaEntity);
-//           return reservationJpaEntity.getId();
-//       }
-       
         ReservationJpaEntity reservationJpaEntity = new ReservationJpaEntity(lessonId, memberId, ReservationStatus.PENDING_APPROVAL);
         reservationJpaRepository.save(reservationJpaEntity);
         return reservationJpaEntity.getId();
