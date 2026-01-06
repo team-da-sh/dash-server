@@ -53,10 +53,12 @@ public class LessonService {
     public Lessons searchBySortOption(LessonSortOption sortOption) {
         List<Lesson> activeLessons = lessonRepository.findActiveLessons(LocalDateTime.now())
                 .stream()
-                .limit(15)
                 .toList();
         Lessons lessons = new Lessons(activeLessons);
-        return lessons.sort(sortOption);
+        Lessons sortedLessons = lessons.sort(sortOption);
+        return new Lessons(sortedLessons.lessons().stream()
+                .limit(15)
+                .toList());
     }
 
     public Lesson findById(long lessonId) {

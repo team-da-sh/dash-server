@@ -53,8 +53,10 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
     int countPastReservationsByMemberId(@Param("memberId") Long memberId, @Param("now") LocalDateTime now);
 
     @Modifying
-    @Query("UPDATE ReservationJpaEntity r SET r.status = :status WHERE r.id = :reservationId")
-    int updateStatusById(@Param("reservationId") Long reservationId, @Param("status") ReservationStatus status);
+    @Query("UPDATE ReservationJpaEntity r SET r.status = :status, r.updatedAt = :now WHERE r.id = :reservationId")
+    int updateStatusById(@Param("reservationId") Long reservationId,
+                         @Param("status") ReservationStatus status,
+                         @Param("now") LocalDateTime now);
 
     List<ReservationJpaEntity> findByStatus(ReservationStatus status);
 

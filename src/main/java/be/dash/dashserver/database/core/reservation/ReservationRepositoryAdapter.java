@@ -66,32 +66,32 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
 
     @Override
     public void pendingApprove(Long reservationId) {
-        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.PENDING_APPROVAL);
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.PENDING_APPROVAL, LocalDateTime.now());
     }
 
     @Override
     public void approve(Long reservationId) {
-        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.APPROVED);
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.APPROVED, LocalDateTime.now());
     }
 
     @Override
     public void pendingCancel(Long reservationId) {
-        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.PENDING_CANCELLATION);
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.PENDING_CANCELLATION, LocalDateTime.now());
     }
 
     @Override
     public void cancel(Long reservationId) {
-        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.CANCELLED);
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.CANCELLED, LocalDateTime.now());
     }
 
     @Override
     public void inProgress(Long reservationId) {
-        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.IN_PROGRESS);
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.IN_PROGRESS, LocalDateTime.now());
     }
 
     @Override
     public void completed(Long reservationId) {
-        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.COMPLETED);
+        reservationJpaRepository.updateStatusById(reservationId, ReservationStatus.COMPLETED, LocalDateTime.now());
     }
 
     @Override
