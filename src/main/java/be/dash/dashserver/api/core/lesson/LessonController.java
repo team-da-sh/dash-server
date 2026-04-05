@@ -25,6 +25,7 @@ import be.dash.dashserver.api.core.lesson.dto.PopularGenres;
 import be.dash.dashserver.api.core.lesson.dto.UpdateLessonRequest;
 import be.dash.dashserver.api.core.teacher.dto.TeacherUpdateRequest;
 import be.dash.dashserver.api.support.MemberId;
+import be.dash.dashserver.api.support.OptionalMemberId;
 import be.dash.dashserver.api.support.Permission;
 import be.dash.dashserver.core.domain.common.Genre;
 import be.dash.dashserver.core.domain.common.Keyword;
@@ -97,16 +98,16 @@ public class LessonController implements LessonControllerDocs {
         return ResponseEntity.ok(new LessonResponses(searched));
     }
 
-    @Permission(role = {Role.MEMBER, Role.TEACHER})
     @GetMapping("/{lessonId}")
     public ResponseEntity<LessonDetailResponse> findById(
-            @MemberId Long memberId,
+            @OptionalMemberId Long memberId,
             @PathVariable @Min(value = 1L, message = "수업의 식별자는 양수로 이루어져야 합니다.") long lessonId) {
         Lesson lesson = lessonService.findById(lessonId);
-        boolean booked = reservationService.isBooked(memberId, lessonId);
+        boolean booked = memberId != null && reservationService.isBooked(memberId, lessonId);
         return ResponseEntity.ok(new LessonDetailResponse(lesson, booked, memberId));
     }
 
+    @Permission(role = {Role.MEMBER, Role.TEACHER})
     @GetMapping("/{lessonId}/reserve-progress")
     public ResponseEntity<LessonReservationResponse> reserveProgress(
             @MemberId Long memberId,
@@ -116,6 +117,7 @@ public class LessonController implements LessonControllerDocs {
         return ResponseEntity.ok(new LessonReservationResponse(lesson, member));
     }
 
+    @Permission(role = {Role.MEMBER, Role.TEACHER})
     @PostMapping("/{lessonId}/reservations")
     public ResponseEntity<Void> createReservation(
             @MemberId Long memberId,

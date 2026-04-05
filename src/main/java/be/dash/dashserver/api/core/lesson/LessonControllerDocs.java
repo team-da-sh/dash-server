@@ -17,6 +17,7 @@ import be.dash.dashserver.api.core.lesson.dto.PaymentRequest;
 import be.dash.dashserver.api.core.lesson.dto.PopularGenres;
 import be.dash.dashserver.api.core.lesson.dto.UpdateLessonRequest;
 import be.dash.dashserver.api.support.MemberId;
+import be.dash.dashserver.api.support.OptionalMemberId;
 import be.dash.dashserver.core.domain.common.Keyword;
 import be.dash.dashserver.core.domain.lesson.LessonSortOption;
 import io.swagger.v3.oas.annotations.Operation;
@@ -92,7 +93,8 @@ public interface LessonControllerDocs {
 	ResponseEntity<LessonResponses> upcoming();
 
 	@Operation(summary = "수업 상세 조회", description = """
-	수업 상세 정보를 조회합니다.
+	수업 상세 정보를 조회합니다. 비로그인(GUEST)도 조회할 수 있습니다.
+	Authorization 헤더가 있으면 예약 여부(bookStatus) 등 개인화 정보가 포함됩니다.
 
 	<발생 가능한 케이스>
 	(1) 존재하지 않는 수업 식별자
@@ -102,23 +104,25 @@ public interface LessonControllerDocs {
 		@ApiResponse(responseCode = "200", description = "조회 성공",
 			content = @Content(schema = @Schema(implementation = LessonDetailResponse.class))),
 		@ApiResponse(responseCode = "400", description = "잘못된 식별자"),
+		@ApiResponse(responseCode = "401", description = "잘못되었거나 만료된 토큰(선택 인증 헤더를 보낸 경우)"),
 		@ApiResponse(responseCode = "404", description = "존재하지 않는 수업")
 	})
 	ResponseEntity<LessonDetailResponse> findById(
-		@Parameter(hidden = true) @MemberId Long memberId,
+		@Parameter(hidden = true) @OptionalMemberId Long memberId,
 		@Parameter(description = "수업 ID", example = "1", required = true)
 		@PathVariable @Min(value = 1L, message = "수업의 식별자는 양수로 이루어져야 합니다.") long lessonId);
 
 	@Operation(summary = "수업 예약 진행 정보 조회", description = """
-	예약 진행에 필요한 정보를 조회합니다.
+	예약(클래스 신청) 진행에 필요한 정보를 조회합니다. 로그인(회원·강사)이 필요합니다.
 
 	<발생 가능한 케이스>
 	(1) 존재하지 않는 수업
-	(2) 권한 없음
+	(2) 인증 실패·권한 없음
 	""")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "조회 성공",
-			content = @Content(schema = @Schema(implementation = LessonReservationResponse.class)))
+			content = @Content(schema = @Schema(implementation = LessonReservationResponse.class))),
+		@ApiResponse(responseCode = "401", description = "인증 실패")
 	})
 	ResponseEntity<LessonReservationResponse> reserveProgress(
 		@Parameter(hidden = true) @MemberId Long memberId,

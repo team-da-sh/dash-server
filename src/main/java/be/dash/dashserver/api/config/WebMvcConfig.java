@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import be.dash.dashserver.api.support.MemberIdArgumentResolver;
+import be.dash.dashserver.api.support.OptionalMemberIdArgumentResolver;
 import be.dash.dashserver.api.support.PermissionInterceptor;
 import be.dash.dashserver.api.support.converter.GenreConverter;
 import be.dash.dashserver.api.support.converter.LevelConverter;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
     private final MemberIdArgumentResolver MemberIdArgumentResolver;
+    private final OptionalMemberIdArgumentResolver optionalMemberIdArgumentResolver;
     private final PermissionInterceptor permissionInterceptor;
     private final GenreConverter genreConverter;
     private final LevelConverter levelConverter;
@@ -39,6 +41,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(MemberIdArgumentResolver);
+        resolvers.add(optionalMemberIdArgumentResolver);
     }
 
     @Override

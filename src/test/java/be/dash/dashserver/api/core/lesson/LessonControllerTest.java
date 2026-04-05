@@ -25,7 +25,10 @@ import be.dash.dashserver.core.fixture.LessonFixture;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static be.dash.dashserver.core.domain.common.Genre.CHOREOGRAPHY;
 import static be.dash.dashserver.core.domain.common.Genre.HIPHOP;
 import static be.dash.dashserver.core.domain.common.Genre.KPOP;
+import static be.dash.dashserver.core.domain.common.Level.BEGINNER;
 
 
 @WebMvcTest(LessonController.class)
@@ -112,6 +116,36 @@ class LessonControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("비로그인 사용자가 수업 상세를 조회할 수 있다.")
+    @Test
+    void findById_guest() throws Exception {
+        var lesson = LessonFixture.create(1L, 1L, 1L, HIPHOP, BEGINNER);
+        when(lessonService.findById(1L)).thenReturn(lesson);
+
+        mockMvc.perform(get("/api/v1/lessons/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.bookStatus").value(false))
+                .andExpect(jsonPath("$.name").value(lesson.getName()));
+
+        verify(reservationService, never()).isBooked(anyLong(), anyLong());
+    }
+
+    @DisplayName("로그인 사용자는 수업 상세 조회 시 예약 여부를 반영한다.")
+    @Test
+    void findById_authenticated() throws Exception {
+        var lesson = LessonFixture.create(1L, 1L, 1L, HIPHOP, BEGINNER);
+        when(lessonService.findById(1L)).thenReturn(lesson);
+        when(reservationService.isBooked(2L, 1L)).thenReturn(true);
+        mockingArgumentResolver(2L);
+
+        mockMvc.perform(get("/api/v1/lessons/1")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer token"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.bookStatus").value(true));
+
+        verify(reservationService).isBooked(2L, 1L);
     }
 
     @DisplayName("장르를 추천한다.")
