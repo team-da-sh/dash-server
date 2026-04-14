@@ -45,7 +45,7 @@ public class LessonRepositoryAdapter implements LessonRepository {
     }
 
     @Override
-    public void save(Lesson lesson) {
+    public long save(Lesson lesson) {
         LessonJpaEntity lessonJpaEntity = lessonJpaRepository.save(new LessonJpaEntity(lesson));
 
         List<LessonImageJpaEntity> lessonImageJpaEntities = lesson.getImages().getImageUrls().stream()
@@ -56,6 +56,8 @@ public class LessonRepositoryAdapter implements LessonRepository {
                 .map(lessonRound -> new LessonRoundJpaEntity(lessonJpaEntity.getId(), lessonRound.getStartTime(), lessonRound.getEndTime()))
                 .toList();
         lessonRoundJpaRepository.saveAll(lessonRoundJpaEntities);
+
+        return lessonJpaEntity.getId();
     }
 
     @Override

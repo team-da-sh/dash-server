@@ -38,12 +38,12 @@ public class LessonService {
     }
 
     @Transactional
-    public void createLesson(CreateLessonCommand command) {
+    public long createLesson(CreateLessonCommand command) {
         Teacher teacher = teacherRepository.findByMemberId(command.memberId())
                 .orElseThrow(() -> new NotFoundException("해당하는 선생님을 찾을 수 없습니다."));
 
         Lesson lesson = command.toDomainWith(teacher);
-        lessonRepository.save(lesson);
+        return lessonRepository.save(lesson);
     }
 
     public List<Genre> getPopularGenres() {

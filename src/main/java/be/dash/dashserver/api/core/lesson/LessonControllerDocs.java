@@ -2,13 +2,13 @@ package be.dash.dashserver.api.core.lesson;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import be.dash.dashserver.api.core.lesson.dto.CreateLessonRequest;
+import be.dash.dashserver.api.core.lesson.dto.LessonCreateResponse;
 import be.dash.dashserver.api.core.lesson.dto.LessonDetailResponse;
 import be.dash.dashserver.api.core.lesson.dto.LessonFilterRequest;
 import be.dash.dashserver.api.core.lesson.dto.LessonReservationResponse;
@@ -61,7 +61,7 @@ public interface LessonControllerDocs {
 		@ApiResponse(responseCode = "400", description = "요청 값 검증 실패"),
 		@ApiResponse(responseCode = "401", description = "인증 실패")
 	})
-	ResponseEntity<Void> create(
+    ResponseEntity<LessonCreateResponse> create(
 		@Parameter(hidden = true) @MemberId Long memberId,
 		@Parameter(description = "수업 생성 요청 바디", required = true) @Valid @RequestBody CreateLessonRequest request);
 

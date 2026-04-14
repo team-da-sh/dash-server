@@ -1,6 +1,7 @@
 package be.dash.dashserver.api.core.member;
 
 import java.util.List;
+import java.util.Optional;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import be.dash.dashserver.api.core.member.dto.MemberAttributeResponse;
 import be.dash.dashserver.api.core.member.dto.MemberResponse;
 import be.dash.dashserver.api.core.member.dto.MemberUpdateRequest;
 import be.dash.dashserver.api.core.member.dto.OnBoardRequest;
@@ -22,10 +24,13 @@ import be.dash.dashserver.api.core.member.dto.ReservationStatusCountResponses;
 import be.dash.dashserver.api.core.member.dto.ReservationsResponse;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.Permission;
+import be.dash.dashserver.core.domain.member.Member;
 import be.dash.dashserver.core.domain.member.Role;
 import be.dash.dashserver.core.domain.member.service.MemberService;
 import be.dash.dashserver.core.domain.member.service.ReservationResult;
 import be.dash.dashserver.core.domain.reservation.ReservationStatus;
+import be.dash.dashserver.core.domain.teacher.Teacher;
+import be.dash.dashserver.core.domain.teacher.service.TeacherService;
 import be.dash.dashserver.core.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberController implements MemberControllerDocs {
 
     private final MemberService memberService;
+    private final TeacherService teacherService;
 
     @Permission(role = {Role.MEMBER, Role.TEACHER})
     @PostMapping("/onboard")
@@ -55,6 +61,13 @@ public class MemberController implements MemberControllerDocs {
                                                         @Valid @RequestBody MemberUpdateRequest request) {
         memberService.updateMemberInformation(request.toCommand(memberId));
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me/attributes")
+    public ResponseEntity<MemberAttributeResponse> getMemberAttributes(@MemberId Long memberId) {
+        Optional<Teacher> optionalByMemberId = teacherService.findOptionalByMemberId(memberId);
+        Member member = memberService.findById(memberId);
+        return ResponseEntity.ok(new MemberAttributeResponse(member.getId(), member.getRole(), optionalByMemberId.map(Teacher::getId).orElse(null)));
     }
 
     @GetMapping("/me/reservations")

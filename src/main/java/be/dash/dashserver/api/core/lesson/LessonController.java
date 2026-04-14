@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import be.dash.dashserver.api.core.lesson.dto.CreateLessonRequest;
+import be.dash.dashserver.api.core.lesson.dto.LessonCreateResponse;
 import be.dash.dashserver.api.core.lesson.dto.LessonDetailResponse;
 import be.dash.dashserver.api.core.lesson.dto.LessonFilterRequest;
 import be.dash.dashserver.api.core.lesson.dto.LessonReservationResponse;
@@ -23,7 +24,6 @@ import be.dash.dashserver.api.core.lesson.dto.LessonResponses;
 import be.dash.dashserver.api.core.lesson.dto.PaymentRequest;
 import be.dash.dashserver.api.core.lesson.dto.PopularGenres;
 import be.dash.dashserver.api.core.lesson.dto.UpdateLessonRequest;
-import be.dash.dashserver.api.core.teacher.dto.TeacherUpdateRequest;
 import be.dash.dashserver.api.support.MemberId;
 import be.dash.dashserver.api.support.OptionalMemberId;
 import be.dash.dashserver.api.support.Permission;
@@ -66,10 +66,9 @@ public class LessonController implements LessonControllerDocs {
 
     @Permission(role = Role.TEACHER)
     @PostMapping
-    public ResponseEntity<Void> create(@MemberId Long memberId,
-                                       @Valid @RequestBody CreateLessonRequest request) {
-        lessonService.createLesson(request.toCommand(memberId));
-        return ResponseEntity.ok().build();
+    public ResponseEntity<LessonCreateResponse> create(@MemberId Long memberId,
+                                                       @Valid @RequestBody CreateLessonRequest request) {
+        return ResponseEntity.ok(new LessonCreateResponse(lessonService.createLesson(request.toCommand(memberId))));
 
     }
 

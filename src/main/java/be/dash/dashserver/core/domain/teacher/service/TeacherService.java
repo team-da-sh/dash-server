@@ -3,6 +3,7 @@ package be.dash.dashserver.core.domain.teacher.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import be.dash.dashserver.api.core.member.dto.MyLessonDetailedResponse;
@@ -159,6 +160,10 @@ public class TeacherService {
         Reservations reservations = reservationRepository.findAllByLessonIdAndReservationStatusOrderByCreatedAtDesc(lessonId, status.getReservationStatuses());
         List<Member> members = memberRepository.findAllByMemberIds(reservations.getMemberIds());
         return MyLessonDetailedResponse.from(lesson, members, reservations);
+    }
+
+    public Optional<Teacher> findOptionalByMemberId(long memberId) {
+        return teacherRepository.findByMemberId(memberId);
     }
 
     private Teacher findTeacherByMemberId(long memberId) {

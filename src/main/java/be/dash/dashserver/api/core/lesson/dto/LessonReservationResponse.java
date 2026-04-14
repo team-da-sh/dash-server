@@ -5,6 +5,8 @@ import be.dash.dashserver.core.domain.lesson.Lesson;
 import be.dash.dashserver.core.domain.member.Member;
 
 public record LessonReservationResponse(
+        long teacherId,
+        long maxReservationCount,
         String imageUrl,
         String name,
         String teacherNickname,
@@ -19,6 +21,8 @@ public record LessonReservationResponse(
 ) {
     public LessonReservationResponse(Lesson lesson, Member member) {
         this(
+                lesson.getTeacher().getId(),
+                lesson.getMaxReservationCount(),
                 lesson.getRepresentativeImageUrl(),
                 lesson.getName(),
                 lesson.getTeacher().getNickname(),

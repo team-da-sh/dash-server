@@ -17,6 +17,7 @@ import be.dash.dashserver.core.auth.JwtTokenExtractor;
 import be.dash.dashserver.core.auth.TokenParser;
 import be.dash.dashserver.core.domain.member.command.OnboardCommand;
 import be.dash.dashserver.core.domain.member.service.MemberService;
+import be.dash.dashserver.core.domain.teacher.service.TeacherService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -30,6 +31,8 @@ class MemberControllerTest {
 
     @MockitoBean
     private MemberService memberService;
+    @MockitoBean
+    private TeacherService teacherService;
     @MockitoBean
     private JwtTokenExtractor jwtTokenExtractor;
     @MockitoBean
